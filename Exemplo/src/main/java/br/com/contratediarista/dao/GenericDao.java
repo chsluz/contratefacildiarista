@@ -1,4 +1,4 @@
-package br.com.exemplo.dao;
+package br.com.contratediarista.dao;
 
 import java.io.Serializable;
 

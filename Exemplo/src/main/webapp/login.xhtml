@@ -1,25 +1,84 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui"> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
 
-<h:head></h:head> 
-<body> 
-	<h:form>
+<h:head></h:head>
+<body>
+
+	<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-auth.js"></script>
+
+	<script>
+		// Initialize Firebase
+		var config = {
+			apiKey : "AIzaSyBVfcPnHvNli_y2b9qeYKcIv6keSRGjEc8",
+			authDomain : "contratediarista-64f5f.firebaseapp.com",
+			databaseURL : "https://contratediarista-64f5f.firebaseio.com",
+			projectId : "contratediarista-64f5f",
+			storageBucket : "contratediarista-64f5f.appspot.com",
+			messagingSenderId : "166088401573"
+		};
+		firebase.initializeApp(config);
+	</script>
+	<script type="text/javascript">
+			function logar() {
+				if (firebase.auth().currentUser) {
+			        // [START signout]
+			        firebase.auth().signOut();
+			        // [END signout]
+			      } else {
+			        // Sign in with email and pass.
+			        // [START authwithemail]
+			        var email = document.getElementById('login').value;
+        				var password = document.getElementById('senha').value;
+			        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+			          // Handle Errors here.
+			          var errorCode = error.code;
+			          var errorMessage = error.message;
+			          // [START_EXCLUDE]
+			          if (errorCode === 'auth/wrong-password') {
+			            alert('Wrong password.');
+			          } else {
+			            alert(errorMessage);
+			          }
+			          console.log(error);
+			          document.getElementById('quickstart-sign-in').disabled = false;
+			          // [END_EXCLUDE]
+			        });
+			        // [END authwithemail]
+
+			        var user = firebase.auth().currentUser;
+			        $("#idUsuario").val(user.uid);
+			        logarUsuario();
+
+			      }
+			}
+	</script>
+	<h:form prependId="false">
+		<h:inputHidden id="idUsuario" value="#{loginBean.idUsuario}"/>
+		<p:remoteCommand
+			name="logarUsuario"
+			actionListener="#{loginBean.logar()}">
+		</p:remoteCommand>
 		<p:panel>
-			<div style="width:300px;left:50%;right:50%">
+			<div style="width: 300px; left: 50%; right: 50%">
 				<h:panelGrid columns="2">
 					<h:outputText value="Login:" />
-					<h:inputText value="#{loginBean.usuario.login}" />
+					<p:inputText id="login" />
 					<h:outputText value="Senha:" />
-					<h:inputText value="#{loginBean.usuario.senha}" />
-					<h:panelGroup/>
-					<p:commandButton action="#{loginBean.logar}" value="Logar" />
+					<p:password id="senha" />
+					<h:panelGroup />
+					<p:commandButton
+						onclick="logar()"
+						value="Logar" />
 				</h:panelGrid>
 			</div>
 		</p:panel>
 	</h:form>
-</body> 
+</body>
 </html>

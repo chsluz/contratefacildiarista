@@ -1,4 +1,4 @@
-package br.com.exemplo.bean;
+package br.com.contratediarista.bean;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -9,8 +9,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import br.com.exemplo.dao.UsuarioDao;
-import br.com.exemplo.entity.Usuario;
+import br.com.contratediarista.dao.UsuarioDao;
+import br.com.contratediarista.entity.Usuario;
 
 @Named
 @SessionScoped
@@ -29,13 +29,15 @@ public class LoginBean implements Serializable {
 	@Inject
 	FacesContext facesContext;
 
+	private String idUsuario;
+
 	@PostConstruct
 	public void init() {
 		usuario = new Usuario();
 	}
 
 	public void logar() throws IOException {
-		usuario = usuarioDao.validarLogin(usuario);
+		usuario = usuarioDao.retornarUsuarioByUid(idUsuario);
 		if (usuario != null) {
 			facesContext.getExternalContext().getSessionMap().put("usuario", usuario);
 			facesContext.getExternalContext().redirect("paginas/index.jsf");
@@ -57,6 +59,14 @@ public class LoginBean implements Serializable {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+
+	public String getIdUsuario() {
+		return idUsuario;
+	}
+
+	public void setIdUsuario(String idUsuario) {
+		this.idUsuario = idUsuario;
 	}
 
 }

@@ -1,4 +1,4 @@
-package br.com.exemplo.filter;
+package br.com.contratediarista.filter;
 
 import java.io.IOException;
 

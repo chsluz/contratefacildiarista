@@ -1,4 +1,4 @@
-package br.com.exemplo.utils;
+package br.com.contratediarista.utils;
 
 import java.io.Serializable;
 
