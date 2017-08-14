@@ -8,14 +8,18 @@
 <h:head></h:head> 
 <body> 
 	<h:form>
-		<h:panelGrid columns="2">
-			<h:outputText value="Login:" />
-			<h:inputText value="#{loginBean.usuario.login}" />
-			<h:outputText value="Senha:" />
-			<h:inputText value="#{loginBean.usuario.senha}" />
-			<h:panelGroup/>
-			<p:commandButton action="#{loginBean.logar}" value="Logar" />
-		</h:panelGrid>
+		<p:panel>
+			<div style="width:300px;left:50%;right:50%">
+				<h:panelGrid columns="2">
+					<h:outputText value="Login:" />
+					<h:inputText value="#{loginBean.usuario.login}" />
+					<h:outputText value="Senha:" />
+					<h:inputText value="#{loginBean.usuario.senha}" />
+					<h:panelGroup/>
+					<p:commandButton action="#{loginBean.logar}" value="Logar" />
+				</h:panelGrid>
+			</div>
+		</p:panel>
 	</h:form>
 </body> 
 </html>
