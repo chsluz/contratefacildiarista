@@ -11,6 +11,7 @@ import javax.inject.Named;
 
 import br.com.contratediarista.dao.UsuarioDao;
 import br.com.contratediarista.entity.Usuario;
+import br.com.contratediarista.service.UsuarioService;
 
 @Named
 @SessionScoped
@@ -23,6 +24,9 @@ public class LoginBean implements Serializable {
 
 	@Inject
 	private UsuarioDao usuarioDao;
+
+	@Inject
+	private UsuarioService usuarioService;
 
 	private Usuario usuario;
 
