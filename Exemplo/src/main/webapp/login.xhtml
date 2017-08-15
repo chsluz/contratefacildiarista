@@ -27,15 +27,15 @@
 	</script>
 	<script type="text/javascript">
 			function logar() {
-				if (firebase.auth().currentUser) {
-			        // [START signout]
-			        firebase.auth().signOut();
-			        // [END signout]
+				if (firebase.auth().currentUser != null) {
+			        var user = firebase.auth().currentUser;
+			        $("#idUsuario").val(user.uid);
+			        logarUsuario();
 			      } else {
 			        // Sign in with email and pass.
 			        // [START authwithemail]
 			        var email = document.getElementById('login').value;
-        				var password = document.getElementById('senha').value;
+        			var password = document.getElementById('senha').value;
 			        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
 			          // Handle Errors here.
 			          var errorCode = error.code;
@@ -65,17 +65,20 @@
 			name="logarUsuario"
 			actionListener="#{loginBean.logar()}">
 		</p:remoteCommand>
-		<p:panel>
-			<div style="width: 300px; left: 50%; right: 50%">
-				<h:panelGrid columns="2">
+		<p:panel style="width: 400px">
+			<div align="center">
+				<h:panelGrid columns="3">
 					<h:outputText value="Login:" />
 					<p:inputText id="login" />
+					<p:spacer/>
 					<h:outputText value="Senha:" />
 					<p:password id="senha" />
+					<p:spacer/>
 					<h:panelGroup />
 					<p:commandButton
 						onclick="logar()"
-						value="Logar" />
+						value="Conectar" />
+					<p:commandLink value="Novo Cadastro" action="#{loginBean.cadastrarNovo}"/>
 				</h:panelGrid>
 			</div>
 		</p:panel>

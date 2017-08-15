@@ -23,9 +23,6 @@ public class LoginBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	private UsuarioDao usuarioDao;
-
-	@Inject
 	private UsuarioService usuarioService;
 
 	private Usuario usuario;
@@ -41,7 +38,7 @@ public class LoginBean implements Serializable {
 	}
 
 	public void logar() throws IOException {
-		usuario = usuarioDao.retornarUsuarioByUid(idUsuario);
+		usuario = usuarioService.retornarUsuarioByUid(idUsuario);
 		if (usuario != null) {
 			facesContext.getExternalContext().getSessionMap().put("usuario", usuario);
 			facesContext.getExternalContext().redirect("paginas/index.jsf");
@@ -54,9 +51,13 @@ public class LoginBean implements Serializable {
 	}
 
 	public void salvar() {
-		usuarioDao.salvar(usuario);
+		usuarioService.salvar(usuario);
 	}
 
+	public void cadastrarNovo() {
+		
+	}
+	
 	public Usuario getUsuario() {
 		return usuario;
 	}
