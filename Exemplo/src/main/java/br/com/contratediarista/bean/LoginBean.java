@@ -2,6 +2,8 @@ package br.com.contratediarista.bean;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -9,8 +11,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import br.com.contratediarista.dao.UsuarioDao;
 import br.com.contratediarista.entity.Usuario;
+import br.com.contratediarista.enuns.TipoUsuario;
 import br.com.contratediarista.service.UsuarioService;
 
 @Named
@@ -25,10 +27,10 @@ public class LoginBean implements Serializable {
 	@Inject
 	private UsuarioService usuarioService;
 
-	private Usuario usuario;
-
 	@Inject
-	FacesContext facesContext;
+	private FacesContext facesContext;
+
+	private Usuario usuario;
 
 	private String idUsuario;
 
@@ -54,10 +56,15 @@ public class LoginBean implements Serializable {
 		usuarioService.salvar(usuario);
 	}
 
-	public void cadastrarNovo() {
-		
+	public List<TipoUsuario> getTiposUsuario() {
+		List<TipoUsuario> tipos = Arrays.asList(TipoUsuario.values());
+		return tipos;
 	}
-	
+
+	public void cadastrarNovo() {
+
+	}
+
 	public Usuario getUsuario() {
 		return usuario;
 	}
