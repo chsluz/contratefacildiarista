@@ -40,6 +40,7 @@ public class LoginBean implements Serializable {
 	}
 
 	public void logar() throws IOException {
+		System.out.println("logou");
 		usuario = usuarioService.retornarUsuarioByUid(idUsuario);
 		if (usuario != null) {
 			facesContext.getExternalContext().getSessionMap().put("usuario", usuario);
@@ -53,6 +54,8 @@ public class LoginBean implements Serializable {
 	}
 
 	public void salvar() {
+		System.out.println("salvou");
+		usuario.setUid(idUsuario);
 		usuarioService.salvar(usuario);
 	}
 

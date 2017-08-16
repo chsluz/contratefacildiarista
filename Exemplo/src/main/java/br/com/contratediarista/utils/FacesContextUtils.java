@@ -2,10 +2,12 @@ package br.com.contratediarista.utils;
 
 import java.io.Serializable;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.context.FacesContext;
 
+@ApplicationScoped
 public class FacesContextUtils implements Serializable {
 
 	/**

@@ -53,6 +53,30 @@
 			        logarUsuario();
 			      }
 			}
+
+			function createLogin() {
+				var email = document.getElementById('emailCadastro').value;
+				var password = document.getElementById('senhaCadastro').value;
+				if(firebase.auth().currentUser == null) {
+					firebase.auth().createUserWithEmailAndPassword(email, password)
+				    .catch(function(error) {
+					  // Handle Errors here.
+					  var errorCode = error.code;
+					  var errorMessage = error.message;
+					  if (errorCode == 'auth/weak-password') {
+					    alert('The password is too weak.');
+					  } else {
+					    alert(errorMessage);
+					  }
+					  console.log(error);
+					});
+					 var user = firebase.auth().currentUser;
+					 if(user != null) {
+			        		$("#idUsuario").val(user.uid);
+			        		criarUsuario();
+					 }
+				}
+			}
 	</script>
 	<h:form prependId="false">
 		<h:inputHidden
@@ -62,13 +86,21 @@
 			name="logarUsuario"
 			actionListener="#{loginBean.logar()}">
 		</p:remoteCommand>
+		<p:remoteCommand
+			name="criarUsuario"
+			actionListener="#{loginBean.salvar()}">
+		</p:remoteCommand>
 		<p:panel style="width: 500px">
 			<div align="center">
 				<h:panelGrid columns="2">
 					<h:outputText value="Email:" />
-					<p:inputText id="email" placeholder="teste@teste.com"/>
+					<p:inputText
+						id="email"
+						placeholder="teste@teste.com" />
 					<h:outputText value="Senha:" />
-					<p:password id="senha" placeholder="********"/>
+					<p:password
+						id="senha"
+						placeholder="********" />
 				</h:panelGrid>
 				<h:panelGrid columns="2">
 					<p:commandButton
@@ -77,7 +109,7 @@
 					<p:commandLink
 						onstart="PF('dgCadastroUsuario').show()"
 						value="Novo? Cadastre-se"
-						action="#{loginBean.cadastrarNovo}" />
+						action="#{loginBean.cadastrarNovo()}" />
 				</h:panelGrid>
 			</div>
 		</p:panel>
@@ -91,27 +123,45 @@
 		closable="false"
 		height="500px;"
 		minHeight="40">
-		<h:form>
+		<h:form prependId="false">
 			<h:panelGrid columns="2">
-				<h:outputText value="Email:"/>
-				<p:inputText id="emailCadastro" placeholder="teste@teste.com"/>
+				<h:outputText value="Email:" />
+				<p:inputText
+					id="emailCadastro"
+					placeholder="teste@teste.com" />
 				<h:outputText value="Senha:" />
-				<p:password id="senhaCadastro" placeholder="********"/>
+				<p:password
+					id="senhaCadastro"
+					placeholder="********" />
 				<h:outputText value="Nome:" />
-				<p:inputText id="nome" placeholder="João da Silva"/>
+				<p:inputText
+					value="#{loginBean.usuario.nome}"
+					id="nome"
+					placeholder="João da Silva" />
 				<h:outputText value="Cpf:" />
-				<p:inputMask id="cpf" mask="999.999.999-99" placeholder="999.999.999-99"/>
+				<p:inputMask
+					value="#{loginBean.usuario.cpf}"
+					id="cpf"
+					mask="999.999.999-99"
+					placeholder="999.999.999-99" />
 				<h:outputText value="Tipo de Usuario:" />
-				<p:selectOneMenu style="width:175px" >
-					<f:selectItems value="#{loginBean.tiposUsuario}" var="tipo" itemLabel="#{tipo.descricao}" itemValue="#{tipo}"/>
+				<p:selectOneMenu
+					value="#{loginBean.usuario.tipoUsuario}"
+					style="width:175px">
+					<f:selectItems
+						value="#{loginBean.tiposUsuario}"
+						var="tipo"
+						itemLabel="#{tipo.descricao}"
+						itemValue="#{tipo}" />
 				</p:selectOneMenu>
 			</h:panelGrid>
-			<h:panelGrid columns="2"> 
+			<h:panelGrid columns="2">
 				<p:commandButton
-						onclick="PF('dgCadastroUsuario').hide()"
-						value="Cancelar" />
+					onclick="PF('dgCadastroUsuario').hide()"
+					value="Cancelar" />
 				<p:commandButton
-						value="Salvar" />
+					onclick="createLogin()"
+					value="Salvar" />
 			</h:panelGrid>
 		</h:form>
 	</p:dialog>

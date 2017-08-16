@@ -17,10 +17,6 @@ import br.com.contratediarista.entity.Usuario;
 @Path("usuario")
 public class UsuarioService implements Serializable {
 
-	public UsuarioService() {
-
-	}
-
 	/**
 	 *
 	 */
@@ -29,7 +25,7 @@ public class UsuarioService implements Serializable {
 	private UsuarioDao usuarioDao;
 
 	@GET
-	@Path("retornarUsuario/{uid}")
+	@Path("{uid}")
 	@Produces({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
 	public Usuario retornarUsuarioByUid(@PathParam("uid") String uid) {
 		return usuarioDao.retornarUsuarioByUid(uid);
