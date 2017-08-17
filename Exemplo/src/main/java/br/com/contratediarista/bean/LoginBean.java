@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -34,6 +35,8 @@ public class LoginBean implements Serializable {
 
 	private String idUsuario;
 
+	private String msgErro;
+
 	@PostConstruct
 	public void init() {
 		usuario = new Usuario();
@@ -51,6 +54,11 @@ public class LoginBean implements Serializable {
 	public void deslogar() throws IOException {
 		facesContext.getExternalContext().getSessionMap().put("usuario", null);
 		facesContext.getExternalContext().redirect("login.jsf");
+	}
+
+	public void exibirMensagemErro() {
+		FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, msgErro, msgErro);
+		facesContext.addMessage(null, facesMessage);
 	}
 
 	public void salvar() {
@@ -82,6 +90,14 @@ public class LoginBean implements Serializable {
 
 	public void setIdUsuario(String idUsuario) {
 		this.idUsuario = idUsuario;
+	}
+
+	public String getMsgErro() {
+		return msgErro;
+	}
+
+	public void setMsgErro(String msgErro) {
+		this.msgErro = msgErro;
 	}
 
 }
