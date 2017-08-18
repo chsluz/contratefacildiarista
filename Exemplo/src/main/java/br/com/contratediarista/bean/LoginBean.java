@@ -11,6 +11,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import br.com.contratediarista.entity.Usuario;
 import br.com.contratediarista.enuns.TipoUsuario;
@@ -43,11 +45,13 @@ public class LoginBean implements Serializable {
 	}
 
 	public void logar() throws IOException {
-		System.out.println("logou");
-		usuario = usuarioService.retornarUsuarioByUid(idUsuario);
-		if (usuario != null) {
-			facesContext.getExternalContext().getSessionMap().put("usuario", usuario);
-			facesContext.getExternalContext().redirect("paginas/index.jsf");
+		Response response = usuarioService.retornarUsuarioByUid(idUsuario);
+		if (response.getStatus() == Status.OK.getStatusCode()) {
+			usuario = (Usuario) response.getEntity();
+			if (usuario != null) {
+				facesContext.getExternalContext().getSessionMap().put("usuario", usuario);
+				facesContext.getExternalContext().redirect("paginas/index.jsf");
+			}
 		}
 	}
 
