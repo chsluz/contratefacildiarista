@@ -1,5 +1,7 @@
 package br.com.contratediarista.service;
 
+import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
+
 import java.io.Serializable;
 
 import javax.enterprise.context.RequestScoped;
@@ -9,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import br.com.contratediarista.dao.UsuarioDao;
 import br.com.contratediarista.entity.Usuario;
@@ -27,8 +30,14 @@ public class UsuarioService implements Serializable {
 	@GET
 	@Path("{uid}")
 	@Produces({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
-	public Usuario retornarUsuarioByUid(@PathParam("uid") String uid) {
-		return usuarioDao.retornarUsuarioByUid(uid);
+	public Response retornarUsuarioByUid(@PathParam("uid") String uid) {
+		try {
+			Usuario retorno = usuarioDao.retornarUsuarioByUid(uid);
+			return Response.ok(retorno).build();
+		} catch (Exception e) {
+			return Response.status(INTERNAL_SERVER_ERROR)
+					.type(MediaType.APPLICATION_JSON + ";charset=UTF-8").build();
+		}
 	}
 
 //	@POST

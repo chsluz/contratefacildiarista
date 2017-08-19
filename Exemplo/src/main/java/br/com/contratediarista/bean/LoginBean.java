@@ -7,9 +7,12 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import br.com.contratediarista.entity.Usuario;
 import br.com.contratediarista.enuns.TipoUsuario;
@@ -34,23 +37,32 @@ public class LoginBean implements Serializable {
 
 	private String idUsuario;
 
+	private String msgErro;
+
 	@PostConstruct
 	public void init() {
 		usuario = new Usuario();
 	}
 
 	public void logar() throws IOException {
-		System.out.println("logou");
-		usuario = usuarioService.retornarUsuarioByUid(idUsuario);
-		if (usuario != null) {
-			facesContext.getExternalContext().getSessionMap().put("usuario", usuario);
-			facesContext.getExternalContext().redirect("paginas/index.jsf");
+		Response response = usuarioService.retornarUsuarioByUid(idUsuario);
+		if (response.getStatus() == Status.OK.getStatusCode()) {
+			usuario = (Usuario) response.getEntity();
+			if (usuario != null) {
+				facesContext.getExternalContext().getSessionMap().put("usuario", usuario);
+				facesContext.getExternalContext().redirect("paginas/index.jsf");
+			}
 		}
 	}
 
 	public void deslogar() throws IOException {
 		facesContext.getExternalContext().getSessionMap().put("usuario", null);
 		facesContext.getExternalContext().redirect("login.jsf");
+	}
+
+	public void exibirMensagemErro() {
+		FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, msgErro, msgErro);
+		facesContext.addMessage(null, facesMessage);
 	}
 
 	public void salvar() {
@@ -82,6 +94,14 @@ public class LoginBean implements Serializable {
 
 	public void setIdUsuario(String idUsuario) {
 		this.idUsuario = idUsuario;
+	}
+
+	public String getMsgErro() {
+		return msgErro;
+	}
+
+	public void setMsgErro(String msgErro) {
+		this.msgErro = msgErro;
 	}
 
 }

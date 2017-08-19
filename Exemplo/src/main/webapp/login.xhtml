@@ -8,7 +8,6 @@
 
 <h:head></h:head>
 <body>
-
 	<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-app.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-auth.js"></script>
@@ -28,30 +27,57 @@
 	<script type="text/javascript">
 			function logar() {
 				if (firebase.auth().currentUser != null) {
-			        var user = firebase.auth().currentUser;
-			        $("#idUsuario").val(user.uid);
-			        logarUsuario();
-			      } else {
-			        var email = document.getElementById('email').value;
-        				var password = document.getElementById('senha').value;
-			        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-			          // Handle Errors here.
-			          var errorCode = error.code;
-			          var errorMessage = error.message;
-			          // [START_EXCLUDE]
-			          if (errorCode === 'auth/wrong-password') {
-			            alert('Wrong password.');
-			          } else {
-			            alert(errorMessage);
-			          }
-			          console.log(error);
-			          // [END_EXCLUDE]
-			        });
-			        // [END authwithemail]
-			        var user = firebase.auth().currentUser;
-			        $("#idUsuario").val(user.uid);
-			        logarUsuario();
+					firebase.auth().signOut().then(function() {
+						  // Sign-out successful.
+						}, function(error) {
+							var errorCode = error.code;
+					        var errorMessage = error.message;
+					        console.log(errorCode);
+					        console.log(errorMessage);
+						});
+			      } 
+		        var email = document.getElementById('email').value;
+       			var password = document.getElementById('senha').value;
+		        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+		          // Handle Errors here.
+		          var errorCode = error.code;
+		          var errorMessage = error.message;
+		          // [START_EXCLUDE]
+		          if (errorCode === 'auth/wrong-password') {
+		        	 	 $("#idErroLogin").val('auth/wrong-password');
+		        	 	erroLogin();
+				    console.log(error);
+		          }
+		          else if(errorCode == 'auth/user-not-found') {
+		        	  	$("#idErroLogin").val('auth/user-not-found');
+		        	  	erroLogin();
+				    console.log(error);
 			      }
+		           else {
+		            $("#idErroLogin").val(error.message);
+		            erroLogin();
+			        console.log(error);
+		          }
+		          
+		          // [END_EXCLUDE]
+		        });
+
+		        sleep(500).then(() => {
+		        		var user = firebase.auth().currentUser;
+			        if(user != null) {
+				        console.log(user.uid)
+				        $("#idUsuario").val(user.uid);
+				        logarUsuario();
+			        }
+			        else {
+				        console.log('usuario vazio');
+				    }
+				}); 
+		        
+			}
+
+			function sleep(ms) {
+				  return new Promise(resolve => setTimeout(resolve, ms));
 			}
 
 			function createLogin() {
@@ -79,9 +105,16 @@
 			}
 	</script>
 	<h:form prependId="false">
+		<p:growl autoUpdate="true" id="mensagem" />
+		<h:inputHidden
+			id="idErroLogin"
+			value="#{loginBean.msgErro}" />
 		<h:inputHidden
 			id="idUsuario"
 			value="#{loginBean.idUsuario}" />
+		<p:remoteCommand
+			name="erroLogin"
+			actionListener="#{loginBean.exibirMensagemErro()}"/>
 		<p:remoteCommand
 			name="logarUsuario"
 			actionListener="#{loginBean.logar()}">
@@ -104,6 +137,7 @@
 				</h:panelGrid>
 				<h:panelGrid columns="2">
 					<p:commandButton
+						update="mensagem"
 						onclick="logar()"
 						value="Logar" />
 					<p:commandLink
