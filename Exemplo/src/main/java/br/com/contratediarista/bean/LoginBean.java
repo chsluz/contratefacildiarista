@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response.Status;
 
 import br.com.contratediarista.entity.Bairro;
 import br.com.contratediarista.entity.Cidade;
+import br.com.contratediarista.entity.Endereco;
 import br.com.contratediarista.entity.Estado;
 import br.com.contratediarista.entity.Pais;
 import br.com.contratediarista.entity.Usuario;
@@ -23,6 +24,7 @@ import br.com.contratediarista.enuns.TipoUsuario;
 import br.com.contratediarista.service.BairroService;
 import br.com.contratediarista.service.CidadeService;
 import br.com.contratediarista.service.EstadoService;
+import br.com.contratediarista.service.PaisService;
 import br.com.contratediarista.service.UsuarioService;
 
 @Named
@@ -36,16 +38,18 @@ public class LoginBean implements Serializable {
 
 	@Inject
 	private UsuarioService usuarioService;
-	
+
 	@Inject
 	private EstadoService estadoService;
-	
+
 	@Inject
 	private CidadeService cidadeService;
-	
+
+	@Inject
+	private PaisService paisService;
+
 	@Inject
 	private BairroService bairroService;
-	
 
 	@Inject
 	private FacesContext facesContext;
@@ -55,19 +59,19 @@ public class LoginBean implements Serializable {
 	private String idUsuario;
 
 	private String msgErro;
-	
+
 	private Pais pais;
-	
+
 	private Estado estado;
-	
+
 	private Cidade cidade;
-	
+
 	private Bairro bairro;
 
 	@PostConstruct
 	public void init() {
 		usuario = new Usuario();
-		listarEstados();
+		usuario.setEndereco(new Endereco());
 	}
 
 	public void logar() throws IOException {
@@ -90,47 +94,62 @@ public class LoginBean implements Serializable {
 		FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, msgErro, msgErro);
 		facesContext.addMessage(null, facesMessage);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public List<Estado> listarEstados() {
+	public List<Pais> getListarPais() {
 		Response response = null;
 		try {
-			if(pais != null) 
+			response = paisService.listAll();
+			List<Pais> paises = (List<Pais>) response.getEntity();
+			return paises;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Estado> getListarEstados() {
+		Response response = null;
+		try {
+			if (pais != null) {
 				response = estadoService.listByIdPais(pais.getId());
-			else 
+			} else {
 				response = estadoService.listAll();
+			}
 			List<Estado> estados = (List<Estado>) response.getEntity();
 			return estados;
 		} catch (Exception e) {
 			return null;
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public List<Cidade> listarCidades() {
+	public List<Cidade> getListarCidades() {
 		Response response = null;
 		try {
-			if(estado != null) 
+			if (estado != null) {
 				response = cidadeService.listByIdEstado(estado.getId());
-			else 
+			} else {
 				response = cidadeService.listAll();
+			}
 			List<Cidade> cidades = (List<Cidade>) response.getEntity();
 			return cidades;
 		} catch (Exception e) {
 			return null;
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public List<Cidade> listarBairros() {
+	public List<Bairro> getListarBairros() {
 		Response response = null;
 		try {
-			if(cidade != null) 
+			if (cidade != null) {
 				response = bairroService.listByIdCidade(cidade.getId());
-			else 
+			} else {
 				response = bairroService.listAll();
-			List<Cidade> cidades = (List<Cidade>) response.getEntity();
-			return cidades;
+			}
+			List<Bairro> bairros = (List<Bairro>) response.getEntity();
+			return bairros;
 		} catch (Exception e) {
 			return null;
 		}

@@ -108,7 +108,9 @@
 			}
 	</script>
 	<h:form prependId="false">
-		<p:growl autoUpdate="true" id="mensagem" />
+		<p:growl
+			autoUpdate="true"
+			id="mensagem" />
 		<h:inputHidden
 			id="idErroLogin"
 			value="#{loginBean.msgErro}" />
@@ -117,7 +119,7 @@
 			value="#{loginBean.idUsuario}" />
 		<p:remoteCommand
 			name="erroLogin"
-			actionListener="#{loginBean.exibirMensagemErro()}"/>
+			actionListener="#{loginBean.exibirMensagemErro()}" />
 		<p:remoteCommand
 			name="logarUsuario"
 			actionListener="#{loginBean.logar()}">
@@ -154,33 +156,107 @@
 	<p:dialog
 		header="Cadastrar novo Usuario"
 		widgetVar="dgCadastroUsuario"
-		width="600px"
+		width="700px"
 		position="left top"
 		resizable="false"
 		closable="false"
-		height="500px;"
+		height="600px;"
 		minHeight="40">
 		<h:form prependId="false">
-			<h:panelGrid columns="4">
-				<h:outputText value="Email:" />
-				<p:inputText
-					id="emailCadastro"
-					placeholder="teste@teste.com" />
-				<h:outputText value="Senha:" />
-				<p:password
-					id="senhaCadastro"
-					placeholder="********" />
-				<h:outputText value="Nome:" />
-				<p:inputText
-					value="#{loginBean.usuario.nome}"
-					id="nome"
-					placeholder="João da Silva" />
-				<h:outputText value="Cpf:" />
-				<p:inputMask
-					value="#{loginBean.usuario.cpf}"
-					id="cpf"
-					mask="999.999.999-99"
-					placeholder="999.999.999-99" />
+			<p:fieldset legend="Dados Usuário">
+				<h:panelGrid columns="4">
+					<h:outputText value="Email:" />
+					<p:inputText
+						id="emailCadastro"
+						placeholder="teste@teste.com" />
+					<h:outputText value="Senha:" />
+					<p:password
+						id="senhaCadastro"
+						placeholder="********" />
+					<h:outputText value="Nome:" />
+					<p:inputText
+						value="#{loginBean.usuario.nome}"
+						id="nome"
+						placeholder="João da Silva" />
+					<h:outputText value="Cpf:" />
+					<p:inputMask
+						value="#{loginBean.usuario.cpf}"
+						id="cpf"
+						mask="999.999.999-99"
+						placeholder="999.999.999-99" />
+
+					<h:outputText value="Telefone:" />
+					<p:inputText
+						value="#{loginBean.usuario.telefone}"
+						id="telefone" />
+					<h:outputText value="Data Nasc:" />
+					<p:inputMask
+						value="#{loginBean.usuario.dataNascimento}"
+						id="dataNasc"
+						mask="99/99/9999"
+						placeholder="99/99/9999" />
+				</h:panelGrid>
+			</p:fieldset>
+
+			<p:fieldset legend="Endereço">
+				<h:panelGrid columns="4">
+					<h:outputText value="Rua:" />
+					<p:inputText
+						placeholder="Rua João da silva"
+						value="#{loginBean.usuario.endereco.rua}"
+						id="rua" />
+					<h:outputText value="Número:" />
+					<p:inputMask
+						id="numero"
+						value="#{loginBean.usuario.endereco.numero}" />
+
+					<h:outputText value="Cep:" />
+					<p:inputMask
+						mask="99.999-999"
+						placeholder="99.999-999"
+						value="#{loginBean.usuario.endereco.cep}"
+						id="cep" />
+					<h:outputText value="Complemento:" />
+					<p:inputText value="#{loginBean.usuario.endereco.complemento}" />
+
+					<p:outputLabel
+						value="Pais"
+						for="pais" />
+					<p:selectOneMenu
+						style="width: 160px;"
+						id="pais">
+						<f:selectItem itemLabel="Selecione" />
+						<f:selectItems value="#{loginBean.listarPais}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel
+						value="Estado"
+						for="estado" />
+					<p:selectOneMenu style="width: 160px;" id="estado">
+						<f:selectItem itemLabel="Selecione" />
+						<f:selectItems value="#{loginBean.listarEstados}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel
+						value="Cidade"
+						for="cidade" />
+					<p:selectOneMenu
+						style="width: 160px;"
+						id="cidade">
+						<f:selectItem itemLabel="Selecione" />
+						<f:selectItems value="#{loginBean.listarCidades}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel
+						value="Bairro"
+						for="bairro" />
+					<p:selectOneMenu style="width: 160px;" id="bairro">
+						<f:selectItem itemLabel="Selecione" />
+						<f:selectItems value="#{loginBean.listarBairros}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+			</p:fieldset>
+			<p:fieldset legend="Tipo Usuário">
 				<h:outputText value="Tipo de Usuario:" />
 				<p:selectOneMenu
 					value="#{loginBean.usuario.tipoUsuario}"
@@ -191,7 +267,9 @@
 						itemLabel="#{tipo.descricao}"
 						itemValue="#{tipo}" />
 				</p:selectOneMenu>
-			</h:panelGrid>
+			</p:fieldset>
+
+
 			<h:panelGrid columns="2">
 				<p:commandButton
 					onclick="PF('dgCadastroUsuario').hide()"
