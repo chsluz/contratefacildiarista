@@ -103,6 +103,9 @@
 					 }
 				}
 			}
+
+			function excluirLogin() {
+			}
 	</script>
 	<h:form prependId="false">
 		<p:growl autoUpdate="true" id="mensagem" />
@@ -158,7 +161,7 @@
 		height="500px;"
 		minHeight="40">
 		<h:form prependId="false">
-			<h:panelGrid columns="2">
+			<h:panelGrid columns="4">
 				<h:outputText value="Email:" />
 				<p:inputText
 					id="emailCadastro"
@@ -194,6 +197,7 @@
 					onclick="PF('dgCadastroUsuario').hide()"
 					value="Cancelar" />
 				<p:commandButton
+					onerror="excluirLogin()"
 					onclick="createLogin()"
 					value="Salvar" />
 			</h:panelGrid>

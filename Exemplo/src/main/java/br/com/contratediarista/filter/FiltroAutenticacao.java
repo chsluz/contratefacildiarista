@@ -16,7 +16,7 @@ import br.com.contratediarista.entity.Usuario;
 import br.com.contratediarista.enuns.TipoUsuario;
 
 @WebFilter("/paginas/*")
-public class FiltroAltenticacao implements Filter {
+public class FiltroAutenticacao implements Filter {
 
 	public void destroy() {
 	}
@@ -27,7 +27,12 @@ public class FiltroAltenticacao implements Filter {
 		HttpServletResponse hres = (HttpServletResponse) response;
 		Usuario user = (Usuario) hreq.getSession().getAttribute("usuario");
 		if (user == null) {
-			hres.sendRedirect("../login.jsf");
+			if(hreq.getRequestURI().contains("login")) {
+				chain.doFilter(request, response);
+			}
+			else {
+				hres.sendRedirect("/login.jsf");
+			}	
 			return;
 		} else {
 			TipoUsuario tipoUsuario = user.getTipoUsuario();
@@ -37,19 +42,19 @@ public class FiltroAltenticacao implements Filter {
 				if (hreq.getRequestURI().contains("/contratante/")) {
 					chain.doFilter(request, response);
 				} else {
-					hres.sendRedirect("../acesso_negado.jsf");
+					hres.sendRedirect("/acesso_negado.jsf");
 				}
 			} else if (TipoUsuario.PRESTADOR.equals(user.getTipoUsuario())) {
 				if (hreq.getRequestURI().contains("/prestador/")) {
 					chain.doFilter(request, response);
 				} else {
-					hres.sendRedirect("../acesso_negado.jsf");
+					hres.sendRedirect("/acesso_negado.jsf");
 				}
 			} else {
 				if (hreq.getRequestURI().contains("/moderador/")) {
 					chain.doFilter(request, response);
 				} else {
-					hres.sendRedirect("../acesso_negado.jsf");
+					hres.sendRedirect("/acesso_negado.jsf");
 				}
 			}
 		}
