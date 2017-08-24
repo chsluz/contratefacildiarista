@@ -18,13 +18,11 @@ import br.com.contratediarista.entity.Bairro;
 import br.com.contratediarista.entity.Cidade;
 import br.com.contratediarista.entity.Endereco;
 import br.com.contratediarista.entity.Estado;
-import br.com.contratediarista.entity.Pais;
 import br.com.contratediarista.entity.Usuario;
 import br.com.contratediarista.enuns.TipoUsuario;
 import br.com.contratediarista.service.BairroService;
 import br.com.contratediarista.service.CidadeService;
 import br.com.contratediarista.service.EstadoService;
-import br.com.contratediarista.service.PaisService;
 import br.com.contratediarista.service.UsuarioService;
 
 @Named
@@ -46,9 +44,6 @@ public class LoginBean implements Serializable {
 	private CidadeService cidadeService;
 
 	@Inject
-	private PaisService paisService;
-
-	@Inject
 	private BairroService bairroService;
 
 	@Inject
@@ -59,8 +54,6 @@ public class LoginBean implements Serializable {
 	private String idUsuario;
 
 	private String msgErro;
-
-	private Pais pais;
 
 	private Estado estado;
 
@@ -96,26 +89,10 @@ public class LoginBean implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Pais> getListarPais() {
-		Response response = null;
-		try {
-			response = paisService.listAll();
-			List<Pais> paises = (List<Pais>) response.getEntity();
-			return paises;
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
 	public List<Estado> getListarEstados() {
 		Response response = null;
 		try {
-			if (pais != null) {
-				response = estadoService.listByIdPais(pais.getId());
-			} else {
-				response = estadoService.listAll();
-			}
+			response = estadoService.listAll();
 			List<Estado> estados = (List<Estado>) response.getEntity();
 			return estados;
 		} catch (Exception e) {
@@ -191,14 +168,6 @@ public class LoginBean implements Serializable {
 
 	public void setMsgErro(String msgErro) {
 		this.msgErro = msgErro;
-	}
-
-	public Pais getPais() {
-		return pais;
-	}
-
-	public void setPais(Pais pais) {
-		this.pais = pais;
 	}
 
 	public Estado getEstado() {

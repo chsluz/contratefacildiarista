@@ -9,7 +9,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -19,33 +18,20 @@ import br.com.contratediarista.entity.Estado;
 
 @RequestScoped
 @Path("estado")
-public class EstadoService implements Serializable{
+public class EstadoService implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	@Inject
 	private EstadoDao estadoDao;
-	
+
 	public EstadoService() {
-		
+
 	}
-	
-	@GET
-	@Path("{id}")
-	@Produces({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
-	public Response listByIdPais(@PathParam("id") int id) {
-		try {
-			List<Estado> estados = estadoDao.listByIdPais(id);
-			return Response.ok(estados).build();
-		} catch (Exception e) {
-			return Response.status(INTERNAL_SERVER_ERROR)
-					.type(MediaType.APPLICATION_JSON + ";charset=UTF-8").build();
-		}
-	}
-	
+
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
 	public Response listAll() {

@@ -4,39 +4,31 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name="estado")
+@Table(name = "estado")
 public class Estado implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id",nullable=false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false)
 	private int id;
-	
-	@Size(max=100,message="Nome não pode conter mais que 100 caracteres")
-	@NotNull(message="Nome é obrigatório")
-	@Column(name="nome",nullable=false,length=100)
+
+	@Size(max = 100, message = "Nome não pode conter mais que 100 caracteres")
+	@NotNull(message = "Nome é obrigatório")
+	@Column(name = "nome", nullable = false, length = 100)
 	private String nome;
-	
-	@NotNull(message="País é obrigatório")
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_pais")
-	private Pais pais;
 
 	public int getId() {
 		return id;
@@ -53,14 +45,6 @@ public class Estado implements Serializable {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
-	public Pais getPais() {
-		return pais;
-	}
-
-	public void setPais(Pais pais) {
-		this.pais = pais;
-	}
 
 	@Override
 	public int hashCode() {
@@ -73,22 +57,27 @@ public class Estado implements Serializable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		Estado other = (Estado) obj;
-		if (id != other.id)
+		if (id != other.id) {
 			return false;
+		}
 		if (nome == null) {
-			if (other.nome != null)
+			if (other.nome != null) {
 				return false;
-		} else if (!nome.equals(other.nome))
+			}
+		} else if (!nome.equals(other.nome)) {
 			return false;
+		}
 		return true;
 	}
-	
 
 }

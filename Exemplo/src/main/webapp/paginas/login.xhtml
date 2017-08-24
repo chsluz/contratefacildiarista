@@ -11,102 +11,9 @@
 	<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-app.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-auth.js"></script>
-
-	<script>
-		// Initialize Firebase
-		var config = {
-			apiKey : "AIzaSyBVfcPnHvNli_y2b9qeYKcIv6keSRGjEc8",
-			authDomain : "contratediarista-64f5f.firebaseapp.com",
-			databaseURL : "https://contratediarista-64f5f.firebaseio.com",
-			projectId : "contratediarista-64f5f",
-			storageBucket : "contratediarista-64f5f.appspot.com",
-			messagingSenderId : "166088401573"
-		};
-		firebase.initializeApp(config);
-	</script>
-	<script type="text/javascript">
-			function logar() {
-				if (firebase.auth().currentUser != null) {
-					firebase.auth().signOut().then(function() {
-						  // Sign-out successful.
-						}, function(error) {
-							var errorCode = error.code;
-					        var errorMessage = error.message;
-					        console.log(errorCode);
-					        console.log(errorMessage);
-						});
-			      } 
-		        var email = document.getElementById('email').value;
-       			var password = document.getElementById('senha').value;
-		        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-		          // Handle Errors here.
-		          var errorCode = error.code;
-		          var errorMessage = error.message;
-		          // [START_EXCLUDE]
-		          if (errorCode === 'auth/wrong-password') {
-		        	 	 $("#idErroLogin").val('auth/wrong-password');
-		        	 	erroLogin();
-				    console.log(error);
-		          }
-		          else if(errorCode == 'auth/user-not-found') {
-		        	  	$("#idErroLogin").val('auth/user-not-found');
-		        	  	erroLogin();
-				    console.log(error);
-			      }
-		           else {
-		            $("#idErroLogin").val(error.message);
-		            erroLogin();
-			        console.log(error);
-		          }
-		          
-		          // [END_EXCLUDE]
-		        });
-
-		        sleep(500).then(() => {
-		        		var user = firebase.auth().currentUser;
-			        if(user != null) {
-				        console.log(user.uid)
-				        $("#idUsuario").val(user.uid);
-				        logarUsuario();
-			        }
-			        else {
-				        console.log('usuario vazio');
-				    }
-				}); 
-		        
-			}
-
-			function sleep(ms) {
-				  return new Promise(resolve => setTimeout(resolve, ms));
-			}
-
-			function createLogin() {
-				var email = document.getElementById('emailCadastro').value;
-				var password = document.getElementById('senhaCadastro').value;
-				if(firebase.auth().currentUser == null) {
-					firebase.auth().createUserWithEmailAndPassword(email, password)
-				    .catch(function(error) {
-					  // Handle Errors here.
-					  var errorCode = error.code;
-					  var errorMessage = error.message;
-					  if (errorCode == 'auth/weak-password') {
-					    alert('The password is too weak.');
-					  } else {
-					    alert(errorMessage);
-					  }
-					  console.log(error);
-					});
-					 var user = firebase.auth().currentUser;
-					 if(user != null) {
-			        		$("#idUsuario").val(user.uid);
-			        		criarUsuario();
-					 }
-				}
-			}
-
-			function excluirLogin() {
-			}
-	</script>
+	<h:outputScript
+			library="js"
+			name="firebase.js" />
 	<h:form prependId="false">
 		<p:growl
 			autoUpdate="true"
@@ -156,118 +63,130 @@
 	<p:dialog
 		header="Cadastrar novo Usuario"
 		widgetVar="dgCadastroUsuario"
-		width="700px"
+		width="800px"
 		position="left top"
 		resizable="false"
 		closable="false"
 		height="600px;"
 		minHeight="40">
 		<h:form prependId="false">
-			<p:fieldset legend="Dados Usuário">
-				<h:panelGrid columns="4">
-					<h:outputText value="Email:" />
-					<p:inputText
-						id="emailCadastro"
-						placeholder="teste@teste.com" />
-					<h:outputText value="Senha:" />
-					<p:password
-						id="senhaCadastro"
-						placeholder="********" />
-					<h:outputText value="Nome:" />
-					<p:inputText
-						value="#{loginBean.usuario.nome}"
-						id="nome"
-						placeholder="João da Silva" />
-					<h:outputText value="Cpf:" />
-					<p:inputMask
-						value="#{loginBean.usuario.cpf}"
-						id="cpf"
-						mask="999.999.999-99"
-						placeholder="999.999.999-99" />
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<p:panelGrid
+						layout="grid"
+						columnClasses="ui-grid-col-12"
+						style="overflow:auto;"
+						columns="1">
+						<p:fieldset legend="Dados Usuário">
+							<p:panelGrid
+								columns="4"
+								layout="grid"
+								columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-3,ui-grid-col-3">
+								<h:outputText value="Email:" />
+								<p:inputText
+									id="emailCadastro"
+									placeholder="teste@teste.com" />
+								<h:outputText value="Senha:" />
+								<p:password
+									id="senhaCadastro"
+									placeholder="********" />
+								<h:outputText value="Nome:" />
+								<p:inputText
+									value="#{loginBean.usuario.nome}"
+									id="nome"
+									placeholder="João da Silva" />
+								<h:outputText value="Cpf:" />
+								<p:inputMask
+									value="#{loginBean.usuario.cpf}"
+									id="cpf"
+									mask="999.999.999-99"
+									placeholder="999.999.999-99" />
 
-					<h:outputText value="Telefone:" />
-					<p:inputText
-						value="#{loginBean.usuario.telefone}"
-						id="telefone" />
-					<h:outputText value="Data Nasc:" />
-					<p:inputMask
-						value="#{loginBean.usuario.dataNascimento}"
-						id="dataNasc"
-						mask="99/99/9999"
-						placeholder="99/99/9999" />
-				</h:panelGrid>
-			</p:fieldset>
+								<h:outputText value="Telefone:" />
+								<p:inputText
+									value="#{loginBean.usuario.telefone}"
+									id="telefone" />
+								<h:outputText value="Data Nasc:" />
+								<p:inputMask
+									value="#{loginBean.usuario.dataNascimento}"
+									id="dataNasc"
+									mask="99/99/9999"
+									placeholder="99/99/9999" />
+							</p:panelGrid>
+						</p:fieldset>
 
-			<p:fieldset legend="Endereço">
-				<h:panelGrid columns="4">
-					<h:outputText value="Rua:" />
-					<p:inputText
-						placeholder="Rua João da silva"
-						value="#{loginBean.usuario.endereco.rua}"
-						id="rua" />
-					<h:outputText value="Número:" />
-					<p:inputMask
-						id="numero"
-						value="#{loginBean.usuario.endereco.numero}" />
 
-					<h:outputText value="Cep:" />
-					<p:inputMask
-						mask="99.999-999"
-						placeholder="99.999-999"
-						value="#{loginBean.usuario.endereco.cep}"
-						id="cep" />
-					<h:outputText value="Complemento:" />
-					<p:inputText value="#{loginBean.usuario.endereco.complemento}" />
+						<p:fieldset legend="Endereço">
+							<p:panelGrid
+								columns="4"
+								layout="grid"
+								columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-3,ui-grid-col-3">
+								<h:outputText value="Rua:" />
+								<p:inputText
+									placeholder="Rua João da silva"
+									value="#{loginBean.usuario.endereco.rua}"
+									id="rua" />
+								<h:outputText value="Número:" />
+								<p:inputMask
+									id="numero"
+									value="#{loginBean.usuario.endereco.numero}" />
 
-					<p:outputLabel
-						value="Pais"
-						for="pais" />
-					<p:selectOneMenu
-						style="width: 160px;"
-						id="pais">
-						<f:selectItem itemLabel="Selecione" />
-						<f:selectItems value="#{loginBean.listarPais}" />
-					</p:selectOneMenu>
+								<h:outputText value="Cep:" />
+								<p:inputMask
+									mask="99.999-999"
+									placeholder="99.999-999"
+									value="#{loginBean.usuario.endereco.cep}"
+									id="cep" />
+								<h:outputText value="Complemento:" />
+								<p:inputText value="#{loginBean.usuario.endereco.complemento}" />
 
-					<p:outputLabel
-						value="Estado"
-						for="estado" />
-					<p:selectOneMenu style="width: 160px;" id="estado">
-						<f:selectItem itemLabel="Selecione" />
-						<f:selectItems value="#{loginBean.listarEstados}" />
-					</p:selectOneMenu>
+								<p:outputLabel
+									value="Estado"
+									for="estado" />
+								<p:selectOneMenu
+									style="width: 160px;"
+									id="estado">
+									<f:selectItem itemLabel="Selecione" />
+									<f:selectItems value="#{loginBean.listarEstados}" />
+								</p:selectOneMenu>
 
-					<p:outputLabel
-						value="Cidade"
-						for="cidade" />
-					<p:selectOneMenu
-						style="width: 160px;"
-						id="cidade">
-						<f:selectItem itemLabel="Selecione" />
-						<f:selectItems value="#{loginBean.listarCidades}" />
-					</p:selectOneMenu>
+								<p:outputLabel
+									value="Cidade"
+									for="cidade" />
+								<p:selectOneMenu
+									style="width: 160px;"
+									id="cidade">
+									<f:selectItem itemLabel="Selecione" />
+									<f:selectItems value="#{loginBean.listarCidades}" />
+								</p:selectOneMenu>
 
-					<p:outputLabel
-						value="Bairro"
-						for="bairro" />
-					<p:selectOneMenu style="width: 160px;" id="bairro">
-						<f:selectItem itemLabel="Selecione" />
-						<f:selectItems value="#{loginBean.listarBairros}" />
-					</p:selectOneMenu>
-				</h:panelGrid>
-			</p:fieldset>
-			<p:fieldset legend="Tipo Usuário">
-				<h:outputText value="Tipo de Usuario:" />
-				<p:selectOneMenu
-					value="#{loginBean.usuario.tipoUsuario}"
-					style="width:175px">
-					<f:selectItems
-						value="#{loginBean.tiposUsuario}"
-						var="tipo"
-						itemLabel="#{tipo.descricao}"
-						itemValue="#{tipo}" />
-				</p:selectOneMenu>
-			</p:fieldset>
+								<p:outputLabel
+									value="Bairro"
+									for="bairro" />
+								<p:selectOneMenu
+									style="width: 160px;"
+									id="bairro">
+									<f:selectItem itemLabel="Selecione" />
+									<f:selectItems value="#{loginBean.listarBairros}" />
+								</p:selectOneMenu>
+							</p:panelGrid>
+						</p:fieldset>
+						<p:fieldset legend="Tipo Usuário">
+							<h:outputText value="Tipo de Usuario:" />
+							<p:selectOneMenu
+								value="#{loginBean.usuario.tipoUsuario}"
+								style="width:175px">
+								<f:selectItems
+									value="#{loginBean.tiposUsuario}"
+									var="tipo"
+									itemLabel="#{tipo.descricao}"
+									itemValue="#{tipo}" />
+							</p:selectOneMenu>
+						</p:fieldset>
+
+					</p:panelGrid>
+				</div>
+			</div>
 
 
 			<h:panelGrid columns="2">
