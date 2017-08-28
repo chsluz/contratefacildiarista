@@ -27,7 +27,7 @@ public class FiltroAutenticacao implements Filter {
 		HttpServletResponse hres = (HttpServletResponse) response;
 		Usuario user = (Usuario) hreq.getSession().getAttribute("usuario");
 		if (user == null) {
-			if(hreq.getRequestURI().contains("login")) {
+			if(hreq.getRequestURI().contains("login") || hreq.getRequestURI().contains("cadastro_usuario")) {
 				chain.doFilter(request, response);
 			}
 			else {

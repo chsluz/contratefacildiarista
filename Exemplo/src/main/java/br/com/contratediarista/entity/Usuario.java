@@ -15,6 +15,9 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 import br.com.contratediarista.enuns.TipoUsuario;
 
 @Entity
@@ -44,6 +47,7 @@ public class Usuario implements Serializable {
 	@NotNull(message = "Endereço é Obrigatório")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_endereco")
+	@Cascade(CascadeType.ALL)
 	private Endereco endereco;
 
 	@NotNull(message = "Data de nascimento é Obrigatório")

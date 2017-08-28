@@ -58,7 +58,7 @@ public class UsuarioDao implements Serializable {
 		}
 	}
 
-	public void salvar(Usuario usuario) {
+	public void salvar(Usuario usuario) throws Exception {
 		dao.salvar(usuario);
 	}
 

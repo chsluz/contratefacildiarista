@@ -1,92 +1,120 @@
-var config = {
-			apiKey : "AIzaSyBVfcPnHvNli_y2b9qeYKcIv6keSRGjEc8",
-			authDomain : "contratediarista-64f5f.firebaseapp.com",
-			databaseURL : "https://contratediarista-64f5f.firebaseio.com",
-			projectId : "contratediarista-64f5f",
-			storageBucket : "contratediarista-64f5f.appspot.com",
-			messagingSenderId : "166088401573"
-		};
-		firebase.initializeApp(config);
 
+	function logar() {
+		console.log('logar()');
+		if(firebase == null) {
+			console.log('erro firebase');
+		}
+		if (firebase.auth().currentUser != null) {
+			deslogarUsuario();
+	    } 
+        var email = document.getElementById('email').value;
+		var password = document.getElementById('senha').value;
+		
+        logarUser(email, password);
 
-			function logar() {
-				if (firebase.auth().currentUser != null) {
-					firebase.auth().signOut().then(function() {
-						  // Sign-out successful.
-						}, function(error) {
-							var errorCode = error.code;
-					        var errorMessage = error.message;
-					        console.log(errorCode);
-					        console.log(errorMessage);
-						});
-			      } 
-		        var email = document.getElementById('email').value;
-       			var password = document.getElementById('senha').value;
-		        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-		          // Handle Errors here.
-		          var errorCode = error.code;
-		          var errorMessage = error.message;
-		          // [START_EXCLUDE]
-		          if (errorCode === 'auth/wrong-password') {
-		        	 	 $("#idErroLogin").val('auth/wrong-password');
-		        	 	erroLogin();
-				    console.log(error);
-		          }
-		          else if(errorCode == 'auth/user-not-found') {
-		        	  	$("#idErroLogin").val('auth/user-not-found');
-		        	  	erroLogin();
-				    console.log(error);
-			      }
-		           else {
-		            $("#idErroLogin").val(error.message);
-		            erroLogin();
-			        console.log(error);
-		          }
-		          
-		          // [END_EXCLUDE]
-		        });
+        sleep(1000).then(() => {
+        	console.log('validar usuario e chamar bean');
+        	var user = firebase.auth().currentUser;
+	        if(user != null) {
+		        console.log(user.uid)
+		        $("#idUsuario").val(user.uid);
+		        logarUsuario();
+		        console.log('chamou bean');
+	        }
+	        else {
+		        console.log('usuario vazio');
+		    }
+		}); 
+        
+	}
+	
+	function logarUser(email,senha) {
+		firebase.auth().signInWithEmailAndPassword(email, senha).catch(function(error) {
+	          console.log('erro ao logar');
+	          var errorCode = error.code;
+	          var errorMessage = error.message;
+	          if (errorCode === 'auth/wrong-password') {
+	        	 $("#idErroLogin").val('auth/wrong-password');
+			    console.log(error);
+	          }
+	          else if(errorCode == 'auth/user-not-found') {
+	        	$("#idErroLogin").val('auth/user-not-found');
+			    console.log(error);
+		      }
+	           else {
+	            $("#idErroLogin").val(error.message);
+		        console.log(error);
+	          }
+	        });
+	}
 
-		        sleep(500).then(() => {
-		        		var user = firebase.auth().currentUser;
-			        if(user != null) {
-				        console.log(user.uid)
-				        $("#idUsuario").val(user.uid);
-				        logarUsuario();
-			        }
-			        else {
-				        console.log('usuario vazio');
-				    }
-				}); 
-		        
-			}
+	function sleep(ms) {
+		setTimeout(function() {
+			
+		}, ms);
+	}
 
-			function sleep(ms) {
-				  return new Promise(resolve => setTimeout(resolve, ms));
-			}
+	function createLogin() {
+		console.log('createLogin()');
+		if(firebase == null) {
+			console.log('firebase vazio');
+			return;
+		}
+		var email = document.getElementById('emailCadastro').value;
+		var password = document.getElementById('senhaCadastro').value;
+		
+		if(email == null || password == null) {
+			console.log('email ou senha vazio');
+			return;
+		}
+		if (firebase.auth().currentUser != null) {
+			deslogarUsuario();
+	    } 
+		console.log('criando novo usuario');
+		var errorCode;
+		firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+			  errorCode = error.code;
+			  var errorMessage = error.message;
+			  $("#idErroLogin").val(errorCode);
+			  console.log(error);
+			});
+		
+		while (errorCode == null && firebase.auth().currentUser == null) {
+			console.log('sem retorno')
+		}
+		console.log('validar usuario e chamar bean');
+		var user = firebase.auth().currentUser;
+    	if(user != null) {
+	        console.log(user.uid);
+	        $("#idUsuario").val(user.uid);
+	        deslogarUsuario();
+    	}
+    	else {
+    		$("#idUsuario").val('');
+    	}
+	}
 
-			function createLogin() {
-				var email = document.getElementById('emailCadastro').value;
-				var password = document.getElementById('senhaCadastro').value;
-				if(firebase.auth().currentUser == null) {
-					firebase.auth().createUserWithEmailAndPassword(email, password)
-				    .catch(function(error) {
-					  // Handle Errors here.
-					  var errorCode = error.code;
-					  var errorMessage = error.message;
-					  if (errorCode == 'auth/weak-password') {
-					    alert('The password is too weak.');
-					  } else {
-					    alert(errorMessage);
-					  }
-					  console.log(error);
-					});
-					 var user = firebase.auth().currentUser;
-					 if(user != null) {
-			        		$("#idUsuario").val(user.uid);
-			        		criarUsuario();
-					 }
-				}
-			}
+	function deslogarUsuario() {
+		firebase.auth().signOut().then(function() {
+		}, function(error) {
+			console.log('erro ao deslogar');
+			var errorCode = error.code;
+	        var errorMessage = error.message;
+	        console.log(errorCode);
+	        console.log(errorMessage);
+		});
+		console.log('deslogado')
+	}
+	
+	function excluirLogin() {
+		var email = document.getElementById('emailCadastro').value;
+		var password = document.getElementById('senhaCadastro').value;
+		logarUser(email, password);
+		var user = firebase.auth().currentUser;
+		user.delete().then(function() {
+		 console.log('usuario excluido com sucesso no firebase');
+		}, function(error) {
+			 console.log('erro ao excluir usuario no firebase.');
+		});
 
-			function excluirLogin() {
-			}
+	}

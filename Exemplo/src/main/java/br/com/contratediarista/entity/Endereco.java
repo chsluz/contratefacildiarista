@@ -34,7 +34,6 @@ public class Endereco implements Serializable {
 	private String rua;
 	
 	@NotNull(message="Número é obrigatório")
-	@Size(max=8,message="Número não pode conter mais que 8 dígitos")
 	@Column(name="numero",length=8,nullable=false)
 	private Integer numero;
 	

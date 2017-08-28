@@ -48,6 +48,10 @@ public class BairroDao implements Serializable{
 		}
 	}
 
+	public Bairro restoreById(int id) {
+		return dao.restoreById(id);
+	}
+	
 	public List<Bairro> listAll() {
 		try {
 			return dao.listarTodos();

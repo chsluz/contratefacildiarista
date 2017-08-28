@@ -43,7 +43,7 @@ public class UsuarioService implements Serializable {
 //	@POST
 //	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
 //	@Produces({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
-	public void salvar(Usuario usuario) {
+	public void salvar(Usuario usuario) throws Exception {
 		usuarioDao.salvar(usuario);
 
 	}

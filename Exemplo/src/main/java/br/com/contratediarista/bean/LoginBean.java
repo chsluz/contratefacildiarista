@@ -7,12 +7,13 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import org.primefaces.context.RequestContext;
 
 import br.com.contratediarista.entity.Bairro;
 import br.com.contratediarista.entity.Cidade;
@@ -24,6 +25,7 @@ import br.com.contratediarista.service.BairroService;
 import br.com.contratediarista.service.CidadeService;
 import br.com.contratediarista.service.EstadoService;
 import br.com.contratediarista.service.UsuarioService;
+import br.com.contratediarista.utils.FacesUtil;
 
 @Named
 @SessionScoped
@@ -48,6 +50,9 @@ public class LoginBean implements Serializable {
 
 	@Inject
 	private FacesContext facesContext;
+	
+	@Inject
+	private FacesUtil facesUtil;
 
 	private Usuario usuario;
 
@@ -60,9 +65,15 @@ public class LoginBean implements Serializable {
 	private Cidade cidade;
 
 	private Bairro bairro;
+	
+	private boolean executando;
 
 	@PostConstruct
 	public void init() {
+		instanciarNovo();
+	}
+	
+	public void instanciarNovo() {
 		usuario = new Usuario();
 		usuario.setEndereco(new Endereco());
 	}
@@ -83,9 +94,9 @@ public class LoginBean implements Serializable {
 		facesContext.getExternalContext().redirect("paginas/login.jsf");
 	}
 
+	
 	public void exibirMensagemErro() {
-		FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, msgErro, msgErro);
-		facesContext.addMessage(null, facesMessage);
+		facesUtil.exibirMsgErro(msgErro);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -132,9 +143,55 @@ public class LoginBean implements Serializable {
 		}
 	}
 
-	public void salvar() {
-		usuario.setUid(idUsuario);
-		usuarioService.salvar(usuario);
+	public void salvar() throws Exception {
+		try {
+			if(!validarErroLogin().equals("") || idUsuario.equals("")) {
+				facesUtil.exibirMsgErro(validarErroLogin());
+			}else {
+				usuario.setUid(idUsuario);
+				usuarioService.salvar(usuario);
+				instanciarNovo();
+				facesUtil.exibirMsgSucesso("Usuário salvo com sucesso.");
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+			facesUtil.exibirMsgErro("erro ao salvar.");
+		}
+	}
+	
+	
+	public void aguardar() throws InterruptedException {
+		while (executando) {
+			Thread.sleep(500);
+		}
+	}
+	
+	public String validarErroLogin() {
+		if(msgErro.equals("")) {
+			return msgErro;
+		}
+		if(msgErro.equals("auth/invalid-email")) {
+			return "Email no formato inválido";
+		}
+		else if(msgErro.equals("auth/wrong-password")) {
+			return "Senha inválida";
+		}
+		else if(msgErro.equals("auth/email-already-in-use")) {
+			return "Email já cadastrado";
+		}
+		else {
+			return "Erro desconhecido";
+		}
+	}
+	
+	
+	public void criarLogin() {
+		executando = true;
+		RequestContext.getCurrentInstance().execute("createLogin();");
+	}
+	
+	public void excluirLogin() {
+		RequestContext.getCurrentInstance().execute("excluirLogin();");
 	}
 
 	public List<TipoUsuario> getTiposUsuario() {
@@ -142,8 +199,8 @@ public class LoginBean implements Serializable {
 		return tipos;
 	}
 
-	public void cadastrarNovo() {
-
+	public void cadastrarNovo() throws IOException {
+		facesContext.getExternalContext().redirect("cadastro_usuario.jsf");
 	}
 
 	public Usuario getUsuario() {
@@ -193,5 +250,15 @@ public class LoginBean implements Serializable {
 	public void setBairro(Bairro bairro) {
 		this.bairro = bairro;
 	}
+
+	public boolean isExecutando() {
+		return executando;
+	}
+
+	public void setExecutando(boolean executando) {
+		this.executando = executando;
+	}
+	
+	
 
 }
