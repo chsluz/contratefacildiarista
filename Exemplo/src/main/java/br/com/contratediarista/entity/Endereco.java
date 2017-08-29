@@ -16,40 +16,39 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name="endereco")
+@Table(name = "endereco")
 public class Endereco implements Serializable {
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id",nullable=false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false)
 	private Long id;
-	
-	@NotEmpty(message="Rua é obrigatório")
-	@Size(max=100,message="Rua não pode conter mais que 100 caracteress")
-	@Column(name="rua",length=100,nullable=false)
+
+	@NotEmpty(message = "Rua é obrigatório")
+	@Size(max = 100, message = "Rua não pode conter mais que 100 caracteress")
+	@Column(name = "rua", length = 100, nullable = false)
 	private String rua;
-	
-	@NotNull(message="Número é obrigatório")
-	@Column(name="numero",length=8,nullable=false)
+
+	@Column(name = "numero", length = 8)
 	private Integer numero;
-	
-	@NotEmpty(message="Cep é obrigatório")
-	@Size(max=10,message="Cep não pode conter mais que 10 dígitos")
-	@Column(name="cep",length=10,nullable=false)
+
+	@NotEmpty(message = "Cep é obrigatório")
+	@Size(max = 10, message = "Cep não pode conter mais que 10 dígitos")
+	@Column(name = "cep", length = 10, nullable = false)
 	private String cep;
-	
-	@Size(max=100,message="Complemento não pode conter mais que 100 caracteres")
-	@Column(name="complemento",length=100)
+
+	@Size(max = 100, message = "Complemento não pode conter mais que 100 caracteres")
+	@Column(name = "complemento", length = 100)
 	private String complemento;
-	
-	@NotNull(message="Bairro é obrigatório")
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_bairro")
+
+	@NotNull(message = "Bairro é obrigatório")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_bairro")
 	private Bairro bairro;
 
 	public Long getId() {
@@ -111,25 +110,31 @@ public class Endereco implements Serializable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		Endereco other = (Endereco) obj;
 		if (id == null) {
-			if (other.id != null)
+			if (other.id != null) {
 				return false;
-		} else if (!id.equals(other.id))
+			}
+		} else if (!id.equals(other.id)) {
 			return false;
+		}
 		if (rua == null) {
-			if (other.rua != null)
+			if (other.rua != null) {
 				return false;
-		} else if (!rua.equals(other.rua))
+			}
+		} else if (!rua.equals(other.rua)) {
 			return false;
+		}
 		return true;
 	}
-	
 
 }

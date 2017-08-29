@@ -5,10 +5,10 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-import br.com.contratediarista.entity.Bairro;
+import br.com.contratediarista.entity.Cidade;
 
-@FacesConverter(value = "bairroConverter")
-public class BairroConverter implements Converter {
+@FacesConverter(value = "cidadeConverter")
+public class CidadeConverter implements Converter {
 
 	@Override
 	public Object getAsObject(FacesContext context, UIComponent component, String value) {
@@ -28,9 +28,9 @@ public class BairroConverter implements Converter {
 			if (value == null) {
 				return "";
 			}
-			Bairro bairro = (Bairro) value;
-			component.getAttributes().put(String.valueOf(bairro.getId()), bairro);
-			return String.valueOf(bairro.getId());
+			Cidade cidade = (Cidade) value;
+			component.getAttributes().put(String.valueOf(cidade.getId()), cidade);
+			return String.valueOf(cidade.getId());
 		} catch (Exception e) {
 			return null;
 		}

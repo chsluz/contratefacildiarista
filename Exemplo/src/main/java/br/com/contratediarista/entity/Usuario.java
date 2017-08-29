@@ -6,8 +6,6 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -34,18 +32,17 @@ public class Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id",nullable= false)
-	private int id;
-	
+	@Column(name = "uid", nullable = false)
+	private String uid;
+
 	@Size(max = 100, message = "Nome não pode conter mais que 100 caracteres")
 	@NotBlank(message = "Nome é Obrigatório")
 	@Column(name = "nome", nullable = false)
 	private String nome;
 
-	@NotEmpty(message="Cpf é obrigatório")
+	@NotEmpty(message = "Cpf é obrigatório")
 	@Size(max = 15, message = "Cpf não pode conter mais que 11 dígitos")
-	@Column(name="cpf",nullable=false,unique=true)
+	@Column(name = "cpf", nullable = false, unique = true)
 	private String cpf;
 
 	@NotNull(message = "Tipo de usuário é Obrigatório")
@@ -72,21 +69,13 @@ public class Usuario implements Serializable {
 
 	@Column(name = "longitude")
 	private Double longitude = 0.0;
-	
-	@NotBlank(message = "Email é Obrigatório")
-	@Column(name = "email",nullable=false,unique=true)
-	private String email;
-	
-	@NotBlank(message = "Senha é Obrigatório")
-	@Column(name = "senha",nullable=false)
-	private String senha;
 
-	public int getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
 	public String getNome() {
@@ -151,21 +140,5 @@ public class Usuario implements Serializable {
 
 	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getSenha() {
-		return senha;
-	}
-
-	public void setSenha(String senha) {
-		this.senha = senha;
 	}
 }

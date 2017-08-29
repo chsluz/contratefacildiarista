@@ -7,11 +7,11 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import br.com.contratediarista.entity.Bairro;
 import br.com.contratediarista.entity.Cidade;
@@ -48,7 +48,7 @@ public class LoginBean implements Serializable {
 
 	@Inject
 	private FacesContext facesContext;
-	
+
 	@Inject
 	private FacesUtil facesUtil;
 
@@ -56,40 +56,58 @@ public class LoginBean implements Serializable {
 
 	private String idUsuario;
 
+	private String msgErro;
 
 	private Estado estado;
 
 	private Cidade cidade;
 
 	private Bairro bairro;
-	
+
 	@PostConstruct
 	public void init() {
 		instanciarNovo();
 	}
-	
+
 	public void instanciarNovo() {
 		usuario = new Usuario();
 		usuario.setEndereco(new Endereco());
 	}
 
-	public void logar() throws IOException {
-		Response response = usuarioService.validarLogin(usuario);
-		if (response.getStatus() == Status.OK.getStatusCode()) {
-			usuario = (Usuario) response.getEntity();
-			if (usuario != null) {
-				facesContext.getExternalContext().getSessionMap().put("usuario", usuario);
-				facesContext.getExternalContext().redirect("paginas/index.jsf");
-			}
-		}
-	}
+//	public void logar() throws IOException {
+//		Response response = usuarioService.validarLogin(usuario);
+//		if (response.getStatus() == Status.OK.getStatusCode()) {
+//			usuario = (Usuario) response.getEntity();
+//			if (usuario != null) {
+//				facesContext.getExternalContext().getSessionMap().put("usuario", usuario);
+//				facesContext.getExternalContext().redirect("paginas/index.jsf");
+//			}
+//		}
+//	}
 
 	public void deslogar() throws IOException {
 		facesContext.getExternalContext().getSessionMap().put("usuario", null);
 		facesContext.getExternalContext().redirect("paginas/login.jsf");
 	}
 
-	
+	public void exibirMensagemErro() {
+		FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, msgErro, msgErro);
+		facesContext.addMessage(null, facesMessage);
+		facesUtil.exibirMsgErro(msgErro);
+	}
+
+	public void salvar() throws Exception {
+		try {
+			usuario.setUid(idUsuario);
+			usuarioService.salvar(usuario);
+			instanciarNovo();
+			facesUtil.exibirMsgSucesso("Usuário salvo com sucesso.");
+		} catch (Exception e) {
+			System.out.println(e);
+			facesUtil.exibirMsgErro("erro ao salvar.");
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<Estado> getListarEstados() {
 		Response response = null;
@@ -134,24 +152,9 @@ public class LoginBean implements Serializable {
 		}
 	}
 
-	public void salvar() throws Exception {
-		try {
-			usuarioService.salvar(usuario);
-			instanciarNovo();
-			facesUtil.exibirMsgSucesso("Usuário salvo com sucesso.");
-		} catch (Exception e) {
-			System.out.println(e);
-			facesUtil.exibirMsgErro("erro ao salvar.");
-		}
-	}
-	
 	public List<TipoUsuario> getTiposUsuario() {
 		List<TipoUsuario> tipos = Arrays.asList(TipoUsuario.values());
 		return tipos;
-	}
-
-	public void cadastrarNovo() throws IOException {
-		facesContext.getExternalContext().redirect("cadastro_usuario.jsf");
 	}
 
 	public Usuario getUsuario() {
@@ -192,6 +195,14 @@ public class LoginBean implements Serializable {
 
 	public void setBairro(Bairro bairro) {
 		this.bairro = bairro;
+	}
+
+	public String getMsgErro() {
+		return msgErro;
+	}
+
+	public void setMsgErro(String msgErro) {
+		this.msgErro = msgErro;
 	}
 
 }
