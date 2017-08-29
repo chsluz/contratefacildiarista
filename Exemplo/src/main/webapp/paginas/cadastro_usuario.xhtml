@@ -6,30 +6,34 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 	<ui:define name="titulo">Contratação de Diaristas</ui:define>
+
 	<ui:define name="logout"></ui:define>
 	<ui:define name="corpo">
+		<h:outputScript library="js" name="criarUsuario.js" />
 		<div class="ui-fluid">
 			<div class="ui-g-12">
 				<h:inputHidden id="idUsuario" value="#{loginBean.idUsuario}" />
 				<h:inputHidden id="idErroLogin" value="#{loginBean.msgErro}" />
 				<p:remoteCommand name="criarUsuario"
-					actionListener="#{loginBean.salvar()}">
+					actionListener="#{loginBean.salvarNovoUid()}">
 				</p:remoteCommand>
+				<p:remoteCommand name="erroLogin"
+					actionListener="#{loginBean.exibirMensagemErro()}" />
 				<p:panelGrid columns="3" layout="grid"
 					columnClasses="ui-grid-col-2,ui-grid-col-8,ui-grid-col-2">
 					<h:panelGroup>
 					</h:panelGroup>
 					<h:panelGroup>
-						<p:panelGrid layout="grid" columnClasses="ui-grid-col-12"
+						<p:panelGrid id="panelCadastro" layout="grid" columnClasses="ui-grid-col-12"
 							style="overflow:auto;" columns="1">
 							<p:fieldset legend="Dados Usuário">
 								<p:panelGrid columns="4" layout="grid"
 									columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-3,ui-grid-col-3">
 									<h:outputText value="Email:" />
-									<p:inputText id="emailCadastro" placeholder="teste@teste.com" />
+									<p:inputText value="#{loginBean.usuario.email}" id="emailCadastro" placeholder="teste@teste.com" />
 									<h:outputText value="Senha:" />
-									<p:password id="senhaCadastro" placeholder="********" />
-									<h:outputText value="Nome:" />
+									<p:password value="#{loginBean.usuario.senha}" id="senhaCadastro" placeholder="********" />
+									<h:outputText  value="Nome:" />
 									<p:inputText value="#{loginBean.usuario.nome}" id="nome"
 										placeholder="João da Silva" />
 									<h:outputText value="Cpf:" />
@@ -98,8 +102,7 @@
 							</p:fieldset>
 							<h:panelGrid columns="2">
 								<p:commandButton value="Cancelar" />
-								<p:commandButton onclick="createLogin()" action="#{loginBean.salvar}"
-									update="mensagem" value="Salvar" />
+								<p:commandButton action="#{loginBean.salvar()}" update="mensagem,panelCadastro" value="Salvar" />
 							</h:panelGrid>
 						</p:panelGrid>
 					</h:panelGroup>

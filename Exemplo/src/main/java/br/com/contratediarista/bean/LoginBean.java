@@ -13,8 +13,6 @@ import javax.inject.Named;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.primefaces.context.RequestContext;
-
 import br.com.contratediarista.entity.Bairro;
 import br.com.contratediarista.entity.Cidade;
 import br.com.contratediarista.entity.Endereco;
@@ -58,7 +56,6 @@ public class LoginBean implements Serializable {
 
 	private String idUsuario;
 
-	private String msgErro;
 
 	private Estado estado;
 
@@ -66,8 +63,6 @@ public class LoginBean implements Serializable {
 
 	private Bairro bairro;
 	
-	private boolean executando;
-
 	@PostConstruct
 	public void init() {
 		instanciarNovo();
@@ -79,7 +74,7 @@ public class LoginBean implements Serializable {
 	}
 
 	public void logar() throws IOException {
-		Response response = usuarioService.retornarUsuarioByUid(idUsuario);
+		Response response = usuarioService.validarLogin(usuario);
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			usuario = (Usuario) response.getEntity();
 			if (usuario != null) {
@@ -95,10 +90,6 @@ public class LoginBean implements Serializable {
 	}
 
 	
-	public void exibirMensagemErro() {
-		facesUtil.exibirMsgErro(msgErro);
-	}
-
 	@SuppressWarnings("unchecked")
 	public List<Estado> getListarEstados() {
 		Response response = null;
@@ -145,55 +136,15 @@ public class LoginBean implements Serializable {
 
 	public void salvar() throws Exception {
 		try {
-			if(!validarErroLogin().equals("") || idUsuario.equals("")) {
-				facesUtil.exibirMsgErro(validarErroLogin());
-			}else {
-				usuario.setUid(idUsuario);
-				usuarioService.salvar(usuario);
-				instanciarNovo();
-				facesUtil.exibirMsgSucesso("Usuário salvo com sucesso.");
-			}
+			usuarioService.salvar(usuario);
+			instanciarNovo();
+			facesUtil.exibirMsgSucesso("Usuário salvo com sucesso.");
 		} catch (Exception e) {
 			System.out.println(e);
 			facesUtil.exibirMsgErro("erro ao salvar.");
 		}
 	}
 	
-	
-	public void aguardar() throws InterruptedException {
-		while (executando) {
-			Thread.sleep(500);
-		}
-	}
-	
-	public String validarErroLogin() {
-		if(msgErro.equals("")) {
-			return msgErro;
-		}
-		if(msgErro.equals("auth/invalid-email")) {
-			return "Email no formato inválido";
-		}
-		else if(msgErro.equals("auth/wrong-password")) {
-			return "Senha inválida";
-		}
-		else if(msgErro.equals("auth/email-already-in-use")) {
-			return "Email já cadastrado";
-		}
-		else {
-			return "Erro desconhecido";
-		}
-	}
-	
-	
-	public void criarLogin() {
-		executando = true;
-		RequestContext.getCurrentInstance().execute("createLogin();");
-	}
-	
-	public void excluirLogin() {
-		RequestContext.getCurrentInstance().execute("excluirLogin();");
-	}
-
 	public List<TipoUsuario> getTiposUsuario() {
 		List<TipoUsuario> tipos = Arrays.asList(TipoUsuario.values());
 		return tipos;
@@ -219,14 +170,6 @@ public class LoginBean implements Serializable {
 		this.idUsuario = idUsuario;
 	}
 
-	public String getMsgErro() {
-		return msgErro;
-	}
-
-	public void setMsgErro(String msgErro) {
-		this.msgErro = msgErro;
-	}
-
 	public Estado getEstado() {
 		return estado;
 	}
@@ -250,15 +193,5 @@ public class LoginBean implements Serializable {
 	public void setBairro(Bairro bairro) {
 		this.bairro = bairro;
 	}
-
-	public boolean isExecutando() {
-		return executando;
-	}
-
-	public void setExecutando(boolean executando) {
-		this.executando = executando;
-	}
-	
-	
 
 }

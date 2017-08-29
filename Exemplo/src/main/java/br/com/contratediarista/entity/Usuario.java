@@ -6,12 +6,16 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -30,14 +34,18 @@ public class Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private String uid;
-
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="id",nullable= false)
+	private int id;
+	
 	@Size(max = 100, message = "Nome não pode conter mais que 100 caracteres")
-	@NotNull(message = "Nome é Obrigatório")
+	@NotBlank(message = "Nome é Obrigatório")
 	@Column(name = "nome", nullable = false)
 	private String nome;
 
+	@NotEmpty(message="Cpf é obrigatório")
 	@Size(max = 15, message = "Cpf não pode conter mais que 11 dígitos")
+	@Column(name="cpf",nullable=false,unique=true)
 	private String cpf;
 
 	@NotNull(message = "Tipo de usuário é Obrigatório")
@@ -64,13 +72,21 @@ public class Usuario implements Serializable {
 
 	@Column(name = "longitude")
 	private Double longitude = 0.0;
+	
+	@NotBlank(message = "Email é Obrigatório")
+	@Column(name = "email",nullable=false,unique=true)
+	private String email;
+	
+	@NotBlank(message = "Senha é Obrigatório")
+	@Column(name = "senha",nullable=false)
+	private String senha;
 
-	public String getUid() {
-		return uid;
+	public int getId() {
+		return id;
 	}
 
-	public void setUid(String uid) {
-		this.uid = uid;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getNome() {
@@ -137,42 +153,19 @@ public class Usuario implements Serializable {
 		this.longitude = longitude;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
-		result = prime * result + ((uid == null) ? 0 : uid.hashCode());
-		return result;
+	public String getEmail() {
+		return email;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		Usuario other = (Usuario) obj;
-		if (nome == null) {
-			if (other.nome != null) {
-				return false;
-			}
-		} else if (!nome.equals(other.nome)) {
-			return false;
-		}
-		if (uid == null) {
-			if (other.uid != null) {
-				return false;
-			}
-		} else if (!uid.equals(other.uid)) {
-			return false;
-		}
-		return true;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
 }

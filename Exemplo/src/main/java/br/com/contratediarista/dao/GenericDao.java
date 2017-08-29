@@ -14,6 +14,10 @@ public class GenericDao<T> implements Serializable {
 	/**
 	 *
 	 */
+	
+	public GenericDao() {
+		
+	}
 
 	public GenericDao(Class<T> classe, EntityManager em) {
 		this.classe = classe;
@@ -60,10 +64,10 @@ public class GenericDao<T> implements Serializable {
 		}
 	}
 
-	public void alterar() {
+	public void alterar(T t) {
 		try {
 			em.getTransaction().begin();
-			em.persist(classe);
+			em.persist(t);
 			em.getTransaction().commit();
 		} catch (Exception e) {
 			em.getTransaction().rollback();

@@ -27,12 +27,13 @@ public class UsuarioService implements Serializable {
 	@Inject
 	private UsuarioDao usuarioDao;
 
+	
 	@GET
-	@Path("{uid}")
+	@Path("/validar-login")
 	@Produces({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
-	public Response retornarUsuarioByUid(@PathParam("uid") String uid) {
+	public Response validarLogin(Usuario usuario) {
 		try {
-			Usuario retorno = usuarioDao.retornarUsuarioByUid(uid);
+			Usuario retorno = usuarioDao.validarLogin(usuario);
 			return Response.ok(retorno).build();
 		} catch (Exception e) {
 			return Response.status(INTERNAL_SERVER_ERROR)
@@ -45,7 +46,10 @@ public class UsuarioService implements Serializable {
 //	@Produces({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
 	public void salvar(Usuario usuario) throws Exception {
 		usuarioDao.salvar(usuario);
-
+	}
+	
+	public void alterar(Usuario usuario) {
+		usuarioDao.alterar(usuario);
 	}
 
 }

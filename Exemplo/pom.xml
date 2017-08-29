@@ -64,6 +64,13 @@
 			<version>4.3.8.Final</version>
 			<scope>compile</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>6.0.0.Final</version>
+		</dependency>
+
 		<!-- Driver JDBC do MySQL -->
 		<dependency>
 			<groupId>mysql</groupId>
@@ -71,7 +78,7 @@
 			<version>5.1.34</version>
 			<scope>compile</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -84,8 +91,8 @@
 			<version>6.1</version>
 		</dependency>
 	</dependencies>
-	
-	
+
+
 
 	<repository>
 		<id>prime-repo</id>

@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -28,7 +29,7 @@ public class Endereco implements Serializable {
 	@Column(name="id",nullable=false)
 	private Long id;
 	
-	@NotNull(message="Rua é obrigatório")
+	@NotEmpty(message="Rua é obrigatório")
 	@Size(max=100,message="Rua não pode conter mais que 100 caracteress")
 	@Column(name="rua",length=100,nullable=false)
 	private String rua;
@@ -37,7 +38,7 @@ public class Endereco implements Serializable {
 	@Column(name="numero",length=8,nullable=false)
 	private Integer numero;
 	
-	@NotNull(message="Cep é obrigatório")
+	@NotEmpty(message="Cep é obrigatório")
 	@Size(max=10,message="Cep não pode conter mais que 10 dígitos")
 	@Column(name="cep",length=10,nullable=false)
 	private String cep;

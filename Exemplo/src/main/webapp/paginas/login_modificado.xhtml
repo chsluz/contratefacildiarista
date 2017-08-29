@@ -25,12 +25,12 @@
 							<div align="center">
 								<p:panelGrid columns="2" layout="grid">
 									<h:outputText value="Email:" />
-									<p:inputText id="email" placeholder="teste@teste.com" />
+									<p:inputText value="#{loginBean.usuario.email}" id="email" placeholder="teste@teste.com" />
 									<h:outputText value="Senha:" />
-									<p:password id="senha" placeholder="********" />
+									<p:password value="#{loginBean.usuario.senha}" id="senha" placeholder="********" />
 								</p:panelGrid>
 								<p:panelGrid columns="2" layout="grid">
-									<p:commandButton update="mensagem" onclick="logar()"
+									<p:commandButton update="mensagem" action="#{loginBean.logar()}"
 										value="Logar" />
 									<p:commandLink value="Novo? Cadastre-se"
 										action="#{loginBean.cadastrarNovo()}" />

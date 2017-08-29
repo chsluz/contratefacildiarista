@@ -12,13 +12,20 @@ import javax.persistence.Query;
 import br.com.contratediarista.entity.Usuario;
 
 @RequestScoped
-public class UsuarioDao implements Serializable {
+public class UsuarioDao extends GenericDao<Usuario> implements Serializable {
+	
+	public UsuarioDao() {
+		
+	}
+			
 	private static final long serialVersionUID = 1L;
 
 	@Inject
+	static
 	EntityManager em;
 
 	GenericDao<Usuario> dao;
+	
 
 	@PostConstruct
 	void init() {
@@ -29,26 +36,12 @@ public class UsuarioDao implements Serializable {
 	 *
 	 */
 
-//	public Usuario validarLogin(Usuario usuario) {
-//		try {
-//			String sql = "SELECT u FROM Usuario u WHERE u.login = :login AND u.senha = :senha";
-//			Query query = em.createQuery(sql);
-//			query.setParameter("login", usuario.getLogin());
-//			query.setParameter("senha", usuario.getSenha());
-//			return (Usuario) query.getSingleResult();
-//		} catch (NoResultException e) {
-//			return null;
-//		} catch (Exception e) {
-//			System.out.println(e);
-//			return null;
-//		}
-//	}
-
-	public Usuario retornarUsuarioByUid(String uid) {
+	public Usuario validarLogin(Usuario usuario) {
 		try {
-			String sql = "SELECT u FROM Usuario u WHERE u.uid = :uid";
+			String sql = "SELECT u FROM Usuario u WHERE u.email = :email AND u.senha = :senha";
 			Query query = em.createQuery(sql);
-			query.setParameter("uid", uid);
+			query.setParameter("email", usuario.getEmail());
+			query.setParameter("senha", usuario.getSenha());
 			return (Usuario) query.getSingleResult();
 		} catch (NoResultException e) {
 			return null;
@@ -60,6 +53,10 @@ public class UsuarioDao implements Serializable {
 
 	public void salvar(Usuario usuario) throws Exception {
 		dao.salvar(usuario);
+	}
+	
+	public void alterar(Usuario usuario) {
+		dao.alterar(usuario);
 	}
 
 }
