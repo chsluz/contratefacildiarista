@@ -19,6 +19,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.validator.constraints.br.CNPJ;
 
 import br.com.contratediarista.enuns.TipoUsuario;
 
@@ -41,8 +42,9 @@ public class Usuario implements Serializable {
 	private String nome;
 
 	@NotEmpty(message = "Cpf é obrigatório")
-	@Size(max = 15, message = "Cpf não pode conter mais que 11 dígitos")
+	@Size(max = 15, message = "Cpf não pode conter mais que 15 dígitos")
 	@Column(name = "cpf", nullable = false, unique = true)
+	@CNPJ
 	private String cpf;
 
 	@NotNull(message = "Tipo de usuário é Obrigatório")

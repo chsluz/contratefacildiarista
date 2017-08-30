@@ -81,15 +81,14 @@ public class LoginBean implements Serializable {
 		bairro = new Bairro();
 	}
 
-	
 	public void selectEstado(SelectEvent event) {
 		estado = (Estado) event.getObject();
 	}
-	
+
 	public void selectCidade(SelectEvent event) {
 		cidade = (Cidade) event.getObject();
 	}
-	
+
 	public void logar() throws IOException {
 		Response response = usuarioService.buscarUsuarioByUid(idUsuario);
 		if (response.getStatus() == Status.OK.getStatusCode()) {
@@ -115,19 +114,19 @@ public class LoginBean implements Serializable {
 			usuario.setUid(idUsuario);
 			usuarioService.salvar(usuario);
 			instanciarNovo();
-			facesUtil.exibirMsgSucesso("Usuário salvo com sucesso.");
+			facesUtil.exibirMsgSucesso(facesUtil.getLabel("salvo.sucesso"));
 			facesContext.getExternalContext().redirect("login_alterado.jsf");
 		} catch (Exception e) {
 			RequestContext.getCurrentInstance().execute("excluirLogin();");
 			e.printStackTrace();
-			facesUtil.exibirMsgErro("erro ao salvar.");
+			facesUtil.exibirMsgErro(facesUtil.getLabel("erro.salvar"));
 		}
 	}
-	
+
 	public void cadastrarNovo() throws IOException {
 		facesContext.getExternalContext().redirect("cadastro_usuario.jsf");
 	}
-	
+
 	public void cancelar() throws IOException {
 		facesContext.getExternalContext().redirect("../");
 	}

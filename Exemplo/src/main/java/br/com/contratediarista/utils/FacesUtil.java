@@ -1,6 +1,7 @@
 package br.com.contratediarista.utils;
 
 import java.io.Serializable;
+import java.util.ResourceBundle;
 
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -13,9 +14,11 @@ import javax.inject.Named;
 public class FacesUtil implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
+
+	protected ResourceBundle bundle = ResourceBundle.getBundle("mensagem");
 
 	@Inject
 	private FacesContext facesContext;
@@ -28,6 +31,10 @@ public class FacesUtil implements Serializable {
 	public void exibirMsgErro(String msg) {
 		FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, msg);
 		facesContext.addMessage(null, facesMessage);
+	}
+
+	public String getLabel(String chave) {
+		return bundle.getString(chave);
 	}
 
 }
