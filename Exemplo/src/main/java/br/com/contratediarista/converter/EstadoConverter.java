@@ -14,7 +14,7 @@ public class EstadoConverter implements Converter {
 	public Object getAsObject(FacesContext context, UIComponent component, String value) {
 		try {
 			if (value == null) {
-				return "";
+				return value;
 			}
 			return component.getAttributes().get(value);
 		} catch (NumberFormatException ex) {
@@ -26,7 +26,7 @@ public class EstadoConverter implements Converter {
 	public String getAsString(FacesContext context, UIComponent component, Object value) {
 		try {
 			if (value == null) {
-				return "";
+				return null;
 			}
 			Estado estado = (Estado) value;
 			component.getAttributes().put(String.valueOf(estado.getId()), estado);

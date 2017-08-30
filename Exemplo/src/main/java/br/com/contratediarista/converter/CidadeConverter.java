@@ -14,7 +14,7 @@ public class CidadeConverter implements Converter {
 	public Object getAsObject(FacesContext context, UIComponent component, String value) {
 		try {
 			if (value == null) {
-				return "";
+				return null;
 			}
 			return component.getAttributes().get(value);
 		} catch (NumberFormatException ex) {
@@ -26,7 +26,7 @@ public class CidadeConverter implements Converter {
 	public String getAsString(FacesContext context, UIComponent component, Object value) {
 		try {
 			if (value == null) {
-				return "";
+				return null;
 			}
 			Cidade cidade = (Cidade) value;
 			component.getAttributes().put(String.valueOf(cidade.getId()), cidade);

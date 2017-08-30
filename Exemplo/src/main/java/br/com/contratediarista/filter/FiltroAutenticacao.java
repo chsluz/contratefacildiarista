@@ -31,7 +31,7 @@ public class FiltroAutenticacao implements Filter {
 				chain.doFilter(request, response);
 			}
 			else {
-				hres.sendRedirect("/login.jsf");
+				hres.sendRedirect("paginas/login_modificado.jsf");
 			}	
 			return;
 		} else {

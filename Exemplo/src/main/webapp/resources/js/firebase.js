@@ -9,10 +9,14 @@
 	    } 
         var email = document.getElementById('email').value;
 		var password = document.getElementById('senha').value;
-		
-        logarUser(email, password);
-
-        sleep(1000).then(() => {
+		firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+	          console.log('erro ao logar');
+	          var errorCode = error.code;
+	          var errorMessage = error.message;
+	          $("#idErroLogin").val('auth/user-not-found');
+	          erroLogin();
+	        });
+		setTimeout(function() {
         	console.log('validar usuario e chamar bean');
         	var user = firebase.auth().currentUser;
 	        if(user != null) {
@@ -24,28 +28,25 @@
 	        else {
 		        console.log('usuario vazio');
 		    }
-		}); 
-        
+		}, 1000);
 	}
 	
 	function logarUser(email,senha) {
+		var erroCode;
 		firebase.auth().signInWithEmailAndPassword(email, senha).catch(function(error) {
 	          console.log('erro ao logar');
-	          var errorCode = error.code;
+	          errorCode = error.code;
 	          var errorMessage = error.message;
-	          if (errorCode === 'auth/wrong-password') {
-	        	 $("#idErroLogin").val('auth/wrong-password');
-			    console.log(error);
-	          }
-	          else if(errorCode == 'auth/user-not-found') {
-	        	$("#idErroLogin").val('auth/user-not-found');
-			    console.log(error);
-		      }
-	           else {
-	            $("#idErroLogin").val(error.message);
-		        console.log(error);
-	          }
 	        });
+		setTimeout(function() {
+			if(erroCode) {
+				$("#idErroLogin").val('auth/user-not-found');
+				return false;
+			}
+			else {
+				return true;
+			}
+		}, 1000);
 	}
 
 	function sleep(ms) {
@@ -110,11 +111,12 @@
 		var email = document.getElementById('emailCadastro').value;
 		var password = document.getElementById('senhaCadastro').value;
 		logarUser(email, password);
-		var user = firebase.auth().currentUser;
-		user.delete().then(function() {
-		 console.log('usuario excluido com sucesso no firebase');
-		}, function(error) {
-			 console.log('erro ao excluir usuario no firebase.');
-		});
-
+		setTimeout(function() {
+			var user = firebase.auth().currentUser;
+			user.delete().then(function() {
+				console.log('usuario excluido com sucesso no firebase');
+			}, function(error) {
+				 console.log('erro ao excluir usuario no firebase.');
+			});
+		}, 1000);
 	}

@@ -3,36 +3,29 @@
 	function criarNovoUsuario() {
 		$("#idUsuario").val('');
 		$("#idErroLogin").val('');
-		
-		
 		var validacao = validarCamposObrigatorios();
 		if(!validacao) {
 			console.log('campos obrigatórios não preenchidos');
 			return null;
 		}
-		
 		var email = document.getElementById('emailCadastro').value;
 		var password = document.getElementById('senhaCadastro').value;
 		firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
 			  var errorMessage = error.message;
-			  console.log(error.code);
 			  $("#idErroLogin").val(error.code);
 			});
 		setTimeout(function() {
 			var auth = firebase.auth();
 			var erro = document.getElementById('idErroLogin').value;
-			console.log(erro);
 			if(auth.currentUser != null) {
 				$("#idUsuario").val(auth.currentUser.uid);
-				console.log(auth.currentUser.uid);
 				criarUsuario();
 				firebase.auth().signOut().then(function() {
 				}).catch(function(error) {
 					console.log(error);
 				});
 			}
-			else if(!erro) {
-				console.log(erro);
+			else if(erro) {
 				erroLogin();
 			}
 		}, 1000);
@@ -53,7 +46,8 @@
 		if(!email || !senha || !nome || !cpf || !telefone || !dtNasc || !rua || !cep || !estado || !cidade || !bairro) {
 			return false;
 		}
-		
+		if(estado == 'Selecione' || cidade == 'Selecione' || bairro == 'Selecione') {
+			return false;
+		}
 		return true;
-		
 	}
