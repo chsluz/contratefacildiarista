@@ -12,37 +12,35 @@ import javax.persistence.Query;
 import br.com.contratediarista.entity.Bairro;
 
 @RequestScoped
-public class BairroDao implements Serializable{
-	
+public class BairroDao implements Serializable {
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	
+
 	public BairroDao() {
-		
+
 	}
 
-	
 	@Inject
 	EntityManager em;
 
 	GenericDao<Bairro> dao;
-	
+
 	@PostConstruct
 	void init() {
 		dao = new GenericDao<Bairro>(Bairro.class, em);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<Bairro> listByIdCidade(int id) {
 		try {
 			String sql = "SELECT b FROM Bairro b WHERE b.cidade.id = :id";
-			Query query = em.createQuery(sql,Bairro.class);
+			Query query = em.createQuery(sql, Bairro.class);
 			query.setParameter("id", id);
-			return (List<Bairro>) query.getResultList();
-		}  catch (Exception e) {
+			return query.getResultList();
+		} catch (Exception e) {
 			System.out.println(e);
 			return null;
 		}
@@ -51,11 +49,15 @@ public class BairroDao implements Serializable{
 	public Bairro restoreById(int id) {
 		return dao.restoreById(id);
 	}
-	
+
+	public Bairro restoreByDescricao(String descricao) {
+		return dao.restoreByDescricao(descricao);
+	}
+
 	public List<Bairro> listAll() {
 		try {
 			return dao.listarTodos();
-		}  catch (Exception e) {
+		} catch (Exception e) {
 			System.out.println(e);
 			return null;
 		}

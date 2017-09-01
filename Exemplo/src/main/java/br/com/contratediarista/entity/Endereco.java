@@ -11,9 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "endereco")
@@ -50,6 +51,12 @@ public class Endereco implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_bairro")
 	private Bairro bairro;
+
+	@Column(name = "latitude")
+	private Double latitude = 0.0;
+
+	@Column(name = "longitude")
+	private Double longitude = 0.0;
 
 	public Long getId() {
 		return id;
@@ -97,6 +104,22 @@ public class Endereco implements Serializable {
 
 	public void setBairro(Bairro bairro) {
 		this.bairro = bairro;
+	}
+
+	public Double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
+	}
+
+	public Double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
 	}
 
 	@Override

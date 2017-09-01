@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<ui:composition template="/template/template.xhtml"
+<ui:composition
+	template="/template/template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -9,133 +10,273 @@
 
 	<ui:define name="logout"></ui:define>
 	<ui:define name="corpo">
-		<h:outputScript library="js" name="criarUsuario.js" />
+		<h:outputScript
+			library="js"
+			name="criarUsuario.js" />
+		<h:outputScript
+			library="js"
+			name="mapbox.js" />
+		<script src='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js'></script>
 		<h:panelGroup id="panelCadastroUsuario">
 			<div class="ui-fluid">
 				<div class="ui-g-12">
-					<h:inputHidden id="idUsuario" value="#{loginBean.idUsuario}" />
-					<h:inputHidden id="idErroLogin" value="#{loginBean.msgErro}" />
-					<p:remoteCommand name="criarUsuario"
+					<h:inputHidden
+						id="idUsuario"
+						value="#{loginBean.idUsuario}" />
+					<h:inputHidden
+						id="idErroLogin"
+						value="#{loginBean.msgErro}" />
+					<p:remoteCommand
+						name="criarUsuario"
 						actionListener="#{loginBean.salvar()}">
 					</p:remoteCommand>
-					<p:remoteCommand name="erroLogin"
+					<p:remoteCommand
+						name="erroLogin"
 						actionListener="#{loginBean.exibirMensagemErro()}" />
-					<p:panelGrid columns="3" layout="grid"
-						columnClasses="ui-grid-col-2,ui-grid-col-8,ui-grid-col-2">
+					<p:panelGrid
+						columns="3"
+						layout="grid"
+						columnClasses="ui-grid-col-1,ui-grid-col-6,ui-grid-col-5">
 						<h:panelGroup>
 						</h:panelGroup>
 						<h:panelGroup>
-							<p:panelGrid id="panelCadastro" layout="grid"
-								columnClasses="ui-grid-col-12" style="overflow:auto;"
+							<p:panelGrid
+								id="panelCadastro"
+								layout="grid"
+								columnClasses="ui-grid-col-12"
+								style="overflow:auto;"
 								columns="1">
 								<p:fieldset legend="Dados Usuário">
-									<p:panelGrid columns="4" layout="grid"
-										columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-3,ui-grid-col-3">
-										<h:outputText value="Email:" />
-										<p:inputText required="true"
-											requiredMessage="Email é obrigatório" id="emailCadastro"
-											placeholder="teste@teste.com" />
-										<h:outputText value="Senha:" />
-										<p:password required="true"
-											requiredMessage="Senha é obrigatório" id="senhaCadastro"
-											placeholder="********" />
-										<h:outputText value="Nome:" />
-										<p:inputText required="true"
-											requiredMessage="Nome é obrigatório"
-											value="#{loginBean.usuario.nome}" id="nome"
-											placeholder="João da Silva" />
-										<h:outputText value="Cpf:" />
-										<p:inputMask required="true"
-											requiredMessage="Cpf é obrigatório"
-											value="#{loginBean.usuario.cpf}" id="cpf"
-											mask="999.999.999-99" placeholder="999.999.999-99" />
-
-										<h:outputText value="Telefone:" />
-										<p:inputMask required="true"
-											requiredMessage="Telefone é obrigatório"
-											value="#{loginBean.usuario.telefone}"
-											placeholder="(99)99999-9999" converter="maskConverter"
-											mask="(99)9?9999-9999" id="telefone" />
-										<h:outputText value="Data Nasc:" />
-										<p:calendar required="true" styleClass="dtNasc"
-											mask="99/99/99"
-											requiredMessage="Data de Nascimento é obrigatório"
-											id="dataNasc" value="#{loginBean.usuario.dataNascimento}">
-										</p:calendar>
+									<p:panelGrid
+										columns="2"
+										layout="grid">
+										<h:panelGroup id="groupEmail">
+											<h:outputText value="Email:" />
+											<p:inputText
+												required="true"
+												requiredMessage="Email é obrigatório"
+												id="emailCadastro"
+												placeholder="teste@teste.com" />
+										</h:panelGroup>
+										<h:panelGroup id="groupSenha">
+											<h:outputText value="Senha:" />
+											<p:password
+												required="true"
+												requiredMessage="Senha é obrigatório"
+												id="senhaCadastro"
+												placeholder="********" />
+										</h:panelGroup>
+										<h:panelGroup id="groupNome">
+											<h:outputText value="#{msg['nome']}:" />
+											<p:inputText
+												required="true"
+												requiredMessage="#{msg['nome']} #{msg['e.obrigatorio']}"
+												value="#{loginBean.usuario.nome}"
+												id="nome"
+												placeholder="João da Silva" />
+										</h:panelGroup>
+										<h:panelGroup id="groupCpf">
+											<h:outputText value="Cpf:" />
+											<p:inputMask
+												required="true"
+												requiredMessage="Cpf é obrigatório"
+												value="#{loginBean.usuario.cpf}"
+												id="cpf"
+												mask="999.999.999-99"
+												placeholder="999.999.999-99" />
+										</h:panelGroup>
+										<h:panelGroup id="groupTelefone">
+											<h:outputText value="Telefone:" />
+											<p:inputMask
+												required="true"
+												requiredMessage="Telefone é obrigatório"
+												value="#{loginBean.usuario.telefone}"
+												placeholder="(99)99999-9999"
+												converter="maskConverter"
+												mask="(99)9?9999-9999"
+												id="telefone" />
+										</h:panelGroup>
+										<h:panelGroup id="groupDataNasc">
+											<h:outputText value="Data Nasc:" />
+											<p:calendar
+												required="true"
+												styleClass="dtNasc"
+												mask="99/99/99"
+												placeholder="99/99/99"
+												requiredMessage="Data de Nascimento é obrigatório"
+												id="dataNasc"
+												value="#{loginBean.usuario.dataNascimento}">
+											</p:calendar>
+										</h:panelGroup>
+										<h:panelGroup id="groupTipoUsuario">
+											<h:outputText value="Tipo de Usuario:" />
+											<p:selectOneMenu
+												styleClass="selectTipoUsuario"
+												value="#{loginBean.usuario.tipoUsuario}">
+												<f:selectItems
+													value="#{loginBean.tiposUsuario}"
+													var="tipo"
+													itemLabel="#{tipo.descricao}"
+													itemValue="#{tipo}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
 									</p:panelGrid>
 								</p:fieldset>
-
-
 								<p:fieldset legend="Endereço">
-									<p:panelGrid columns="4" layout="grid"
-										columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-3,ui-grid-col-3">
-										<h:outputText value="Rua:" />
-										<p:inputText placeholder="Rua João da silva" required="true"
-											requiredMessage="Rua é obrigatório"
-											value="#{loginBean.usuario.endereco.rua}" id="rua" />
-										<h:outputText value="Número:" />
-										<p:inputMask id="numero"
-											value="#{loginBean.usuario.endereco.numero}" />
+									<p:panelGrid
+										id="groupEndereco"
+										columns="2"
+										layout="grid">
+										<h:panelGroup id="groupEstado">
+											<h:outputText value="Estado:" />
+											<p:selectOneMenu
+												styleClass="selectEstado"
+												converter="estadoConverter"
+												value="#{buscaEnderecoBean.estado}"
+												id="estado">
+												<f:selectItem
+													itemLabel="Selecione"
+													itemValue="null" />
+												<f:selectItems
+													itemLabel="#{estado.nome}"
+													itemValue="#{estado}"
+													var="estado"
+													value="#{buscaEnderecoBean.listarEstados}" />
+												<p:ajax
+													event="itemSelect"
+													listener="#{buscaEnderecoBean.selectEstado}"
+													update="cidade" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+										<h:panelGroup id="groupCidade">
+											<h:outputText value="Cidade:" />
+											<p:selectOneMenu
+												styleClass="selectCidade"
+												converter="cidadeConverter"
+												value="#{buscaEnderecoBean.cidade}"
+												id="cidade">
+												<f:selectItem
+													itemLabel="Selecione"
+													itemValue="null" />
+												<f:selectItems
+													var="cidade"
+													itemLabel="#{cidade.nome}"
+													itemValue="#{cidade}"
+													value="#{buscaEnderecoBean.listarCidades}" />
+												<p:ajax
+													event="itemSelect"
+													listener="#{buscaEnderecoBean.selectCidade}"
+													update="bairro" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+										<h:panelGroup id="groupBairro">
+											<h:outputText value="Bairro:" />
+											<p:selectOneMenu
+												required="true"
+												styleClass="selectBairro"
+												requiredMessage="Bairro é obrigatório"
+												value="#{buscaEnderecoBean.endereco.bairro}"
+												id="bairro"
+												converter="bairroConverter">
+												<f:selectItem
+													itemLabel="Selecione"
+													itemValue="null" />
+												<f:selectItems
+													itemValue="#{bairro}"
+													var="bairro"
+													itemLabel="#{bairro.descricao}"
+													value="#{buscaEnderecoBean.listarBairros}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+										<h:panelGroup id="groupRua">
+											<h:outputText value="Rua:" />
+											<p:inputText
+												placeholder="Rua João da silva"
+												required="true"
+												requiredMessage="Rua é obrigatório"
+												value="#{buscaEnderecoBean.endereco.rua}"
+												id="rua" />
+										</h:panelGroup>
+										<h:panelGroup id="groupNumero">
+											<h:outputText value="Número:" />
+											<p:inputMask
+												id="numero"
+												value="#{buscaEnderecoBean.endereco.numero}" />
+										</h:panelGroup>
+										<h:panelGroup id="groupCep">
+											<p:panelGrid
+												style="width:100%"
+												columns="1">
+												<h:outputText value="Cep:" />
+												<p:panelGrid
+													style="width:100%"
+													columns="2"
+													columnClasses="ui-grid-col-10,ui-grid-col-2">
+													<p:inputMask
+														required="true"
+														requiredMessage="Cep é obrigatório"
+														mask="99.999-999"
+														placeholder="99.999-999"
+														value="#{buscaEnderecoBean.endereco.cep}"
+														id="cep" />
+													<p:commandButton
+														update="groupEndereco"
+														action="#{buscaEnderecoBean.buscarCep}"
+														value="buscar"
+														partialSubmit="true"
+														process="cep,@this">
+													</p:commandButton>
+												</p:panelGrid>
 
-										<h:outputText value="Cep:" />
-										<p:inputMask required="true"
-											requiredMessage="Cep é obrigatório" mask="99.999-999"
-											placeholder="99.999-999"
-											value="#{loginBean.usuario.endereco.cep}" id="cep" />
-										<h:outputText value="Complemento:" />
-										<p:inputText value="#{loginBean.usuario.endereco.complemento}" />
-
-										<p:outputLabel value="Estado" for="estado" />
-										<p:selectOneMenu styleClass="selectEstado"
-											converter="estadoConverter" value="#{loginBean.estado}"
-											style="width: 160px;" id="estado">
-											<f:selectItem itemLabel="Selecione" itemValue="null" />
-											<f:selectItems itemLabel="#{estado.nome}"
-												itemValue="#{estado}" var="estado"
-												value="#{loginBean.listarEstados}" />
-											<p:ajax event="itemSelect"
-												listener="#{loginBean.selectEstado}" update="cidade" />
-										</p:selectOneMenu>
-
-										<p:outputLabel value="Cidade" for="cidade" />
-										<p:selectOneMenu styleClass="selectCidade"
-											converter="cidadeConverter" value="#{loginBean.cidade}"
-											style="width: 160px;" id="cidade">
-											<f:selectItem itemLabel="Selecione" itemValue="null" />
-											<f:selectItems var="cidade" itemLabel="#{cidade.nome}"
-												itemValue="#{cidade}" value="#{loginBean.listarCidades}" />
-											<p:ajax event="itemSelect"
-												listener="#{loginBean.selectCidade}" update="bairro" />
-										</p:selectOneMenu>
-
-										<p:outputLabel value="Bairro" for="bairro" />
-										<p:selectOneMenu required="true" styleClass="selectBairro"
-											requiredMessage="Bairro é obrigatório"
-											value="#{loginBean.usuario.endereco.bairro}"
-											style="width: 160px;" id="bairro" converter="bairroConverter">
-											<f:selectItem itemLabel="Selecione" itemValue="null" />
-											<f:selectItems itemValue="#{bairro}" var="bairro"
-												itemLabel="#{bairro.descricao}"
-												value="#{loginBean.listarBairros}" />
-										</p:selectOneMenu>
+											</p:panelGrid>
+										</h:panelGroup>
+										<h:panelGroup id="groupComplemento">
+											<h:outputText value="Complemento:" />
+											<p:inputText value="#{buscaEnderecoBean.endereco.complemento}" />
+										</h:panelGroup>
+										<p:spacer />
+										<h:panelGroup id="groupLatitude">
+											<h:outputText value="Latitude:" />
+											<p:inputText value="#{buscaEnderecoBean.endereco.latitude}" />
+										</h:panelGroup>
+										<h:panelGroup id="groupLongitude">
+											<h:outputText value="Longitude:" />
+											<p:inputText value="#{buscaEnderecoBean.endereco.longitude}" />
+										</h:panelGroup>
 									</p:panelGrid>
-								</p:fieldset>
-								<p:fieldset legend="Tipo Usuário">
-									<h:outputText value="Tipo de Usuario:" />
-									<p:selectOneMenu styleClass="selectTipoUsuario"
-										value="#{loginBean.usuario.tipoUsuario}" style="width:175px">
-										<f:selectItems value="#{loginBean.tiposUsuario}" var="tipo"
-											itemLabel="#{tipo.descricao}" itemValue="#{tipo}" />
-									</p:selectOneMenu>
 								</p:fieldset>
 								<h:panelGrid columns="2">
-									<p:commandButton value="Cancelar" action="#{loginBean.cancelar()}" immediate="true"/>
-									<p:commandButton onclick="criarNovoUsuario()"
-										update="mensagem,panelCadastro" value="Salvar" />
+									<p:commandButton
+										value="Cancelar"
+										action="#{loginBean.cancelar()}"
+										immediate="true" />
+									<p:commandButton
+										onclick="criarNovoUsuario()"
+										update="mensagem,panelCadastro"
+										value="Salvar" />
 								</h:panelGrid>
+								<p:commandButton
+									styleClass="material-icons"
+									action="#{loginBean.deslogar()}"
+									value="exit_to_app">
+								</p:commandButton>
 							</p:panelGrid>
 						</h:panelGroup>
 						<h:panelGroup>
+							<div onload="init()">
+								<script src='https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.js'></script>
+								<link
+									rel='stylesheet'
+									href='https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.css'
+									type='text/css' />
+								<div
+									id="map"
+									style="width: 100%; height: 600px; position: relative;"></div>
+								<p:commandButton
+									immediate="true"
+									onclick="init()"
+									value="Carregar"></p:commandButton>
+							</div>
 						</h:panelGroup>
 					</p:panelGrid>
 				</div>

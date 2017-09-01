@@ -18,21 +18,23 @@ import br.com.contratediarista.enuns.TipoUsuario;
 @WebFilter("/paginas/*")
 public class FiltroAutenticacao implements Filter {
 
+	@Override
 	public void destroy() {
 	}
 
+	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		HttpServletRequest hreq = (HttpServletRequest) request;
 		HttpServletResponse hres = (HttpServletResponse) response;
 		Usuario user = (Usuario) hreq.getSession().getAttribute("usuario");
 		if (user == null) {
-			if(hreq.getRequestURI().contains("login_modificado") || hreq.getRequestURI().contains("cadastro_usuario")) {
+			if (hreq.getRequestURI().contains("login_modificado") || hreq.getRequestURI().contains("cadastro_usuario")
+					|| hreq.getRequestURI().contains("pagina_exemplo")) {
 				chain.doFilter(request, response);
-			}
-			else {
+			} else {
 				hres.sendRedirect("paginas/login_modificado.jsf");
-			}	
+			}
 			return;
 		} else {
 			TipoUsuario tipoUsuario = user.getTipoUsuario();
@@ -60,6 +62,7 @@ public class FiltroAutenticacao implements Filter {
 		}
 	}
 
+	@Override
 	public void init(FilterConfig filter) throws ServletException {
 
 	}

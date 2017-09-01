@@ -22,7 +22,7 @@ import br.com.contratediarista.entity.Bairro;
 public class BairroService implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -51,6 +51,19 @@ public class BairroService implements Serializable {
 		try {
 			List<Bairro> bairros = bairroDao.listAll();
 			return Response.ok(bairros).build();
+		} catch (Exception e) {
+			return Response.status(INTERNAL_SERVER_ERROR)
+					.type(MediaType.APPLICATION_JSON + ";charset=UTF-8").build();
+		}
+	}
+
+	@GET
+	@Path(value = "restore-descricao/{descricao}")
+	@Produces({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
+	public Response restoreByDescricao(@PathParam(value = "descricao") String descricao) {
+		try {
+			Bairro bairro = bairroDao.restoreByDescricao(descricao);
+			return Response.ok(bairro).build();
 		} catch (Exception e) {
 			return Response.status(INTERNAL_SERVER_ERROR)
 					.type(MediaType.APPLICATION_JSON + ";charset=UTF-8").build();

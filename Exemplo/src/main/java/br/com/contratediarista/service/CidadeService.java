@@ -19,20 +19,20 @@ import br.com.contratediarista.entity.Cidade;
 
 @RequestScoped
 @Path("cidade")
-public class CidadeService implements Serializable{
+public class CidadeService implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	public CidadeService() {
-		
+
 	}
-	
+
 	@Inject
 	private CidadeDao cidadeDao;
-	
+
 	@GET
 	@Path("{id}")
 	@Produces({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
@@ -45,13 +45,26 @@ public class CidadeService implements Serializable{
 					.type(MediaType.APPLICATION_JSON + ";charset=UTF-8").build();
 		}
 	}
-	
+
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
 	public Response listAll() {
 		try {
 			List<Cidade> cidades = cidadeDao.listAll();
 			return Response.ok(cidades).build();
+		} catch (Exception e) {
+			return Response.status(INTERNAL_SERVER_ERROR)
+					.type(MediaType.APPLICATION_JSON + ";charset=UTF-8").build();
+		}
+	}
+
+	@GET
+	@Path(value = "restore-nome/{nome}")
+	@Produces({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
+	public Response restoreByNome(@PathParam(value = "nome") String nome) {
+		try {
+			Cidade cidade = cidadeDao.restoreByNome(nome);
+			return Response.ok(cidade).build();
 		} catch (Exception e) {
 			return Response.status(INTERNAL_SERVER_ERROR)
 					.type(MediaType.APPLICATION_JSON + ";charset=UTF-8").build();

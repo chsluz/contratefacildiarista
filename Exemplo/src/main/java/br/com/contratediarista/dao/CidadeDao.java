@@ -15,46 +15,48 @@ import br.com.contratediarista.entity.Cidade;
 public class CidadeDao implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	public CidadeDao() {
-		
+
 	}
-	
 
 	@Inject
 	EntityManager em;
 
 	GenericDao<Cidade> dao;
-	
+
 	@PostConstruct
 	void init() {
 		dao = new GenericDao<Cidade>(Cidade.class, em);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<Cidade> listByIdEstado(int id) {
 		try {
 			String sql = "SELECT c FROM Cidade c WHERE c.estado.id = :id";
-			Query query = em.createQuery(sql,Cidade.class);
+			Query query = em.createQuery(sql, Cidade.class);
 			query.setParameter("id", id);
-			return (List<Cidade>) query.getResultList();
-		}  catch (Exception e) {
+			return query.getResultList();
+		} catch (Exception e) {
 			System.out.println(e);
 			return null;
 		}
+	}
+
+	public Cidade restoreByNome(String nome) {
+		return dao.restoreByNome(nome);
 	}
 
 	public List<Cidade> listAll() {
 		try {
 			return dao.listarTodos();
-		}  catch (Exception e) {
+		} catch (Exception e) {
 			System.out.println(e);
 			return null;
 		}
 	}
-
 
 }

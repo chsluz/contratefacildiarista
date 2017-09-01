@@ -2,7 +2,6 @@ package br.com.contratediarista.bean;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,17 +14,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.SelectEvent;
 
-import br.com.contratediarista.entity.Bairro;
-import br.com.contratediarista.entity.Cidade;
-import br.com.contratediarista.entity.Endereco;
-import br.com.contratediarista.entity.Estado;
 import br.com.contratediarista.entity.Usuario;
 import br.com.contratediarista.enuns.TipoUsuario;
-import br.com.contratediarista.service.BairroService;
-import br.com.contratediarista.service.CidadeService;
-import br.com.contratediarista.service.EstadoService;
 import br.com.contratediarista.service.UsuarioService;
 import br.com.contratediarista.utils.FacesUtil;
 
@@ -42,16 +33,10 @@ public class LoginBean implements Serializable {
 	private UsuarioService usuarioService;
 
 	@Inject
-	private EstadoService estadoService;
-
-	@Inject
-	private CidadeService cidadeService;
-
-	@Inject
-	private BairroService bairroService;
-
-	@Inject
 	private FacesContext facesContext;
+
+	@Inject
+	private BuscaEnderecoBean buscaEnderecoBean;
 
 	@Inject
 	private FacesUtil facesUtil;
@@ -62,12 +47,6 @@ public class LoginBean implements Serializable {
 
 	private String msgErro;
 
-	private Estado estado;
-
-	private Cidade cidade;
-
-	private Bairro bairro;
-
 	@PostConstruct
 	public void init() {
 		instanciarNovo();
@@ -75,18 +54,7 @@ public class LoginBean implements Serializable {
 
 	public void instanciarNovo() {
 		usuario = new Usuario();
-		usuario.setEndereco(new Endereco());
-		estado = new Estado();
-		cidade = new Cidade();
-		bairro = new Bairro();
-	}
 
-	public void selectEstado(SelectEvent event) {
-		estado = (Estado) event.getObject();
-	}
-
-	public void selectCidade(SelectEvent event) {
-		cidade = (Cidade) event.getObject();
 	}
 
 	public void logar() throws IOException {
@@ -111,11 +79,12 @@ public class LoginBean implements Serializable {
 
 	public void salvar() throws Exception {
 		try {
+			usuario.setEndereco(buscaEnderecoBean.getEndereco());
 			usuario.setUid(idUsuario);
 			usuarioService.salvar(usuario);
 			instanciarNovo();
 			facesUtil.exibirMsgSucesso(facesUtil.getLabel("salvo.sucesso"));
-			facesContext.getExternalContext().redirect("login_alterado.jsf");
+			facesContext.getExternalContext().redirect("../");
 		} catch (Exception e) {
 			RequestContext.getCurrentInstance().execute("excluirLogin();");
 			e.printStackTrace();
@@ -129,56 +98,6 @@ public class LoginBean implements Serializable {
 
 	public void cancelar() throws IOException {
 		facesContext.getExternalContext().redirect("../");
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Estado> getListarEstados() {
-		try {
-			Response response = null;
-			List<Estado> estados = new ArrayList<>();
-			response = estadoService.listAll();
-			if (response != null && response.getEntity() != null) {
-				estados = (List<Estado>) response.getEntity();
-			}
-			return estados;
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Cidade> getListarCidades() {
-		try {
-			Response response = null;
-			List<Cidade> cidades = new ArrayList<>();
-			if (estado != null) {
-				response = cidadeService.listByIdEstado(estado.getId());
-				if (response != null && response.getEntity() != null) {
-					cidades = (List<Cidade>) response.getEntity();
-				}
-			}
-			return cidades;
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Bairro> getListarBairros() {
-
-		try {
-			Response response = null;
-			List<Bairro> bairros = new ArrayList<>();
-			if (cidade != null) {
-				response = bairroService.listByIdCidade(cidade.getId());
-				if (response != null && response.getEntity() != null) {
-					bairros = (List<Bairro>) response.getEntity();
-				}
-			}
-			return bairros;
-		} catch (Exception e) {
-			return null;
-		}
 	}
 
 	public List<TipoUsuario> getTiposUsuario() {
@@ -200,30 +119,6 @@ public class LoginBean implements Serializable {
 
 	public void setIdUsuario(String idUsuario) {
 		this.idUsuario = idUsuario;
-	}
-
-	public Estado getEstado() {
-		return estado;
-	}
-
-	public void setEstado(Estado estado) {
-		this.estado = estado;
-	}
-
-	public Cidade getCidade() {
-		return cidade;
-	}
-
-	public void setCidade(Cidade cidade) {
-		this.cidade = cidade;
-	}
-
-	public Bairro getBairro() {
-		return bairro;
-	}
-
-	public void setBairro(Bairro bairro) {
-		this.bairro = bairro;
 	}
 
 	public String getMsgErro() {

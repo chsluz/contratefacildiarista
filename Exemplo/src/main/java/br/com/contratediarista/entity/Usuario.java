@@ -12,14 +12,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-import org.hibernate.validator.constraints.br.CNPJ;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.br.CPF;
 
 import br.com.contratediarista.enuns.TipoUsuario;
 
@@ -37,14 +37,14 @@ public class Usuario implements Serializable {
 	private String uid;
 
 	@Size(max = 100, message = "Nome não pode conter mais que 100 caracteres")
-	@NotBlank(message = "Nome é Obrigatório")
+	@NotBlank(message = "{nome} {e.obrigatorio}")
 	@Column(name = "nome", nullable = false)
 	private String nome;
 
 	@NotEmpty(message = "Cpf é obrigatório")
 	@Size(max = 15, message = "Cpf não pode conter mais que 15 dígitos")
 	@Column(name = "cpf", nullable = false, unique = true)
-	@CNPJ
+	@CPF
 	private String cpf;
 
 	@NotNull(message = "Tipo de usuário é Obrigatório")
@@ -65,12 +65,6 @@ public class Usuario implements Serializable {
 	@Size(max = 12, message = "Telefone não pode conter mais que 12 dígitos")
 	@Column(name = "telefone")
 	private String telefone;
-
-	@Column(name = "latitude")
-	private Double latitude = 0.0;
-
-	@Column(name = "longitude")
-	private Double longitude = 0.0;
 
 	public String getUid() {
 		return uid;
@@ -128,19 +122,4 @@ public class Usuario implements Serializable {
 		this.telefone = telefone;
 	}
 
-	public Double getLatitude() {
-		return latitude;
-	}
-
-	public void setLatitude(Double latitude) {
-		this.latitude = latitude;
-	}
-
-	public Double getLongitude() {
-		return longitude;
-	}
-
-	public void setLongitude(Double longitude) {
-		this.longitude = longitude;
-	}
 }

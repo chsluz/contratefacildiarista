@@ -8,8 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "estado")
@@ -26,9 +27,14 @@ public class Estado implements Serializable {
 	private int id;
 
 	@Size(max = 100, message = "Nome não pode conter mais que 100 caracteres")
-	@NotNull(message = "Nome é obrigatório")
+	@NotEmpty(message = "Nome é obrigatório")
 	@Column(name = "nome", nullable = false, length = 100)
 	private String nome;
+
+	@Size(max = 2, message = "Sigla não pode conter mais que 2 caracteres")
+	@NotEmpty(message = "Sigla é obrigatório")
+	@Column(name = "sigla", nullable = false, length = 2)
+	private String sigla;
 
 	public int getId() {
 		return id;
@@ -44,6 +50,14 @@ public class Estado implements Serializable {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public String getSigla() {
+		return sigla;
+	}
+
+	public void setSigla(String sigla) {
+		this.sigla = sigla;
 	}
 
 	@Override
