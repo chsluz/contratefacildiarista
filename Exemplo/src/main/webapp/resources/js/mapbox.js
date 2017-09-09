@@ -1,59 +1,49 @@
-var lat;
-		var lon;
-		var map;
-		var pontos = [];
-		var directions;
-		var distance;
+  	  var latitude;
+      var longitude;
+      var map;
+      var marker;
+      var cidade;
+      function init() {
+      	navigator.geolocation.watchPosition(render);
+      }
 
-		function init() {
-			navigator.geolocation.watchPosition(render);
-		}
+      function render(pos) {
+      	latitude = pos.coords.latitude;
+      	longitude = pos.coords.longitude;
+      	if(!map) {
+      		$("#latitude").val(latitude);
+          	$("#longitude").val(longitude);
+      		initMap();
+      	}
+      	 map.addListener('click', function(e) {
+      	    placeMarkerAndPanTo(e.latLng, map);
+      	  });
+      	 
+      	function placeMarkerAndPanTo(latLng, map) {
+      	  marker.setMap(null);
+      	  marker = new google.maps.Marker({
+      	    position: latLng,
+      	    map: map
+      	  });
+      	  map.panTo(latLng);
+      	  $("#latitude").val(latLng.lat);
+          $("#longitude").val(latLng.lng);
+      	}
 
-		function render(pos) {
-			lat = pos.coords.latitude;
-			lon = pos.coords.longitude;
-			if(!map) {
-				carregarMapa();
-			}
-		}
+      }
 
-		function carregarMapa() {
-			var cidade = new L.LatLng(lat,lon);
-			distance = 0;
-
-			L.mapbox.accessToken = 'pk.eyJ1IjoiaGVucmlxdWUyODEiLCJhIjoiY2ozYWhubWo0MDB5NDJxbWU1eTlmbTV0bCJ9.BtfSnLM-ru-l02f8VRrsEA';
-			map = L.mapbox.map('map', 'mapbox.streets', {
-			    zoomControl: true
-			}).setView(cidade, 15);
-
-			
-			
-			map.on('click', onMapClick);
-
-			function onMapClick(e) {
-				pontos.push(e.latlng);
-				if(pontos.length > 1) {
-					directions = L.mapbox.directions();
-					directions.setOrigin(pontos[pontos.length -2]);
-					directions.waypoints = pontos;
-					directions.setDestination(pontos[pontos.length -1]);
-
-					directionsLayer = L.mapbox.directions.layer(directions).addTo(map);
-					directionsRoutesControl = L.mapbox.directions.routesControl('routes', directions).addTo(map);
-					var route = directions.query();
-
-					sleep(3000).then(() => {
-							distance = distance + route.directions.routes[0].distance;
-							//var input = document.getElementById('txtDistancia');
-							//input.value = distance;
-					}); 
-					
-
-					
-				}
-			}
-
-			function sleep(ms) {
-			  return new Promise(resolve => setTimeout(resolve, ms));
-			}
-		}
+      function initMap() {
+        cidade = {lat: latitude, lng: longitude};
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 17,
+          center: cidade
+        });
+        
+        	marker = new google.maps.Marker({
+            position: cidade,
+            map: map
+         });
+      
+      }
+      
+     

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<ui:composition template="/template/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="corpo">
+	<h:panelGroup id="panelCadastroTipoAtividade">
+		<p:outputLabel for="" id="labelDescricaoAtividae"/>
+		<p:inputText maxlength="100" id="descricaoAtividade"/>
+	</h:panelGroup>
+	<h:panelGroup id="panelConsultaTipoAtividade">
+		<p:dataTable>
+		</p:dataTable>
+	</h:panelGroup>
+	</ui:define>
+</ui:composition>

@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 	<display-name>ContrateDiarista</display-name>
 	<welcome-file-list>
-		<welcome-file>paginas/login_alterado.jsf</welcome-file>
+		<welcome-file>paginas/publico/login.jsf</welcome-file>
 	</welcome-file-list>
 	<context-param>
 		<param-name>javax.faces.PROJECT_STAGE</param-name>
@@ -27,6 +27,10 @@
 		<servlet-name>javax.ws.rs.core.Application</servlet-name>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/paginas/publico/pagina_nao_encontrada.xhtml</location>
+	</error-page>
 	<servlet-mapping>
 		<servlet-name>javax.ws.rs.core.Application</servlet-name>
 		<url-pattern>/api/*</url-pattern>

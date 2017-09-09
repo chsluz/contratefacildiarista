@@ -29,35 +29,51 @@ public class FiltroAutenticacao implements Filter {
 		HttpServletResponse hres = (HttpServletResponse) response;
 		Usuario user = (Usuario) hreq.getSession().getAttribute("usuario");
 		if (user == null) {
-			if (hreq.getRequestURI().contains("login_modificado") || hreq.getRequestURI().contains("cadastro_usuario")
-					|| hreq.getRequestURI().contains("pagina_exemplo")) {
+			if (hreq.getRequestURI().equals("/ContrateDiarista/")) {
+				hres.sendRedirect("paginas/publico/pagina_inicial.jsf");
+				return;
+			}
+			if (hreq.getRequestURI().contains("login") || hreq.getRequestURI().contains("cadastro_usuario")) {
 				chain.doFilter(request, response);
 			} else {
-				hres.sendRedirect("paginas/login_modificado.jsf");
+				hres.sendRedirect("login.jsf");
 			}
 			return;
 		} else {
 			TipoUsuario tipoUsuario = user.getTipoUsuario();
-			if (TipoUsuario.ADMINISTRADOR.equals(tipoUsuario)) {
+			if (hreq.getRequestURI().contains("login") || hreq.getRequestURI().contains("cadastro_usuario")) {
+				hres.sendRedirect("pagina_inicial.jsf");
+				return;
+			} else if (hreq.getRequestURI().equals("/ContrateDiarista/")) {
+				hres.sendRedirect("paginas/publico/pagina_inicial.jsf");
+				return;
+			} else if (hreq.getRequestURI().contains("pagina_inicial")) {
 				chain.doFilter(request, response);
+				return;
+			} else if (TipoUsuario.ADMINISTRADOR.equals(tipoUsuario)) {
+				chain.doFilter(request, response);
+				return;
 			} else if (TipoUsuario.CONTRATANTE.equals(user.getTipoUsuario())) {
 				if (hreq.getRequestURI().contains("/contratante/")) {
 					chain.doFilter(request, response);
 				} else {
-					hres.sendRedirect("/acesso_negado.jsf");
+					hres.sendRedirect("acesso_negado.jsf");
 				}
+				return;
 			} else if (TipoUsuario.PRESTADOR.equals(user.getTipoUsuario())) {
 				if (hreq.getRequestURI().contains("/prestador/")) {
 					chain.doFilter(request, response);
 				} else {
-					hres.sendRedirect("/acesso_negado.jsf");
+					hres.sendRedirect("acesso_negado.jsf");
 				}
+				return;
 			} else {
 				if (hreq.getRequestURI().contains("/moderador/")) {
 					chain.doFilter(request, response);
 				} else {
-					hres.sendRedirect("/acesso_negado.jsf");
+					hres.sendRedirect("acesso_negado.jsf");
 				}
+				return;
 			}
 		}
 	}

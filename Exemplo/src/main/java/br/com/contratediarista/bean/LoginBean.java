@@ -19,6 +19,7 @@ import br.com.contratediarista.entity.Usuario;
 import br.com.contratediarista.enuns.TipoUsuario;
 import br.com.contratediarista.service.UsuarioService;
 import br.com.contratediarista.utils.FacesUtil;
+import br.com.contratediarista.utils.Utils;
 
 @Named
 @SessionScoped
@@ -42,6 +43,8 @@ public class LoginBean implements Serializable {
 	private FacesUtil facesUtil;
 
 	private Usuario usuario;
+	
+	private Usuario usuarioLogin;
 
 	private String idUsuario;
 
@@ -54,23 +57,24 @@ public class LoginBean implements Serializable {
 
 	public void instanciarNovo() {
 		usuario = new Usuario();
+		usuarioLogin = new Usuario();
 
 	}
 
 	public void logar() throws IOException {
 		Response response = usuarioService.buscarUsuarioByUid(idUsuario);
 		if (response.getStatus() == Status.OK.getStatusCode()) {
-			usuario = (Usuario) response.getEntity();
+			usuarioLogin = (Usuario) response.getEntity();
 			if (usuario != null) {
-				facesContext.getExternalContext().getSessionMap().put("usuario", usuario);
-				facesContext.getExternalContext().redirect("index.jsf");
+				facesContext.getExternalContext().getSessionMap().put("usuario", usuarioLogin);
+				facesContext.getExternalContext().redirect("pagina_inicial.jsf");
 			}
 		}
 	}
 
 	public void deslogar() throws IOException {
 		facesContext.getExternalContext().getSessionMap().put("usuario", null);
-		facesContext.getExternalContext().redirect("../");
+		facesContext.getExternalContext().redirect("../publico/login.jsf");
 	}
 
 	public void exibirMensagemErro() {
@@ -79,12 +83,19 @@ public class LoginBean implements Serializable {
 
 	public void salvar() throws Exception {
 		try {
+			String cpf = new String(usuario.getCpf());
+			cpf = Utils.removerAcentos(cpf);
+			if(!Utils.validarCpf(cpf)) {
+				RequestContext.getCurrentInstance().execute("excluirLogin();");
+				facesUtil.exibirMsgErro(facesUtil.getLabel("cpf.invalido"));
+				return;
+			}
 			usuario.setEndereco(buscaEnderecoBean.getEndereco());
 			usuario.setUid(idUsuario);
 			usuarioService.salvar(usuario);
 			instanciarNovo();
 			facesUtil.exibirMsgSucesso(facesUtil.getLabel("salvo.sucesso"));
-			facesContext.getExternalContext().redirect("../");
+			facesContext.getExternalContext().redirect("login.jsf");
 		} catch (Exception e) {
 			RequestContext.getCurrentInstance().execute("excluirLogin();");
 			e.printStackTrace();
@@ -93,11 +104,13 @@ public class LoginBean implements Serializable {
 	}
 
 	public void cadastrarNovo() throws IOException {
+		usuario = new Usuario();
 		facesContext.getExternalContext().redirect("cadastro_usuario.jsf");
 	}
 
 	public void cancelar() throws IOException {
-		facesContext.getExternalContext().redirect("../");
+		usuario = new Usuario();
+		facesContext.getExternalContext().redirect("login.jsf");
 	}
 
 	public List<TipoUsuario> getTiposUsuario() {
@@ -129,4 +142,12 @@ public class LoginBean implements Serializable {
 		this.msgErro = msgErro;
 	}
 
+	public Usuario getUsuarioLogin() {
+		return usuarioLogin;
+	}
+
+	public void setUsuarioLogin(Usuario usuarioLogin) {
+		this.usuarioLogin = usuarioLogin;
+	}
+	
 }

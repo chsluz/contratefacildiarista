@@ -9,6 +9,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import br.com.contratediarista.entity.Usuario;
+
 @Named
 @RequestScoped
 public class FacesUtil implements Serializable {
@@ -35,6 +37,11 @@ public class FacesUtil implements Serializable {
 
 	public String getLabel(String chave) {
 		return bundle.getString(chave);
+	}
+	
+	public Usuario getUsuarioLogado() {
+		Usuario usuario = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
+		return usuario;
 	}
 
 }
