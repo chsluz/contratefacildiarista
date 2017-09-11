@@ -1,29 +1,60 @@
 <!DOCTYPE html>
-<ui:composition template="/template/template.xhtml"
+<ui:composition
+	template="/template/template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 	<ui:define name="corpo">
-		<h:panelGrid>
-			<h:panelGroup id="panelCadastroTipoAtividade">
-				<p:outputLabel value="#{msg['descricao']}" for="descricaoAtividade"
+		<h:panelGrid
+			id="panelTipoAtividade"
+			style="height:600px;">
+			<h1>Cadastro de Tipo de Atividade</h1>
+			<p:panelGrid
+				id="panelCadastroTipoAtividade"
+				layout="grid"
+				columns="1"
+				style="height:40%">
+				<p:outputLabel
+					value="#{msg['descricao']}"
+					for="descricaoAtividade"
 					id="labelDescricaoAtividae" />
-				<p:inputText maxlength="100" id="descricaoAtividade" />
-			</h:panelGroup>
-			<h:panelGroup id="panelConsultaTipoAtividade">
-				<p:dataTable var="tipo"
-					value="#{tipoAtividadeBean.tipoAtividadeLazy}" paginator="true"
+				<p:inputText
+					maxlength="100"
+					id="descricaoAtividade" />
+				<f:facet name="footer" style="position:absolute;">
+					<p:commandButton value="Cancelar" />
+					<p:commandButton value="Salvar" />
+				</f:facet>
+
+			</p:panelGrid>
+
+			<h:panelGroup
+				id="panelConsultaTipoAtividade"
+				style="height:60%">
+				<p:dataTable
+					var="tipo"
+					value="#{tipoAtividadeBean.tipoAtividadeLazy}"
+					paginator="true"
 					rows="10"
 					paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-					rowsPerPageTemplate="5,10,15" id="tableTipoAtividade" lazy="true">
-					<p:column headerText="#{msg['id']}" sortBy="#{tipo.id}"
+					rowsPerPageTemplate="5,10,15"
+					id="tableTipoAtividade"
+					lazy="true">
+					<f:facet name="header">
+						Tipos de Atividade
+					</f:facet>
+					<p:column
+						headerText="#{msg['id']}"
+						sortBy="#{tipo.id}"
 						filterBy="#{tipo.id}">
 						<h:outputText value="#{tipo.id}" />
 					</p:column>
-					<p:column headerText="#{msg['descricao']}"
-						sortBy="#{tipo.descricao}" filterBy="#{tipo.descricao}">
+					<p:column
+						headerText="#{msg['descricao']}"
+						sortBy="#{tipo.descricao}"
+						filterBy="#{tipo.descricao}">
 						<h:outputText value="#{tipo.descricao}" />
 					</p:column>
 				</p:dataTable>

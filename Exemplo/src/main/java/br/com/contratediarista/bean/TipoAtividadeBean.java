@@ -13,27 +13,27 @@ import javax.ws.rs.core.Response.Status;
 import org.primefaces.model.LazyDataModel;
 
 import br.com.contratediarista.entity.TipoAtividade;
-import br.com.contratediarista.lazy.TipoAtividadeLazy;
+import br.com.contratediarista.lazy.AbstractLazyDataModel;
 import br.com.contratediarista.service.TipoAtividadeService;
 
 @Named
 @ViewScoped
-public class TipoAtividadeBean implements Serializable{
+public class TipoAtividadeBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private LazyDataModel<TipoAtividade> tipoAtividadeLazy;
-	
+
 	@Inject
 	private TipoAtividadeService tipoAtividadeService;
-	
+
 	@SuppressWarnings("unchecked")
 	@PostConstruct
 	public void init() {
 		Response response = tipoAtividadeService.listAll();
-		if(response.getStatus() == Status.OK.getStatusCode()) {
+		if (response.getStatus() == Status.OK.getStatusCode()) {
 			List<TipoAtividade> lista = (List<TipoAtividade>) response.getEntity();
-			tipoAtividadeLazy = new TipoAtividadeLazy(lista);
+			tipoAtividadeLazy = new AbstractLazyDataModel<TipoAtividade>(lista);
 		}
 	}
 
