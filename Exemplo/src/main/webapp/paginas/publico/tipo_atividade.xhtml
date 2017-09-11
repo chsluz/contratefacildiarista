@@ -6,13 +6,29 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 	<ui:define name="corpo">
-	<h:panelGroup id="panelCadastroTipoAtividade">
-		<p:outputLabel for="" id="labelDescricaoAtividae"/>
-		<p:inputText maxlength="100" id="descricaoAtividade"/>
-	</h:panelGroup>
-	<h:panelGroup id="panelConsultaTipoAtividade">
-		<p:dataTable>
-		</p:dataTable>
-	</h:panelGroup>
+		<h:panelGrid>
+			<h:panelGroup id="panelCadastroTipoAtividade">
+				<p:outputLabel value="#{msg['descricao']}" for="descricaoAtividade"
+					id="labelDescricaoAtividae" />
+				<p:inputText maxlength="100" id="descricaoAtividade" />
+			</h:panelGroup>
+			<h:panelGroup id="panelConsultaTipoAtividade">
+				<p:dataTable var="tipo"
+					value="#{tipoAtividadeBean.tipoAtividadeLazy}" paginator="true"
+					rows="10"
+					paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+					rowsPerPageTemplate="5,10,15" id="tableTipoAtividade" lazy="true">
+					<p:column headerText="#{msg['id']}" sortBy="#{tipo.id}"
+						filterBy="#{tipo.id}">
+						<h:outputText value="#{tipo.id}" />
+					</p:column>
+					<p:column headerText="#{msg['descricao']}"
+						sortBy="#{tipo.descricao}" filterBy="#{tipo.descricao}">
+						<h:outputText value="#{tipo.descricao}" />
+					</p:column>
+				</p:dataTable>
+			</h:panelGroup>
+		</h:panelGrid>
+
 	</ui:define>
 </ui:composition>

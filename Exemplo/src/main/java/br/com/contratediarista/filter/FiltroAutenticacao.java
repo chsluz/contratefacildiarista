@@ -50,25 +50,25 @@ public class FiltroAutenticacao implements Filter {
 			} else if (hreq.getRequestURI().contains("pagina_inicial")) {
 				chain.doFilter(request, response);
 				return;
-			} else if (TipoUsuario.ADMINISTRADOR.equals(tipoUsuario)) {
+			} else if (TipoUsuario.ADMINISTRADOR.equals(tipoUsuario) || hreq.getRequestURI().contains("/publico/")) {
 				chain.doFilter(request, response);
 				return;
 			} else if (TipoUsuario.CONTRATANTE.equals(user.getTipoUsuario())) {
-				if (hreq.getRequestURI().contains("/contratante/")) {
+				if (hreq.getRequestURI().contains("/contratante/") || hreq.getRequestURI().contains("/publico/")) {
 					chain.doFilter(request, response);
 				} else {
 					hres.sendRedirect("acesso_negado.jsf");
 				}
 				return;
 			} else if (TipoUsuario.PRESTADOR.equals(user.getTipoUsuario())) {
-				if (hreq.getRequestURI().contains("/prestador/")) {
+				if (hreq.getRequestURI().contains("/prestador/") || hreq.getRequestURI().contains("/publico/")) {
 					chain.doFilter(request, response);
 				} else {
 					hres.sendRedirect("acesso_negado.jsf");
 				}
 				return;
 			} else {
-				if (hreq.getRequestURI().contains("/moderador/")) {
+				if (hreq.getRequestURI().contains("/moderador/") || hreq.getRequestURI().contains("/publico/")) {
 					chain.doFilter(request, response);
 				} else {
 					hres.sendRedirect("acesso_negado.jsf");
