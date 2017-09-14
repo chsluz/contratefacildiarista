@@ -93,13 +93,25 @@ public class GenericDao<T> implements Serializable {
 		}
 	}
 
-	public void alterar(T t) {
+	public void alterar(T t) throws Exception {
 		try {
 			em.getTransaction().begin();
-			em.persist(t);
+			em.merge(t);
 			em.getTransaction().commit();
 		} catch (Exception e) {
 			em.getTransaction().rollback();
+			throw new Exception(e.getCause());
+		}
+	}
+
+	public void excluir(T t) throws Exception {
+		try {
+			em.getTransaction().begin();
+			em.remove(t);
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			em.getTransaction().rollback();
+			throw new Exception(e.getCause());
 		}
 	}
 

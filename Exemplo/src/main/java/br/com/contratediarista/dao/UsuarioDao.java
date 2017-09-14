@@ -54,7 +54,7 @@ public class UsuarioDao extends GenericDao<Usuario> implements Serializable {
 	}
 
 	@Override
-	public void alterar(Usuario usuario) {
+	public void alterar(Usuario usuario) throws Exception {
 		dao.alterar(usuario);
 	}
 

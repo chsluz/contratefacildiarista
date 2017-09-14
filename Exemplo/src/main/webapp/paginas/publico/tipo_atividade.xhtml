@@ -10,7 +10,7 @@
 		<h:panelGrid
 			id="panelTipoAtividade"
 			style="height:600px;">
-			<h1>Cadastro de Tipo de Atividade</h1>
+			<h1>#{msg['cadastro.tipo.atividade']}</h1>
 			<p:panelGrid
 				id="panelCadastroTipoAtividade"
 				layout="grid"
@@ -21,11 +21,22 @@
 					for="descricaoAtividade"
 					id="labelDescricaoAtividae" />
 				<p:inputText
+					required="true"
+					requiredMessage="#{msg['descricao']} #{msg['e.obrigatorio']}"
 					maxlength="100"
+					value="#{tipoAtividadeBean.tipoAtividade.descricao}"
 					id="descricaoAtividade" />
-				<f:facet name="footer" style="position:absolute;">
-					<p:commandButton value="Cancelar" />
-					<p:commandButton value="Salvar" />
+				<f:facet
+					name="footer"
+					style="position:absolute;">
+					<p:commandButton
+						update="panelTipoAtividade"
+						action="#{tipoAtividadeBean.cancelar()}"
+						value="#{msg['cancelar']}" />
+					<p:commandButton
+						update="@form formCadastro"
+						action="#{tipoAtividadeBean.salvar()}"
+						value="#{msg['salvar']}" />
 				</f:facet>
 
 			</p:panelGrid>
@@ -43,19 +54,58 @@
 					id="tableTipoAtividade"
 					lazy="true">
 					<f:facet name="header">
-						Tipos de Atividade
+						#{msg['tipos.atividade']}
 					</f:facet>
 					<p:column
 						headerText="#{msg['id']}"
+						style="text-align:center"
 						sortBy="#{tipo.id}"
 						filterBy="#{tipo.id}">
 						<h:outputText value="#{tipo.id}" />
 					</p:column>
 					<p:column
+						style="text-align:center"
 						headerText="#{msg['descricao']}"
 						sortBy="#{tipo.descricao}"
 						filterBy="#{tipo.descricao}">
 						<h:outputText value="#{tipo.descricao}" />
+					</p:column>
+					<p:column
+						headerText="#{msg['acoes']}"
+						style="text-align:center">
+						<p:commandButton
+							icon="ui-icon-pencil"
+							process="@this"
+							update="panelTipoAtividade">
+							<f:setPropertyActionListener
+								value="#{tipo}"
+								target="#{tipoAtividadeBean.tipoAtividade}" />
+						</p:commandButton>
+						<p:commandButton
+							immediate="true"
+							icon="ui-icon-trash"
+							update="@form formCadastro"
+							action="#{tipoAtividadeBean.excluir(tipo)}">
+							<p:confirm
+								header="#{msg['confirmacao']}"
+								message="#{msg['deseja.realmente.excluir.este.registro']}"
+								icon="fa fa-trash" />
+							<p:confirmDialog
+								global="true"
+								showEffect="fade"
+								hideEffect="fade">
+								<p:commandButton
+									value="Yes"
+									type="button"
+									styleClass="ui-confirmdialog-yes"
+									icon="ui-icon-check" />
+								<p:commandButton
+									value="No"
+									type="button"
+									styleClass="ui-confirmdialog-no"
+									icon="ui-icon-close" />
+							</p:confirmDialog>
+						</p:commandButton>
 					</p:column>
 				</p:dataTable>
 			</h:panelGroup>
