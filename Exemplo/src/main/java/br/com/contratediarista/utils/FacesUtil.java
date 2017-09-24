@@ -8,8 +8,11 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import br.com.contratediarista.entity.Usuario;
+import br.com.contratediarista.service.UsuarioService;
 
 @Named
 @RequestScoped
@@ -18,6 +21,9 @@ public class FacesUtil implements Serializable {
 	/**
 	 *
 	 */
+	@Inject
+	private UsuarioService usuarioService;
+	
 	private static final long serialVersionUID = 1L;
 
 	protected ResourceBundle bundle = ResourceBundle.getBundle("mensagem");
@@ -41,7 +47,13 @@ public class FacesUtil implements Serializable {
 	
 	public Usuario getUsuarioLogado() {
 		Usuario usuario = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
-		return usuario;
+		if(usuario != null) {
+			Response response = usuarioService.buscarUsuarioByUid(usuario.getUid());
+			if(response.getStatus() == Status.OK.getStatusCode()) {
+				return (Usuario) response.getEntity();
+			}
+		}
+		return null;
 	}
 
 }

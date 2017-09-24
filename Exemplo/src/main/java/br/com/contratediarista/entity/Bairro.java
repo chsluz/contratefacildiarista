@@ -32,7 +32,7 @@ public class Bairro implements Serializable{
 	private String descricao;
 	
 	@NotNull(message="Cidade é obrigatório")
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="id_cidade")
 	private Cidade cidade;
 

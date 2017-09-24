@@ -48,7 +48,7 @@ public class Endereco implements Serializable {
 	private String complemento;
 
 	@NotNull(message = "Bairro é obrigatório")
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_bairro")
 	private Bairro bairro;
 
@@ -57,6 +57,10 @@ public class Endereco implements Serializable {
 
 	@Column(name = "longitude")
 	private Double longitude = 0.0;
+	
+	public Endereco() {
+		
+	}
 
 	public Long getId() {
 		return id;

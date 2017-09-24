@@ -1,115 +1,76 @@
 <!DOCTYPE html>
-<ui:composition
-	template="/template/template.xhtml"
+<ui:composition template="/template/template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 	<ui:define name="corpo">
-		<h:panelGrid
-			id="panelTipoAtividade"
-			style="height:600px;">
+		<p:panelGrid columns="1" layout="grid" id="panelTipoAtividade">
 			<h1>#{msg['cadastro.tipo.atividade']}</h1>
-			<p:panelGrid
-				id="panelCadastroTipoAtividade"
-				layout="grid"
-				columns="1"
-				style="height:40%">
-				<p:outputLabel
-					value="#{msg['descricao']}"
-					for="descricaoAtividade"
+			<p:panelGrid id="panelCadastroTipoAtividade" layout="grid"
+				columns="1" style="height:40%">
+				<p:outputLabel value="#{msg['descricao']}" for="descricaoAtividade"
 					id="labelDescricaoAtividae" />
-				<p:inputText
-					required="true"
+				<p:inputText required="true"
 					requiredMessage="#{msg['descricao']} #{msg['e.obrigatorio']}"
 					maxlength="100"
 					value="#{tipoAtividadeBean.tipoAtividade.descricao}"
 					id="descricaoAtividade" />
-				<f:facet
-					name="footer"
-					style="position:absolute;">
-					<p:commandButton
-						update="panelTipoAtividade"
+				<p:panelGrid columns="2" styleClass="ui-g-8" layout="grid">
+					<p:commandButton update="panelTipoAtividade"
 						action="#{tipoAtividadeBean.cancelar()}"
 						value="#{msg['cancelar']}" />
-					<p:commandButton
-						update="@form formCadastro"
-						action="#{tipoAtividadeBean.salvar()}"
-						value="#{msg['salvar']}" />
-				</f:facet>
-
+					<p:commandButton update="@form formCadastro"
+						action="#{tipoAtividadeBean.salvar()}" value="#{msg['salvar']}" />
+				</p:panelGrid>
 			</p:panelGrid>
-
-			<h:panelGroup
-				id="panelConsultaTipoAtividade"
-				style="height:60%">
-				<p:dataTable
-					var="tipo"
-					value="#{tipoAtividadeBean.tipoAtividadeLazy}"
-					paginator="true"
+			<p:panelGrid styleClass="ui-g-12" columns="1" layout="grid"
+				id="panelConsultaTipoAtividade" style="height:60%">
+				<p:dataTable var="tipo"
+					reflow="true"
+					value="#{tipoAtividadeBean.tipoAtividadeLazy}" paginator="true"
 					rows="10"
 					paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-					rowsPerPageTemplate="5,10,15"
-					id="tableTipoAtividade"
-					lazy="true">
+					rowsPerPageTemplate="5,10,15" id="tableTipoAtividade" lazy="true">
 					<f:facet name="header">
 						#{msg['tipos.atividade']}
 					</f:facet>
-					<p:column
-						headerText="#{msg['id']}"
-						style="text-align:center"
-						sortBy="#{tipo.id}"
-						filterBy="#{tipo.id}">
+					<p:column headerText="#{msg['id']}" style="text-align:center"
+						sortBy="#{tipo.id}" filterBy="#{tipo.id}">
 						<h:outputText value="#{tipo.id}" />
 					</p:column>
-					<p:column
-						style="text-align:center"
-						headerText="#{msg['descricao']}"
-						sortBy="#{tipo.descricao}"
+					<p:column style="text-align:center"
+						headerText="#{msg['descricao']}" sortBy="#{tipo.descricao}"
 						filterBy="#{tipo.descricao}">
 						<h:outputText value="#{tipo.descricao}" />
 					</p:column>
-					<p:column
-						headerText="#{msg['acoes']}"
-						style="text-align:center">
-						<p:commandButton
-							icon="ui-icon-pencil"
-							process="@this"
-							update="panelTipoAtividade">
-							<f:setPropertyActionListener
-								value="#{tipo}"
-								target="#{tipoAtividadeBean.tipoAtividade}" />
-						</p:commandButton>
-						<p:commandButton
-							immediate="true"
-							icon="ui-icon-trash"
-							update="@form formCadastro"
-							action="#{tipoAtividadeBean.excluir(tipo)}">
-							<p:confirm
-								header="#{msg['confirmacao']}"
-								message="#{msg['deseja.realmente.excluir.este.registro']}"
-								icon="fa fa-trash" />
-							<p:confirmDialog
-								global="true"
-								showEffect="fade"
-								hideEffect="fade">
-								<p:commandButton
-									value="Yes"
-									type="button"
-									styleClass="ui-confirmdialog-yes"
-									icon="ui-icon-check" />
-								<p:commandButton
-									value="No"
-									type="button"
-									styleClass="ui-confirmdialog-no"
-									icon="ui-icon-close" />
-							</p:confirmDialog>
-						</p:commandButton>
+					<p:column headerText="#{msg['acoes']}" style="text-align:center">
+						<p:panelGrid columns="2" layout="grid">
+							<p:commandButton icon="ui-icon-pencil" process="@this"
+								update="panelTipoAtividade">
+								<f:setPropertyActionListener value="#{tipo}"
+									target="#{tipoAtividadeBean.tipoAtividade}" />
+							</p:commandButton>
+							<p:commandButton immediate="true" icon="ui-icon-trash"
+								update="@form formCadastro"
+								action="#{tipoAtividadeBean.excluir(tipo)}">
+								<p:confirm header="#{msg['confirmacao']}"
+									message="#{msg['deseja.realmente.excluir.este.registro']}"
+									icon="fa fa-trash" />
+								<p:confirmDialog global="true" showEffect="fade"
+									hideEffect="fade">
+									<p:commandButton value="Yes" type="button"
+										styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									<p:commandButton value="No" type="button"
+										styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+								</p:confirmDialog>
+							</p:commandButton>
+						</p:panelGrid>
+
 					</p:column>
 				</p:dataTable>
-			</h:panelGroup>
-		</h:panelGrid>
-
+			</p:panelGrid>
+		</p:panelGrid>
 	</ui:define>
 </ui:composition>

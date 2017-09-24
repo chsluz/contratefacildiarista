@@ -34,7 +34,7 @@ public class Cidade implements Serializable {
 	private String nome;
 	
 	@NotNull(message="Estado é obrigatório")
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="id_estado")
 	private Estado estado;
 

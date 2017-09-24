@@ -50,7 +50,7 @@ public class Usuario implements Serializable {
 	private TipoUsuario tipoUsuario;
 
 	@NotNull(message = "Endereço é Obrigatório")
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_endereco")
 	@Cascade(CascadeType.ALL)
 	private Endereco endereco;
@@ -63,6 +63,8 @@ public class Usuario implements Serializable {
 	@Size(max = 12, message = "Telefone não pode conter mais que 12 dígitos")
 	@Column(name = "telefone")
 	private String telefone;
+	
+	//TODO CRIAR AVALIACAO
 
 	public String getUid() {
 		return uid;

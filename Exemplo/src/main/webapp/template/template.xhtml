@@ -9,7 +9,10 @@
 	<title><ui:insert name="titulo">Contratação de Diaristas</ui:insert></title>
 	<h:outputStylesheet name="style.css" library="css" />
 	<h:outputScript library="js" name="firebase.js" />
-	<h:outputScript library="primefaces/jquery" name="jquery.js"/>
+	<h:outputScript library="primefaces/jquery" name="jquery.js" />
+	<h:outputScript library="js" name="mapbox.js" />
+	<script
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVfcPnHvNli_y2b9qeYKcIv6keSRGjEc8" />
 	<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-app.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-auth.js"></script>
@@ -39,33 +42,36 @@
 		closable="false" resizable="false" showHeader="false">
 		<p:graphicImage library="img" name="ajaxloadingbar.gif" />
 	</p:dialog>
-	
+
 	<h:form id="formCadastro" prependId="false">
 		<p:growl autoUpdate="true" id="mensagem" />
 		<header> </header>
-		<div id="conteudo">
-			<ui:insert name="logout">
-				<div style="width: 100%; height: 50px;">
-					<h:panelGroup id="panelAcoes" style="float:right">
-						<p:commandButton styleClass="material-icons"
-							action="#{loginBean.deslogar()}" value="exit_to_app">
-						</p:commandButton>
-					</h:panelGroup>
+		<div class="ui-fluid">
+			<div class="ui-g">
+				<div id="conteudo" class="ui-g-12">
+					<ui:insert name="logout">
+						<div style="height: 50px;">
+							<h:panelGroup id="panelAcoes" style="float:right">
+								<p:commandButton styleClass="material-icons"
+									immediate="true"
+									action="#{loginBean.deslogar()}" value="exit_to_app">
+								</p:commandButton>
+							</h:panelGroup>
+						</div>
+					</ui:insert>
+					<div class="ui-g-2" style="height: 550px;">
+						<ui:insert name="menu">
+							<p:tieredMenu model="#{menuBean.menuModel}" />
+						</ui:insert>
+					</div>
+					<div class="ui-g-10" id="panelCorpo">
+						<ui:insert name="corpo">
+						</ui:insert>
+					</div>
 				</div>
-			</ui:insert>
-			<ui:insert name="menu">
-				<h:panelGroup style="width:20%;height:550px;float:left">
-					 <p:tieredMenu model="#{menuBean.menuModel}"/>
-				</h:panelGroup>
-			</ui:insert>
-			<ui:insert name="corpo">
-				<h:panelGroup
-					id="panelCorpo"
-					style="width:80%;height:550px;float:left">
-				</h:panelGroup>
-			</ui:insert>
+			</div>
 		</div>
 	</h:form>
-	<footer style="text-align:center"> Contratação de Diaristas</footer>
+	<footer style="text-align: center"> Contratação de Diaristas</footer>
 </h:body>
 </html>

@@ -1,11 +1,154 @@
 <!DOCTYPE html>
-<ui:composition
-	template="/template/template.xhtml"
+<ui:composition template="/template/template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 	<ui:define name="corpo">
+		<p:panelGrid columns="1" layout="grid">
+			<h1>#{msg['cadastro.vaga']}</h1>
+			<p:panelGrid columns="3" layout="grid">
+				<h:panelGroup>
+					<p:outputLabel value="#{msg['data.inicial']}" />
+					<p:calendar id="dataInicial" required="true"
+						requiredMessage="#{msg['data.inicial.obrigatorio']}"
+						value="#{vagasBean.dataInicial}" mask="99/99/99" size="15" />
+				</h:panelGroup>
+				<h:panelGroup>
+					<p:outputLabel value="#{msg['data.final']}" />
+					<p:calendar id="dataFinal" required="true"
+						requiredMessage="#{msg['data.final.obrigatorio']}"
+						value="#{vagasBean.dataFinal}" mask="99/99/99" size="15" />
+				</h:panelGroup>
+				<h:panelGroup>
+					<p:outputLabel value="#{msg['periodo']}" />
+					<p:selectOneMenu id="selectPeriodo" required="true"
+						requiredMessage="#{msg['selecione.um.periodo']}"
+						value="#{vagasBean.tipoPeriodo}">
+						<f:selectItem itemLabel="#{msg['selecione']}" />
+						<f:selectItems value="#{vagasBean.tiposPeriodo}" var="tipoPeriodo"
+							itemValue="#{tipoPeriodo}" itemLabel="#{tipoPeriodo.descricao}" />
+					</p:selectOneMenu>
+				</h:panelGroup>
+			</p:panelGrid>
+			<p:outputLabel value="#{msg['dias']}" />
+			<p:panelGrid id="panelDiasSemana" columns="1" layout="grid">
+				<p:selectManyCheckbox id="selectDias"
+					required="true"
+					requiredMessage="#{msg['dia.da.semana.e.obrigatorio']}"
+					value="#{vagasBean.diasSelecionados}" layout="responsive"
+					columns="3">
+					<f:selectItem itemLabel="#{msg['selecione']}" itemValue="null"/>
+					<f:selectItems var="dia" itemLabel="#{dia.descricao}"
+						itemValue="#{dia}" value="#{vagasBean.diasSemana}" />
+				</p:selectManyCheckbox>
+			</p:panelGrid>
+			<p:outputLabel value="#{msg['atividades']}" />
+			<p:selectManyMenu converter="tipoAtividadeConverter"
+				required="true"
+				requiredMessage="#{msg['selecione.pelo.menos.uma.atividade']}"
+				id="selectAtividades" value="#{vagasBean.atividadesSelecionadas}"
+				filter="true" filterMatchMode="contains" showCheckbox="true">
+				<f:selectItems value="#{vagasBean.tiposAtividades}" var="tipo"
+					itemValue="#{tipo}" itemLabel="#{tipo.descricao}" />
+			</p:selectManyMenu>
+			<p:panelGrid columns="2" layout="grid"
+				columnClasses="ui-grid-col-6,ui-grid-col-6">
+				<p:panelGrid id="groupEndereco" columns="2" layout="grid">
+					<h:panelGroup id="groupEstado">
+						<h:outputText value="#{msg['estado']}:" />
+						<p:selectOneMenu styleClass="selectEstado"
+							converter="estadoConverter" value="#{buscaEnderecoBean.estado}"
+							id="estado">
+							<f:selectItem itemLabel="#{msg['selecione']}" itemValue="null" />
+							<f:selectItems itemLabel="#{estado.nome}" itemValue="#{estado}"
+								var="estado" value="#{buscaEnderecoBean.listarEstados}" />
+							<p:ajax event="itemSelect"
+								listener="#{buscaEnderecoBean.selectEstado}" update="cidade" />
+						</p:selectOneMenu>
+					</h:panelGroup>
+					<h:panelGroup id="groupCidade">
+						<h:outputText value="#{msg['cidade']}:" />
+						<p:selectOneMenu styleClass="selectCidade"
+							converter="cidadeConverter" value="#{buscaEnderecoBean.cidade}"
+							id="cidade">
+							<f:selectItem itemLabel="#{msg['cidade']}" itemValue="null" />
+							<f:selectItems var="cidade" itemLabel="#{cidade.nome}"
+								itemValue="#{cidade}" value="#{buscaEnderecoBean.listarCidades}" />
+							<p:ajax event="itemSelect"
+								listener="#{buscaEnderecoBean.selectCidade}" update="bairro" />
+						</p:selectOneMenu>
+					</h:panelGroup>
+					<h:panelGroup id="groupBairro">
+						<h:outputText value="#{msg['bairro']}:" />
+						<p:selectOneMenu required="true" styleClass="selectBairro"
+							requiredMessage="#{msg['bairro.obrigatorio']}"
+							value="#{buscaEnderecoBean.endereco.bairro}" id="bairro"
+							converter="bairroConverter">
+							<f:selectItem itemLabel="#{msg['selecione']}" itemValue="null" />
+							<f:selectItems itemValue="#{bairro}" var="bairro"
+								itemLabel="#{bairro.descricao}"
+								value="#{buscaEnderecoBean.listarBairros}" />
+						</p:selectOneMenu>
+					</h:panelGroup>
+					<h:panelGroup id="groupRua">
+						<h:outputText value="#{msg['rua']}:" />
+						<p:inputText placeholder="Rua João da silva" required="true"
+							requiredMessage="#{msg['rua.obrigatorio']}"
+							value="#{buscaEnderecoBean.endereco.rua}" id="rua" />
+					</h:panelGroup>
+					<h:panelGroup id="groupNumero">
+						<h:outputText value="#{msg['numero']}:" />
+						<p:inputMask id="numero"
+							value="#{buscaEnderecoBean.endereco.numero}" />
+					</h:panelGroup>
+					<h:panelGroup id="groupCep">
+						<p:panelGrid style="width:100%" columns="1">
+							<h:outputText value="#{msg['cep']}:" />
+							<p:panelGrid style="width:100%" columns="2"
+								columnClasses="ui-grid-col-8,ui-grid-col-4">
+								<p:inputMask required="true"
+									requiredMessage="#{msg['cep.obrigatorio']}" mask="99.999-999"
+									placeholder="99.999-999"
+									value="#{buscaEnderecoBean.endereco.cep}" id="cep" />
+								<p:commandButton update="groupEndereco"
+									action="#{buscaEnderecoBean.buscarCep}" icon="ui-icon-search"
+									partialSubmit="true" process="cep,@this">
+								</p:commandButton>
+							</p:panelGrid>
+
+						</p:panelGrid>
+					</h:panelGroup>
+					<h:panelGroup id="groupComplemento">
+						<h:outputText value="Complemento:" />
+						<p:inputText value="#{buscaEnderecoBean.endereco.complemento}" />
+					</h:panelGroup>
+					<p:spacer />
+					<h:panelGroup id="groupLatitude">
+						<h:outputText value="Latitude:" />
+						<p:inputText id="latitude"
+							value="#{buscaEnderecoBean.endereco.latitude}" />
+					</h:panelGroup>
+					<h:panelGroup id="groupLongitude">
+						<h:outputText value="Longitude:" />
+						<p:inputText id="longitude"
+							value="#{buscaEnderecoBean.endereco.longitude}" />
+					</h:panelGroup>
+				</p:panelGrid>
+				<h:panelGroup>
+					<script>
+				 	google.maps.event.addDomListener(window, 'load', init);
+				</script>
+					<div>
+						<div id="map" style="height: 600px; position: relative;"></div>
+					</div>
+				</h:panelGroup>
+				<p:panelGrid columns="2" layout="grid">
+					<p:commandButton value="cancelar" action="#{vagasBean.cancelar()}"/>
+					<p:commandButton value="salvar" action="#{vagasBean.salvar()}" />
+				</p:panelGrid>
+			</p:panelGrid>
+		</p:panelGrid>
 	</ui:define>
 </ui:composition>

@@ -15,6 +15,9 @@
           	$("#longitude").val(longitude);
       		initMap();
       	}
+      	else {
+      		latitude = $("#latitude");
+      	}
       	 map.addListener('click', function(e) {
       	    placeMarkerAndPanTo(e.latLng, map);
       	  });

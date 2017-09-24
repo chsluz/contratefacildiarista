@@ -16,33 +16,31 @@
 			actionListener="#{loginBean.logar()}" />
 		<p:remoteCommand name="erroLogin"
 			actionListener="#{loginBean.exibirMensagemErro()}" />
-		<div class="ui-fluid">
-			<div class="ui-g-12">
-				<p:panelGrid columns="3" layout="grid">
-					<h:panelGroup>
-					</h:panelGroup>
-					<h:panelGroup>
-						<p:panel>
-							<div align="center">
-								<p:panelGrid columns="2" layout="grid">
-									<h:outputText value="Email:" />
-									<p:inputText id="email" placeholder="teste@teste.com" />
-									<h:outputText value="Senha:" />
-									<p:password id="senha" placeholder="********" />
-								</p:panelGrid>
-								<p:panelGrid columns="2" layout="grid">
-									<p:commandButton update="mensagem" onclick="logar()"
-										value="Logar" />
-									<p:commandLink value="Novo? Cadastre-se"
-										action="#{loginBean.cadastrarNovo()}" />
-								</p:panelGrid>
-							</div>
-						</p:panel>
-					</h:panelGroup>
-					<h:panelGroup>
-					</h:panelGroup>
-				</p:panelGrid>
-			</div>
-		</div>
+		<p:panelGrid columns="3"
+			columnClasses="ui-grid-col-2,ui-grid-col-8,ui-grid-col-2"
+			layout="grid" styleClass="ui-g-12">
+			<h:panelGroup>
+			</h:panelGroup>
+			<h:panelGroup>
+				<p:panel>
+					<div align="center">
+						<p:panelGrid columns="2" layout="grid">
+							<h:outputText value="Email:" />
+							<p:inputText id="email" placeholder="teste@teste.com" />
+							<h:outputText value="Senha:" />
+							<p:password id="senha" placeholder="********" />
+						</p:panelGrid>
+						<p:panelGrid columns="2" layout="grid">
+							<p:commandButton update="mensagem" onclick="logar()"
+								value="Logar" />
+							<p:commandLink value="Novo? Cadastre-se"
+								action="#{loginBean.cadastrarNovo()}" />
+						</p:panelGrid>
+					</div>
+				</p:panel>
+			</h:panelGroup>
+			<h:panelGroup>
+			</h:panelGroup>
+		</p:panelGrid>
 	</ui:define>
 </ui:composition>
