@@ -145,8 +145,8 @@
 					</div>
 				</h:panelGroup>
 				<p:panelGrid columns="2" layout="grid">
-					<p:commandButton value="cancelar" action="#{vagasBean.cancelar()}"/>
-					<p:commandButton value="salvar" action="#{vagasBean.salvar()}" />
+					<p:commandButton value="cancelar" action="#{vagasBean.cancelar()}" update="@form"/>
+					<p:commandButton value="salvar" action="#{vagasBean.salvar()}" update="@form" />
 				</p:panelGrid>
 			</p:panelGrid>
 		</p:panelGrid>

@@ -36,7 +36,7 @@ public class FiltroAutenticacao implements Filter {
 			if (hreq.getRequestURI().contains("login") || hreq.getRequestURI().contains("cadastro_usuario")) {
 				chain.doFilter(request, response);
 			} else {
-				hres.sendRedirect("login.jsf");
+				hres.sendRedirect("../../paginas/publico/login.jsf");
 			}
 			return;
 		} else {

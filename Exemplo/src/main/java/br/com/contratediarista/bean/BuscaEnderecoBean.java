@@ -4,6 +4,8 @@
 package br.com.contratediarista.bean;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -264,33 +266,33 @@ public class BuscaEnderecoBean implements Serializable {
 	 * @throws MagicTradeException
 	 */
 	public void buscarCoordenadas() throws Exception {
-		StringBuilder url = new StringBuilder(endereco.getRua());
-		if(endereco.getNumero() != null) {
-			url.append("%20").append(endereco.getNumero());
+		StringBuilder busca = new StringBuilder(endereco.getRua().trim());
+		if (endereco.getNumero() != null) {
+			busca.append(" ").append(endereco.getNumero());
 		}
-		if(endereco.getBairro() != null) {
-			url.append("%20").append(endereco.getBairro().getDescricao());
+		if (endereco.getBairro().getDescricao() != null) {
+			busca.append(" ").append(endereco.getBairro().getDescricao().trim());
 		}
-		if(cidade != null) {
-			url.append("%20").append(cidade.getNome());
-		}
+		busca.append(" ")
+				.append(cidade.getNome().trim())
+				.append(" ")
+				.append(estado.getSigla().trim());
 
-		String urlModificada = url.toString().replaceAll(" ", "%20");
-		String urlBusca = new StringBuilder().append(URL_BUSCAR_CORDENADAS).append(urlModificada).toString();
+		String urlModificada;
+		try {
+			urlModificada = URLEncoder.encode(busca.toString(), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new Exception("erro.ao.converter.url");
+		}
+		String url = new StringBuilder().append(URL_BUSCAR_CORDENADAS).append(urlModificada).toString();
 
 		Client cliente = ClientBuilder.newClient();
-		WebTarget target = cliente.target(urlBusca);
+		WebTarget target = cliente.target(url);
 
-		String jsonResponse = "";
-		try {
-			jsonResponse = target.request()
-					.accept(MediaType.APPLICATION_JSON).get(String.class);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
+		String jsonResponse = target.request()
+				.accept(MediaType.APPLICATION_JSON).get(String.class);
 
-		if (!jsonResponse.isEmpty()) {
+		if (!jsonResponse.isEmpty() && !jsonResponse.contains("ZERO_RESULTS")) {
 			JsonObject jsonObject = new Gson().fromJson(jsonResponse, JsonObject.class);
 			JsonElement results = jsonObject.getAsJsonArray("results").get(0);
 			JsonElement geometry = results.getAsJsonObject().get("geometry");

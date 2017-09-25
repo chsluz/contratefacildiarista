@@ -1,7 +1,12 @@
 package br.com.contratediarista.enuns;
 
 public enum TipoPeriodo {
-	MANHA("Manhã"), TARDE("Tarde"), INTEGRAL("Noite");
+	MANHA(
+			"Manhã"),
+	TARDE(
+			"Tarde"),
+	INTEGRAL(
+			"Integral");
 
 	private final String descricao;
 

@@ -50,7 +50,7 @@ public class VagasBean implements Serializable {
 
 	@Inject
 	private BuscaEnderecoBean buscaEnderecoBean;
-	
+
 	@Inject
 	private VagaService vagaService;
 
@@ -59,6 +59,10 @@ public class VagasBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
+		instanciarNovo();
+	}
+
+	public void instanciarNovo() {
 		dataInicial = new Date();
 		dataFinal = new Date();
 		usuarioLogado = facesUtil.getUsuarioLogado();
@@ -70,7 +74,10 @@ public class VagasBean implements Serializable {
 			buscaEnderecoBean.setEstado(buscaEnderecoBean.getCidade().getEstado());
 		}
 		atividadesSelecionadas = new ArrayList<>();
+		tipoPeriodo = null;
+		diasSelecionados = null;
 		carregarListaAtividades();
+
 	}
 
 	public void salvar() {
@@ -85,10 +92,10 @@ public class VagasBean implements Serializable {
 			vaga.setDataCadastrada(new Date());
 			vaga.setTipoPeriodo(tipoPeriodo);
 			List<TipoAtividade> atividades = new ArrayList<>();
-			for(TipoAtividade tipo :atividadesSelecionadas) {
+			for (TipoAtividade tipo : atividadesSelecionadas) {
 				Response tipoAtividade = tipoAtividadeService.restoreById(tipo.getId());
-				if(tipoAtividade.getStatus() == Status.OK.getStatusCode()) {
-					atividades.add((TipoAtividade)tipoAtividade.getEntity());
+				if (tipoAtividade.getStatus() == Status.OK.getStatusCode()) {
+					atividades.add((TipoAtividade) tipoAtividade.getEntity());
 				}
 			}
 			vaga.setTiposAtividade(atividades);
@@ -112,19 +119,21 @@ public class VagasBean implements Serializable {
 				}
 			}
 			Response response = vagaService.salvar(vaga);
-			if(response.getStatus() == Status.OK.getStatusCode()) {
-				
+			if (response.getStatus() == Status.OK.getStatusCode()) {
+				instanciarNovo();
+				facesUtil.exibirMsgSucesso(facesUtil.getLabel("salvo.sucesso"));
+			} else {
+				facesUtil.exibirMsgErro(facesUtil.getLabel("erro.salvar"));
 			}
-			else {
-				
-			}
-			
+
 		} catch (Exception e) {
+			facesUtil.exibirMsgErro(facesUtil.getLabel("erro.salvar"));
 			e.printStackTrace();
 		}
 	}
 
 	public void cancelar() {
+		instanciarNovo();
 	}
 
 	public void carregarListaAtividades() {
