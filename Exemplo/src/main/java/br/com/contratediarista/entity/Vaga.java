@@ -56,6 +56,10 @@ public class Vaga implements Serializable{
 	@Column(name = "id_tipo_periodo", nullable = false)
 	private TipoPeriodo tipoPeriodo;
 	
+	@NotNull(message="Valor do período é Obrigatório")
+	@Column(name="valor_periodo",nullable=false)
+	private Double valorPeriodo;
+	
 	@NotEmpty(message="Tipos de Atividade é Obrigatório")
 	@Cascade(CascadeType.ALL)
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -124,6 +128,14 @@ public class Vaga implements Serializable{
 
 	public void setRotinas(List<Rotina> rotinas) {
 		this.rotinas = rotinas;
+	}
+	
+	public Double getValorPeriodo() {
+		return valorPeriodo;
+	}
+
+	public void setValorPeriodo(Double valorPeriodo) {
+		this.valorPeriodo = valorPeriodo;
 	}
 
 	@Override

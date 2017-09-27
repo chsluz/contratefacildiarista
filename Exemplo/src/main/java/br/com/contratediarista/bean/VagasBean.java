@@ -53,6 +53,8 @@ public class VagasBean implements Serializable {
 
 	@Inject
 	private VagaService vagaService;
+	
+	private Vaga vaga;
 
 	public VagasBean() {
 	}
@@ -66,7 +68,9 @@ public class VagasBean implements Serializable {
 		dataInicial = new Date();
 		dataFinal = new Date();
 		usuarioLogado = facesUtil.getUsuarioLogado();
+		vaga = new Vaga();
 		if (usuarioLogado != null) {
+			vaga.setContratante(usuarioLogado);
 			endereco = usuarioLogado.getEndereco();
 			endereco.setId(null);
 			buscaEnderecoBean.setEndereco(endereco);
@@ -86,9 +90,7 @@ public class VagasBean implements Serializable {
 			return;
 		}
 		try {
-			Vaga vaga = new Vaga();
 			vaga.setEndereco(buscaEnderecoBean.getEndereco());
-			vaga.setContratante(usuarioLogado);
 			vaga.setDataCadastrada(new Date());
 			vaga.setTipoPeriodo(tipoPeriodo);
 			List<TipoAtividade> atividades = new ArrayList<>();
@@ -125,7 +127,6 @@ public class VagasBean implements Serializable {
 			} else {
 				facesUtil.exibirMsgErro(facesUtil.getLabel("erro.salvar"));
 			}
-
 		} catch (Exception e) {
 			facesUtil.exibirMsgErro(facesUtil.getLabel("erro.salvar"));
 			e.printStackTrace();
@@ -214,6 +215,14 @@ public class VagasBean implements Serializable {
 
 	public void setBuscaEnderecoBean(BuscaEnderecoBean buscaEnderecoBean) {
 		this.buscaEnderecoBean = buscaEnderecoBean;
+	}
+
+	public Vaga getVaga() {
+		return vaga;
+	}
+
+	public void setVaga(Vaga vaga) {
+		this.vaga = vaga;
 	}
 
 }

@@ -8,7 +8,7 @@
 	<ui:define name="corpo">
 		<p:panelGrid columns="1" layout="grid">
 			<h1>#{msg['cadastro.vaga']}</h1>
-			<p:panelGrid columns="3" layout="grid">
+			<p:panelGrid columns="2" layout="grid">
 				<h:panelGroup>
 					<p:outputLabel value="#{msg['data.inicial']}" />
 					<p:calendar id="dataInicial" required="true"
@@ -21,6 +21,9 @@
 						requiredMessage="#{msg['data.final.obrigatorio']}"
 						value="#{vagasBean.dataFinal}" mask="99/99/99" size="15" />
 				</h:panelGroup>
+
+			</p:panelGrid>
+			<p:panelGrid layout="grid" columns="2">
 				<h:panelGroup>
 					<p:outputLabel value="#{msg['periodo']}" />
 					<p:selectOneMenu id="selectPeriodo" required="true"
@@ -31,22 +34,24 @@
 							itemValue="#{tipoPeriodo}" itemLabel="#{tipoPeriodo.descricao}" />
 					</p:selectOneMenu>
 				</h:panelGroup>
+				<h:panelGroup>
+					<p:outputLabel value="#{msg['valor.periodo']}"/>
+					<p:inputMask value="#{vagasBean.vaga.valorPeriodo}" mask="?9999,99"/>
+				</h:panelGroup>
 			</p:panelGrid>
 			<p:outputLabel value="#{msg['dias']}" />
 			<p:panelGrid id="panelDiasSemana" columns="1" layout="grid">
-				<p:selectManyCheckbox id="selectDias"
-					required="true"
+				<p:selectManyCheckbox id="selectDias" required="true"
 					requiredMessage="#{msg['dia.da.semana.e.obrigatorio']}"
 					value="#{vagasBean.diasSelecionados}" layout="responsive"
 					columns="3">
-					<f:selectItem itemLabel="#{msg['selecione']}" itemValue="null"/>
+					<f:selectItem itemLabel="#{msg['selecione']}" itemValue="null" />
 					<f:selectItems var="dia" itemLabel="#{dia.descricao}"
 						itemValue="#{dia}" value="#{vagasBean.diasSemana}" />
 				</p:selectManyCheckbox>
 			</p:panelGrid>
 			<p:outputLabel value="#{msg['atividades']}" />
-			<p:selectManyMenu converter="tipoAtividadeConverter"
-				required="true"
+			<p:selectManyMenu converter="tipoAtividadeConverter" required="true"
 				requiredMessage="#{msg['selecione.pelo.menos.uma.atividade']}"
 				id="selectAtividades" value="#{vagasBean.atividadesSelecionadas}"
 				filter="true" filterMatchMode="contains" showCheckbox="true">
