@@ -6,7 +6,7 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 	<ui:define name="corpo">
-		<p:panelGrid columns="1" layout="grid">
+		<p:panelGrid columns="1" id="panelCadastroVaga" layout="grid">
 			<h1>#{msg['cadastro.vaga']}</h1>
 			<p:panelGrid columns="2" layout="grid">
 				<h:panelGroup>
@@ -36,7 +36,7 @@
 				</h:panelGroup>
 				<h:panelGroup>
 					<p:outputLabel value="#{msg['valor.periodo']}"/>
-					<p:inputMask value="#{vagasBean.vaga.valorPeriodo}" mask="?9999,99"/>
+					<p:inputMask required="true" requiredMessage="#{msg['valor.periodo.obrigatorio']}" value="#{vagasBean.vaga.valorPeriodo}" mask="?999"/>
 				</h:panelGroup>
 			</p:panelGrid>
 			<p:outputLabel value="#{msg['dias']}" />
@@ -119,6 +119,7 @@
 									value="#{buscaEnderecoBean.endereco.cep}" id="cep" />
 								<p:commandButton update="groupEndereco"
 									action="#{buscaEnderecoBean.buscarCep}" icon="ui-icon-search"
+									oncomplete="init()"
 									partialSubmit="true" process="cep,@this">
 								</p:commandButton>
 							</p:panelGrid>
@@ -141,7 +142,7 @@
 							value="#{buscaEnderecoBean.endereco.longitude}" />
 					</h:panelGroup>
 				</p:panelGrid>
-				<h:panelGroup>
+				<h:panelGroup id="mapa">
 					<script>
 				 	google.maps.event.addDomListener(window, 'load', init);
 				</script>
@@ -150,8 +151,8 @@
 					</div>
 				</h:panelGroup>
 				<p:panelGrid columns="2" layout="grid">
-					<p:commandButton value="cancelar" action="#{vagasBean.cancelar()}" update="@form"/>
-					<p:commandButton value="salvar" action="#{vagasBean.salvar()}" update="@form" />
+					<p:commandButton immediate="true" process="@this" value="cancelar" action="#{vagasBean.cancelar()}" update="panelCadastroVaga"/>
+					<p:commandButton value="salvar" action="#{vagasBean.salvar()}" update="panelCadastroVaga"/>
 				</p:panelGrid>
 			</p:panelGrid>
 		</p:panelGrid>

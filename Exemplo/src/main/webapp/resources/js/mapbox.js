@@ -8,15 +8,26 @@
       }
 
       function render(pos) {
-      	latitude = pos.coords.latitude;
-      	longitude = pos.coords.longitude;
+    	if(!latitude) {
+    		latitude = pos.coords.latitude;
+    	}
+    	if(!longitude) {
+    		longitude = pos.coords.longitude;
+    	}
       	if(!map) {
       		$("#latitude").val(latitude);
           	$("#longitude").val(longitude);
       		initMap();
       	}
       	else {
-      		latitude = $("#latitude");
+      		if(latitude != document.getElementById('latitude').value) {
+	      		latitude = document.getElementById('latitude').value;
+	      		initMap();
+      		}
+      		if(longitude != document.getElementById('longitude').value) {
+	      		longitude = document.getElementById('longitude').value;
+	      		initMap();
+      		}
       	}
       	 map.addListener('click', function(e) {
       	    placeMarkerAndPanTo(e.latLng, map);
@@ -39,11 +50,17 @@
         cidade = {lat: latitude, lng: longitude};
         map = new google.maps.Map(document.getElementById('map'), {
           zoom: 17,
-          center: cidade
+          center: {
+              lat: parseFloat(latitude),
+              lng: parseFloat(longitude),
+            }
         });
         
         	marker = new google.maps.Marker({
-            position: cidade,
+            position:  {
+                lat: parseFloat(latitude),
+                lng: parseFloat(longitude),
+              },
             map: map
          });
       

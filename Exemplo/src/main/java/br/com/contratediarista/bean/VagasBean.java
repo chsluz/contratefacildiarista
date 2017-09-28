@@ -76,12 +76,12 @@ public class VagasBean implements Serializable {
 			buscaEnderecoBean.setEndereco(endereco);
 			buscaEnderecoBean.setCidade(endereco.getBairro().getCidade());
 			buscaEnderecoBean.setEstado(buscaEnderecoBean.getCidade().getEstado());
+			buscaEnderecoBean.buscarCep();
 		}
 		atividadesSelecionadas = new ArrayList<>();
 		tipoPeriodo = null;
 		diasSelecionados = null;
 		carregarListaAtividades();
-
 	}
 
 	public void salvar() {

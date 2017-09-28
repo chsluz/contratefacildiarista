@@ -253,6 +253,7 @@ public class BuscaEnderecoBean implements Serializable {
 					endereco.setBairro((Bairro) resultadoBairro.getEntity());
 				}
 			}
+			buscarCoordenadas();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

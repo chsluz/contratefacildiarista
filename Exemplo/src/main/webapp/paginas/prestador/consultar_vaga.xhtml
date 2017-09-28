@@ -8,6 +8,35 @@
 	<ui:define name="corpo">
 		<p:panelGrid columns="1" layout="grid">
 			<h1>#{msg['consultar.vaga']}</h1>
+			<p:panelGrid layout="grid" columns="4">
+				<h:panelGroup>
+					<p:outputLabel value="#{msg['data.inicial']}" />
+					<p:calendar />
+				</h:panelGroup>
+				<h:panelGroup>
+					<p:outputLabel value="#{msg['data.final']}" />
+					<p:calendar />
+				</h:panelGroup>
+				<h:panelGroup>
+					<p:outputLabel value="#{msg['valor.inicial']}" />
+					<p:inputMask mask="?999" />
+				</h:panelGroup>
+				<h:panelGroup>
+					<p:outputLabel value="#{msg['valor.final']}" />
+					<p:inputMask mask="?999" />
+				</h:panelGroup>
+			</p:panelGrid>
+			<p:panelGrid columns="1" layout="grid">
+				<h:panelGroup>
+					<p:outputLabel value="#{msg['periodo']}" />
+					<p:selectOneMenu id="selectPeriodo" required="true"
+						requiredMessage="#{msg['selecione.um.periodo']}">
+						<f:selectItem itemLabel="#{msg['selecione']}" />
+						<f:selectItems value="#{buscarVagaBean.tiposPeriodo}" var="tipoPeriodo"
+							itemValue="#{tipoPeriodo}" itemLabel="#{tipoPeriodo.descricao}" />
+					</p:selectOneMenu>
+				</h:panelGroup>
+			</p:panelGrid>
 		</p:panelGrid>
 	</ui:define>
 </ui:composition>
