@@ -11,31 +11,62 @@
 			<p:panelGrid layout="grid" columns="4">
 				<h:panelGroup>
 					<p:outputLabel value="#{msg['data.inicial']}" />
-					<p:calendar />
+					<p:calendar locale="pt_BR" id="dataInicial" pattern="dd/MM/yyyy" required="true" placeholder="99/99/9999"
+						requiredMessage="#{msg['data.inicial.obrigatorio']}"
+						value="#{buscarVagaBean.dataInicial}" mask="99/99/9999" size="15" />
 				</h:panelGroup>
 				<h:panelGroup>
 					<p:outputLabel value="#{msg['data.final']}" />
-					<p:calendar />
+					<p:calendar locale="pt_BR" id="dataFinal" pattern="dd/MM/yyyy" required="true" placeholder="99/99/9999"
+						requiredMessage="#{msg['data.final.obrigatorio']}"
+						value="#{buscarVagaBean.dataFinal}" mask="99/99/9999" size="15" />
 				</h:panelGroup>
 				<h:panelGroup>
 					<p:outputLabel value="#{msg['valor.inicial']}" />
-					<p:inputMask mask="?999" />
+					<p:inputMask required="true" requiredMessage="#{msg['valor.inicial.obrigatorio']}" value="#{buscarVagaBean.valorInicial}" mask="?999"
+						placeholder="99" />
 				</h:panelGroup>
 				<h:panelGroup>
 					<p:outputLabel value="#{msg['valor.final']}" />
-					<p:inputMask mask="?999" />
+					<p:inputMask required="true" requiredMessage="#{msg['valor.final.obrigatorio']}" value="#{buscarVagaBean.valorFinal}" mask="?999"
+						placeholder="99" />
 				</h:panelGroup>
 			</p:panelGrid>
 			<p:panelGrid columns="1" layout="grid">
-				<h:panelGroup>
-					<p:outputLabel value="#{msg['periodo']}" />
-					<p:selectOneMenu id="selectPeriodo" required="true"
-						requiredMessage="#{msg['selecione.um.periodo']}">
-						<f:selectItem itemLabel="#{msg['selecione']}" />
-						<f:selectItems value="#{buscarVagaBean.tiposPeriodo}" var="tipoPeriodo"
-							itemValue="#{tipoPeriodo}" itemLabel="#{tipoPeriodo.descricao}" />
-					</p:selectOneMenu>
-				</h:panelGroup>
+				<p:panelGrid columns="3"
+					columnClasses="ui-grid-col-3,ui-grid-col-6,ui-grid-col-3"
+					layout="grid">
+					<h:panelGroup>
+						<p:outputLabel value="#{msg['periodo']}" />
+						<p:selectOneMenu id="selectPeriodo"
+							value="#{buscarVagaBean.tipoPeriodo}">
+							<f:selectItem itemLabel="#{msg['selecione']}" />
+							<f:selectItems value="#{buscarVagaBean.tiposPeriodo}"
+								var="tipoPeriodo" itemValue="#{tipoPeriodo}"
+								itemLabel="#{tipoPeriodo.descricao}" />
+						</p:selectOneMenu>
+					</h:panelGroup>
+					<h:panelGroup>
+						<p:outputLabel value="#{msg['dias.semana']}" />
+						<p:selectManyCheckbox id="selectDias"
+							value="#{buscarVagaBean.diasSelecionados}" layout="responsive"
+							columns="3">
+							<f:selectItem itemLabel="#{msg['selecione']}" itemValue="null" />
+							<f:selectItems var="dia" itemLabel="#{dia.descricao}"
+								itemValue="#{dia}" value="#{buscarVagaBean.diasSemana}" />
+						</p:selectManyCheckbox>
+					</h:panelGroup>
+					<h:panelGroup>
+						<p:outputLabel value="#{msg['atividades']}" />
+						<p:selectManyMenu converter="tipoAtividadeConverter"
+							id="selectAtividades" filter="true" filterMatchMode="contains"
+							showCheckbox="true">
+							<f:selectItems value="#{buscarVagaBean.tiposAtividades}"
+								var="tipo" itemValue="#{tipo}" itemLabel="#{tipo.descricao}" />
+						</p:selectManyMenu>
+					</h:panelGroup>
+				</p:panelGrid>
+				<p:commandButton value="Buscar" action="#{buscarVagaBean.pesquisar()}" style="float:right;width:100px"/>
 			</p:panelGrid>
 		</p:panelGrid>
 	</ui:define>

@@ -53,7 +53,7 @@ public class VagasBean implements Serializable {
 
 	@Inject
 	private VagaService vagaService;
-	
+
 	private Vaga vaga;
 
 	public VagasBean() {

@@ -11,15 +11,18 @@
 			<p:panelGrid columns="2" layout="grid">
 				<h:panelGroup>
 					<p:outputLabel value="#{msg['data.inicial']}" />
-					<p:calendar id="dataInicial" required="true"
+					<p:calendar locale="pt_BR" id="dataInicial" required="true"
 						requiredMessage="#{msg['data.inicial.obrigatorio']}"
-						value="#{vagasBean.dataInicial}" mask="99/99/99" size="15" />
+						placeholder="99/99/9999" pattern="99/99/9999"
+						value="#{vagasBean.dataInicial}" mask="99/99/9999" size="15" />
 				</h:panelGroup>
 				<h:panelGroup>
 					<p:outputLabel value="#{msg['data.final']}" />
 					<p:calendar id="dataFinal" required="true"
+						locale="pt_BR"
 						requiredMessage="#{msg['data.final.obrigatorio']}"
-						value="#{vagasBean.dataFinal}" mask="99/99/99" size="15" />
+						pattern="99/99/9999"
+						value="#{vagasBean.dataFinal}" mask="99/99/9999" size="15" />
 				</h:panelGroup>
 
 			</p:panelGrid>
