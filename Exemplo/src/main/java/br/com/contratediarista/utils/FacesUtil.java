@@ -40,6 +40,11 @@ public class FacesUtil implements Serializable {
 		FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, msg);
 		facesContext.addMessage(null, facesMessage);
 	}
+	
+	public void exibirMsgWarning(String msg) {
+		FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, msg, msg);
+		facesContext.addMessage(null, facesMessage);
+	}
 
 	public String getLabel(String chave) {
 		return bundle.getString(chave);

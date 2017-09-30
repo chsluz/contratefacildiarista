@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import br.com.contratediarista.entity.Rotina;
 import br.com.contratediarista.entity.TipoAtividade;
 import br.com.contratediarista.entity.Vaga;
 import br.com.contratediarista.enuns.DiasSemana;
@@ -51,16 +52,16 @@ public class VagaDao implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Vaga> buscarVagasPorDataEValor(Date dataInicial, Date dataFinal, int valorInicial, int valorFinal,
+	public List<Rotina> buscarRotinasPorDataEValor(Date dataInicial, Date dataFinal, int valorInicial, int valorFinal,
 			TipoPeriodo periodo, List<TipoAtividade> tiposAtividade, List<DiasSemana> diasSemana) {
 		try {
-			StringBuilder sql = new StringBuilder(" SELECT v FROM Vaga v ");
+			StringBuilder sql = new StringBuilder(" SELECT DISTINCT r FROM Vaga v ");
 			sql.append(" JOIN v.rotinas r ").append(" JOIN v.tiposAtividade at ")
 					.append(" WHERE v.valorPeriodo BETWEEN :valorInicial AND :valorFinal ")
 					.append(" AND r.data BETWEEN :dataInicial AND :dataFinal ");
 
 			if (periodo != null) {
-				sql.append(" AND r.tipoPeriodo = :tipoPeriodo ");
+				sql.append(" AND v.tipoPeriodo = :tipoPeriodo ");
 			}
 			if (diasSemana != null) {
 				sql.append(" AND r.diaSemana IN :diasSemana ");
@@ -68,7 +69,7 @@ public class VagaDao implements Serializable {
 			if (tiposAtividade != null) {
 				sql.append(" AND at IN :tiposAtividade ");
 			}
-			Query query = em.createQuery(sql.toString(), Vaga.class);
+			Query query = em.createQuery(sql.toString(), Rotina.class);
 			query.setParameter("valorInicial", valorInicial);
 			query.setParameter("valorFinal", valorFinal);
 			query.setParameter("dataInicial", dataInicial);
@@ -82,7 +83,7 @@ public class VagaDao implements Serializable {
 			if (tiposAtividade != null) {
 				query.setParameter("tiposAtividade", tiposAtividade);
 			}
-			return (List<Vaga>) query.getResultList();
+			return (List<Rotina>) query.getResultList();
 		} catch (Exception e) {
 			System.out.println(e);
 			return null;

@@ -12,6 +12,8 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.google.gson.JsonObject;
+
 @Entity
 @Table(name="tipo_atividade")
 public class TipoAtividade implements Serializable{
@@ -67,6 +69,14 @@ public class TipoAtividade implements Serializable{
 		} else if (!descricao.equals(other.descricao))
 			return false;
 		return true;
+	}
+
+	public static TipoAtividade toTipoAtividadeGson(JsonObject jsonObject) {
+		TipoAtividade tipo = new TipoAtividade();
+		if(jsonObject.get("id") != null) {
+			tipo.setId(jsonObject.get("id").getAsInt());
+		}
+		return tipo;
 	}
 	
 	

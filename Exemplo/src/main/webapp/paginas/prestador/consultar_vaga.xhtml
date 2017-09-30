@@ -6,30 +6,35 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 	<ui:define name="corpo">
-		<p:panelGrid columns="1" layout="grid">
+		<p:panelGrid id="panelConsultarVaga" columns="1" layout="grid">
 			<h1>#{msg['consultar.vaga']}</h1>
 			<p:panelGrid layout="grid" columns="4">
 				<h:panelGroup>
 					<p:outputLabel value="#{msg['data.inicial']}" />
-					<p:calendar locale="pt_BR" id="dataInicial" pattern="dd/MM/yyyy" required="true" placeholder="99/99/9999"
+					<p:calendar locale="pt_BR" id="dataInicial" pattern="dd/MM/yyyy"
+						required="true" placeholder="99/99/9999"
 						requiredMessage="#{msg['data.inicial.obrigatorio']}"
 						value="#{buscarVagaBean.dataInicial}" mask="99/99/9999" size="15" />
 				</h:panelGroup>
 				<h:panelGroup>
 					<p:outputLabel value="#{msg['data.final']}" />
-					<p:calendar locale="pt_BR" id="dataFinal" pattern="dd/MM/yyyy" required="true" placeholder="99/99/9999"
+					<p:calendar locale="pt_BR" id="dataFinal" pattern="dd/MM/yyyy"
+						required="true" placeholder="99/99/9999"
 						requiredMessage="#{msg['data.final.obrigatorio']}"
 						value="#{buscarVagaBean.dataFinal}" mask="99/99/9999" size="15" />
 				</h:panelGroup>
 				<h:panelGroup>
 					<p:outputLabel value="#{msg['valor.inicial']}" />
-					<p:inputMask required="true" requiredMessage="#{msg['valor.inicial.obrigatorio']}" value="#{buscarVagaBean.valorInicial}" mask="?999"
+					<p:inputMask required="true"
+						requiredMessage="#{msg['valor.inicial.obrigatorio']}"
+						value="#{buscarVagaBean.valorInicial}" mask="?999"
 						placeholder="99" />
 				</h:panelGroup>
 				<h:panelGroup>
 					<p:outputLabel value="#{msg['valor.final']}" />
-					<p:inputMask required="true" requiredMessage="#{msg['valor.final.obrigatorio']}" value="#{buscarVagaBean.valorFinal}" mask="?999"
-						placeholder="99" />
+					<p:inputMask required="true"
+						requiredMessage="#{msg['valor.final.obrigatorio']}"
+						value="#{buscarVagaBean.valorFinal}" mask="?999" placeholder="99" />
 				</h:panelGroup>
 			</p:panelGrid>
 			<p:panelGrid columns="1" layout="grid">
@@ -66,8 +71,58 @@
 						</p:selectManyMenu>
 					</h:panelGroup>
 				</p:panelGrid>
-				<p:commandButton value="Buscar" action="#{buscarVagaBean.pesquisar()}" style="float:right;width:100px"/>
+				<p:commandButton value="Buscar" update="panelTableVaga"
+					action="#{buscarVagaBean.pesquisar()}"
+					style="float:right;width:100px" />
 			</p:panelGrid>
+			<p:panelGrid columns="1" layout="grid" id="panelTableVaga">
+				<p:dataTable var="rotina"
+					rendered="#{not empty buscarVagaBean.rotinas}" reflow="true"
+					value="#{buscarVagaBean.rotinas}" paginator="true" rows="10"
+					paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+					rowsPerPageTemplate="5,10,15" id="tableVaga" lazy="true">
+					<f:facet name="header">
+						#{msg['vagas']}
+					</f:facet>
+					<p:column headerText="#{msg['id']}" style="text-align:center"
+						sortBy="#{rotina.id}" filterBy="#{rotina.id}">
+						<h:outputText value="#{rotina.id}" />
+					</p:column>
+					<p:column headerText="#{msg['contratante']}"
+						style="text-align:center" sortBy="#{rotina.vaga.contratante.nome}"
+						filterBy="#{rotina.vaga.contratante.nome}">
+						<h:outputText value="#{rotina.vaga.contratante.nome}" />
+					</p:column>
+					<p:column headerText="#{msg['data']}" style="text-align:center"
+						sortBy="#{rotina.data}" filterBy="#{rotina.data}">
+						<h:outputText value="#{rotina.data}">
+							<f:convertDateTime timeZone="pt_BR" pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="#{msg['tipo.periodo']}"
+						style="text-align:center"
+						sortBy="#{rotina.vaga.tipoPeriodo.descricao}"
+						filterBy="#{rotina.vaga.tipoPeriodo.descricao}">
+						<h:outputText value="#{rotina.vaga.tipoPeriodo.descricao}" />
+					</p:column>
+					<p:column headerText="#{msg['valor.periodo.reais']}"
+						style="text-align:center" sortBy="#{rotina.vaga.valorPeriodo}"
+						filterBy="#{rotina.vaga.valorPeriodo}">
+						<h:outputText value="#{rotina.vaga.valorPeriodo} Reais" />
+					</p:column>
+					<p:column headerText="#{msg['atividades']}"
+						style="text-align:center">
+						<ui:repeat var="atividade" value="#{rotina.vaga.tiposAtividade}">
+							<h:outputText value="#{atividade.descricao}" />
+							<br/>
+						</ui:repeat>
+					</p:column>
+					<p:column headerText="#{msg['visualizar']}">
+						<p:commandButton value="#{msg['visualizar']}"/>
+					</p:column>
+				</p:dataTable>
+			</p:panelGrid>
+
 		</p:panelGrid>
 	</ui:define>
 </ui:composition>

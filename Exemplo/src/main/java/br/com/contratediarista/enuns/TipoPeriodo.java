@@ -13,6 +13,15 @@ public enum TipoPeriodo {
 	private TipoPeriodo(String descricao) {
 		this.descricao = descricao;
 	}
+	
+	public static TipoPeriodo getFromDescricao(String descricao) {
+		for(TipoPeriodo tipo : TipoPeriodo.values()) {
+			if(tipo.getDescricao().equals(descricao)) {
+				return tipo;
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Obtem o valor de descricao.

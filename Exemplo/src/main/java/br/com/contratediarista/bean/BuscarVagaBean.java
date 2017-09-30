@@ -15,13 +15,16 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import br.com.contratediarista.entity.Rotina;
 import br.com.contratediarista.entity.TipoAtividade;
 import br.com.contratediarista.enuns.DiasSemana;
 import br.com.contratediarista.enuns.TipoPeriodo;
 import br.com.contratediarista.service.TipoAtividadeService;
 import br.com.contratediarista.service.VagaService;
+import br.com.contratediarista.utils.FacesUtil;
 
 @SuppressWarnings("unchecked")
 @Named
@@ -34,9 +37,10 @@ public class BuscarVagaBean implements Serializable {
 	
 	private Date dataInicial;
 	private Date dataFinal;
-	private int valorInicial;
-	private int valorFinal;
+	private Integer valorInicial;
+	private Integer valorFinal;
 	private TipoPeriodo tipoPeriodo;
+	private List<Rotina> rotinas;
 	private List<TipoAtividade> atividadesSelecionadas;
 	private DiasSemana[] diasSelecionados;
 	private SimpleDateFormat formatoJson = new SimpleDateFormat("yyyy-MM-dd");
@@ -46,6 +50,9 @@ public class BuscarVagaBean implements Serializable {
 	
 	@Inject
 	private VagaService vagaService;
+	
+	@Inject
+	private FacesUtil facesUtil;
 	
 	private Gson gson;
 
@@ -58,6 +65,9 @@ public class BuscarVagaBean implements Serializable {
 		gson = new Gson();
 		dataInicial = new Date();
 		dataFinal = new Date();
+		rotinas = new ArrayList<>();
+		tipoPeriodo = null;
+		diasSelecionados = null;
 		carregarListaAtividades();
 	}
 
@@ -70,9 +80,19 @@ public class BuscarVagaBean implements Serializable {
 	}
 	
 	public void pesquisar() {
+		rotinas = new ArrayList<>();
 		JsonObject parametros = montarChamadaPesquisarVaga();
 		String json = gson.toJson(parametros);
-		vagaService.buscarVagasDisponiveisPorDataValor(json);
+		Response response = vagaService.buscarVagasDisponiveisPorDataValor(json);
+		if(response.getStatus() == Status.OK.getStatusCode()) {
+			rotinas = (List<Rotina>) response.getEntity();
+		}
+		else if(response.getStatus() == Status.NO_CONTENT.getStatusCode()) {
+			facesUtil.exibirMsgWarning(facesUtil.getLabel("nenhum.resultado.encontrado"));
+		}
+		else {
+			facesUtil.exibirMsgErro(facesUtil.getLabel("erro.ao.pesquisar"));
+		}
 	}
 	
 	public JsonObject montarChamadaPesquisarVaga() {
@@ -81,6 +101,27 @@ public class BuscarVagaBean implements Serializable {
 		jsonObject.addProperty("dataFinal", formatoJson.format(dataFinal));
 		jsonObject.addProperty("valorInicial", valorInicial);
 		jsonObject.addProperty("valorFinal", valorFinal);
+		if(!Arrays.asList(diasSelecionados).isEmpty()) {
+			JsonArray arraDias = new JsonArray();
+			for(DiasSemana dia : Arrays.asList(diasSelecionados)) {
+				JsonObject jsonDia = new JsonObject();
+				jsonDia.addProperty("diaSemana", dia.ordinal());
+				arraDias.add(jsonDia);
+			}
+			jsonObject.add("diasSelecionados", arraDias);
+		}
+		if(tipoPeriodo != null) {
+			jsonObject.addProperty("periodo", tipoPeriodo.getDescricao());
+		}
+		if(tiposAtividades != null && !tiposAtividades.isEmpty()) {
+			JsonArray arrayTipoAtividades = new JsonArray();
+			for(TipoAtividade tipo : tiposAtividades) {
+				JsonObject objectTipoAtividade = new JsonObject();
+				objectTipoAtividade.addProperty("id", tipo.getId());
+				arrayTipoAtividades.add(objectTipoAtividade);
+			}
+			jsonObject.add("", arrayTipoAtividades);
+		}
 		return jsonObject;
 	}
 
@@ -116,19 +157,19 @@ public class BuscarVagaBean implements Serializable {
 		this.dataFinal = dataFinal;
 	}
 
-	public int getValorInicial() {
+	public Integer getValorInicial() {
 		return valorInicial;
 	}
 
-	public void setValorInicial(int valorInicial) {
+	public void setValorInicial(Integer valorInicial) {
 		this.valorInicial = valorInicial;
 	}
 
-	public int getValorFinal() {
+	public Integer getValorFinal() {
 		return valorFinal;
 	}
 
-	public void setValorFinal(int valorFinal) {
+	public void setValorFinal(Integer valorFinal) {
 		this.valorFinal = valorFinal;
 	}
 
@@ -154,6 +195,14 @@ public class BuscarVagaBean implements Serializable {
 
 	public void setTipoPeriodo(TipoPeriodo tipoPeriodo) {
 		this.tipoPeriodo = tipoPeriodo;
+	}
+
+	public List<Rotina> getRotinas() {
+		return rotinas;
+	}
+
+	public void setRotinas(List<Rotina> rotinas) {
+		this.rotinas = rotinas;
 	}
 
 }

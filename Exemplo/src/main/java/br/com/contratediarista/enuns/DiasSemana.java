@@ -1,5 +1,7 @@
 package br.com.contratediarista.enuns;
 
+import com.google.gson.JsonObject;
+
 public enum DiasSemana {
 	DOMINGO("Domingo"), SEGUNDA("Segunda"), TERCA("Terça"), QUARTA("Quarta"), QUINTA("Quinta"), SEXTA("Sexta"), SABADO(
 			"Sábado");
@@ -44,4 +46,10 @@ public enum DiasSemana {
 		return descricao;
 	}
 
+	public static DiasSemana toDiaSemanaJson(JsonObject jsonObject) {
+		if(jsonObject.get("diaSemana") != null) {
+			return getValor(jsonObject.get("diaSemana").getAsInt());
+		}
+		return null;
+	}
 }
