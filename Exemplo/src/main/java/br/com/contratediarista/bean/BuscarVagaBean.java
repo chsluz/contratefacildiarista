@@ -1,5 +1,6 @@
 package br.com.contratediarista.bean;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -41,6 +43,7 @@ public class BuscarVagaBean implements Serializable {
 	private Integer valorFinal;
 	private TipoPeriodo tipoPeriodo;
 	private List<Rotina> rotinas;
+	private Rotina rotinaSelecionada;
 	private List<TipoAtividade> atividadesSelecionadas;
 	private DiasSemana[] diasSelecionados;
 	private SimpleDateFormat formatoJson = new SimpleDateFormat("yyyy-MM-dd");
@@ -53,6 +56,9 @@ public class BuscarVagaBean implements Serializable {
 	
 	@Inject
 	private FacesUtil facesUtil;
+	
+	@Inject
+	private FacesContext facesContext;
 	
 	private Gson gson;
 
@@ -123,6 +129,11 @@ public class BuscarVagaBean implements Serializable {
 			jsonObject.add("", arrayTipoAtividades);
 		}
 		return jsonObject;
+	}
+	
+	public void visualizar(Rotina rotina) throws IOException {
+		facesContext.getExternalContext().redirect("visualizacao_vaga_prestador.jsf");
+		facesContext.getExternalContext().getSessionMap().put("rotina", rotina);
 	}
 
 	public List<TipoPeriodo> getTiposPeriodo() {
@@ -203,6 +214,14 @@ public class BuscarVagaBean implements Serializable {
 
 	public void setRotinas(List<Rotina> rotinas) {
 		this.rotinas = rotinas;
+	}
+
+	public Rotina getRotinaSelecionada() {
+		return rotinaSelecionada;
+	}
+
+	public void setRotinaSelecionada(Rotina rotinaSelecionada) {
+		this.rotinaSelecionada = rotinaSelecionada;
 	}
 
 }

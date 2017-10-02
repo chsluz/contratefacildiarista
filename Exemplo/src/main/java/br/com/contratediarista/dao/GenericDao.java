@@ -114,5 +114,6 @@ public class GenericDao<T> implements Serializable {
 			throw new Exception(e.getCause());
 		}
 	}
+	
 
 }

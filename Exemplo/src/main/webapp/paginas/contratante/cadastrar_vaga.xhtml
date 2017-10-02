@@ -13,16 +13,15 @@
 					<p:outputLabel value="#{msg['data.inicial']}" />
 					<p:calendar locale="pt_BR" id="dataInicial" required="true"
 						requiredMessage="#{msg['data.inicial.obrigatorio']}"
-						placeholder="99/99/9999" pattern="99/99/9999"
+						placeholder="99/99/9999" pattern="dd/MM/yyyy"
 						value="#{vagasBean.dataInicial}" mask="99/99/9999" size="15" />
 				</h:panelGroup>
 				<h:panelGroup>
 					<p:outputLabel value="#{msg['data.final']}" />
-					<p:calendar id="dataFinal" required="true"
-						locale="pt_BR"
+					<p:calendar id="dataFinal" required="true" locale="pt_BR"
 						requiredMessage="#{msg['data.final.obrigatorio']}"
-						pattern="99/99/9999"
-						value="#{vagasBean.dataFinal}" mask="99/99/9999" size="15" />
+						pattern="dd/MM/yyyy" value="#{vagasBean.dataFinal}"
+						mask="99/99/9999" size="15" />
 				</h:panelGroup>
 
 			</p:panelGrid>
@@ -38,8 +37,10 @@
 					</p:selectOneMenu>
 				</h:panelGroup>
 				<h:panelGroup>
-					<p:outputLabel value="#{msg['valor.periodo']}"/>
-					<p:inputMask required="true" requiredMessage="#{msg['valor.periodo.obrigatorio']}" value="#{vagasBean.vaga.valorPeriodo}" mask="?999"/>
+					<p:outputLabel value="#{msg['valor.periodo']}" />
+					<p:inputMask required="true"
+						requiredMessage="#{msg['valor.periodo.obrigatorio']}"
+						value="#{vagasBean.vaga.valorPeriodo}" mask="?999" />
 				</h:panelGroup>
 			</p:panelGrid>
 			<p:outputLabel value="#{msg['dias']}" />
@@ -122,8 +123,7 @@
 									value="#{buscaEnderecoBean.endereco.cep}" id="cep" />
 								<p:commandButton update="groupEndereco"
 									action="#{buscaEnderecoBean.buscarCep}" icon="ui-icon-search"
-									oncomplete="init()"
-									partialSubmit="true" process="cep,@this">
+									oncomplete="init()" partialSubmit="true" process="cep,@this">
 								</p:commandButton>
 							</p:panelGrid>
 
@@ -154,8 +154,10 @@
 					</div>
 				</h:panelGroup>
 				<p:panelGrid columns="2" layout="grid">
-					<p:commandButton immediate="true" process="@this" value="cancelar" action="#{vagasBean.cancelar()}" update="panelCadastroVaga"/>
-					<p:commandButton value="salvar" action="#{vagasBean.salvar()}" update="panelCadastroVaga"/>
+					<p:commandButton immediate="true" process="@this" value="cancelar"
+						action="#{vagasBean.cancelar()}" update="panelCadastroVaga" />
+					<p:commandButton value="salvar" action="#{vagasBean.salvar()}"
+						update="panelCadastroVaga" />
 				</p:panelGrid>
 			</p:panelGrid>
 		</p:panelGrid>

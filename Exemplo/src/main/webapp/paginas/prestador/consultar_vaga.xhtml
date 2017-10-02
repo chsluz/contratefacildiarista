@@ -114,15 +114,16 @@
 						style="text-align:center">
 						<ui:repeat var="atividade" value="#{rotina.vaga.tiposAtividade}">
 							<h:outputText value="#{atividade.descricao}" />
-							<br/>
+							<br />
 						</ui:repeat>
 					</p:column>
 					<p:column headerText="#{msg['visualizar']}">
-						<p:commandButton value="#{msg['visualizar']}"/>
+						<p:commandButton value="#{msg['visualizar']}"
+							action="#{buscarVagaBean.visualizar(rotina)}">
+						</p:commandButton>
 					</p:column>
 				</p:dataTable>
 			</p:panelGrid>
-
 		</p:panelGrid>
 	</ui:define>
 </ui:composition>

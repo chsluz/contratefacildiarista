@@ -48,6 +48,11 @@ public class MenuBean implements Serializable {
 		item.setHref("../../paginas/prestador/consultar_vaga.jsf");
 		item.setIcon("ui-icon-home");
 		consulta.addElement(item);
+		
+		item = new DefaultMenuItem(facesUtil.getLabel("aprovacao.vaga"));
+		item.setHref("../../paginas/contratante/aprovacao_vaga.jsf");
+		item.setIcon("ui-icon-home");
+		consulta.addElement(item);
 
 		menuModel.addElement(cadastro);
 		menuModel.addElement(consulta);
