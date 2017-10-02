@@ -6,14 +6,20 @@
       function init() {
       	navigator.geolocation.watchPosition(render);
       }
+      
+      function carregarMapa() {
+    	  	latitude = document.getElementById('latitude').value;
+    	  	longitude = document.getElementById('longitude').value;
+    	  	initMap();
+      }
 
       function render(pos) {
-    	if(!latitude) {
-    		latitude = pos.coords.latitude;
-    	}
-    	if(!longitude) {
-    		longitude = pos.coords.longitude;
-    	}
+	    	if(!latitude) {
+	    		latitude = pos.coords.latitude;
+	    	}
+	    	if(!longitude) {
+	    		longitude = pos.coords.longitude;
+	    	}
       	if(!map) {
       		$("#latitude").val(latitude);
           	$("#longitude").val(longitude);
@@ -47,7 +53,9 @@
       }
 
       function initMap() {
-        cidade = {lat: latitude, lng: longitude};
+	        cidade = {
+		lat : latitude,
+		lng : longitude};
         map = new google.maps.Map(document.getElementById('map'), {
           zoom: 17,
           center: {

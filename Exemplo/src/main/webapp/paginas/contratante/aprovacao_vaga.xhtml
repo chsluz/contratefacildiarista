@@ -1,70 +1,114 @@
 <!DOCTYPE html>
-<ui:composition template="/template/template.xhtml"
+<ui:composition
+	template="/template/template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 	<ui:define name="corpo">
-		<p:panelGrid columns="1" id="panelAprovacaoVaga" layout="grid">
+		<p:panelGrid
+			columns="1"
+			id="panelAprovacaoVaga"
+			layout="grid">
 			<h1>#{msg['aprovacao.vaga']}</h1>
-			<p:panelGrid columns="4" layout="grid"
+			<p:panelGrid
+				columns="4"
+				layout="grid"
 				columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-2,ui-grid-col-2">
 				<h:panelGroup>
 					<p:outputLabel value="#{msg['data.inicial']}" />
-					<p:calendar locale="pt_BR" id="dataInicial" required="true"
+					<p:calendar
+						locale="pt_BR"
+						id="dataInicial"
+						required="true"
 						mindate="#{aprovacaoVagasBean.dataMinima}"
 						requiredMessage="#{msg['data.inicial.obrigatorio']}"
-						placeholder="99/99/9999" pattern="dd/MM/yyyy"
-						value="#{aprovacaoVagasBean.dataInicial}" mask="99/99/9999"
+						placeholder="99/99/9999"
+						pattern="dd/MM/yyyy"
+						value="#{aprovacaoVagasBean.dataInicial}"
+						mask="99/99/9999"
 						size="15" />
 				</h:panelGroup>
 				<h:panelGroup>
 					<p:outputLabel value="#{msg['data.final']}" />
-					<p:calendar id="dataFinal" required="true" locale="pt_BR"
+					<p:calendar
+						id="dataFinal"
+						required="true"
+						locale="pt_BR"
 						mindate="#{aprovacaoVagasBean.dataMinima}"
 						requiredMessage="#{msg['data.final.obrigatorio']}"
-						pattern="dd/MM/yyyy" value="#{aprovacaoVagasBean.dataFinal}"
-						mask="99/99/9999" size="15" />
+						pattern="dd/MM/yyyy"
+						value="#{aprovacaoVagasBean.dataFinal}"
+						mask="99/99/9999"
+						size="15" />
 				</h:panelGroup>
 				<h:panelGroup />
-				<p:commandButton value="Buscar" update="panelTableVaga" action="#{aprovacaoVagasBean.buscarRotinas()}"/>
+				<p:commandButton
+					value="Buscar"
+					update="panelTableVaga"
+					action="#{aprovacaoVagasBean.buscarRotinas()}" />
 			</p:panelGrid>
-			<p:panelGrid columns="1" layout="grid" id="panelTableVaga">
-				<p:dataTable var="rotina"
-					rendered="#{not empty aprovacaoVagasBean.rotinas}" reflow="true"
-					value="#{aprovacaoVagasBean.rotinas}" paginator="true" rows="10"
+			<p:panelGrid
+				columns="1"
+				layout="grid"
+				id="panelTableVaga">
+				<p:dataTable
+					var="rotina"
+					rendered="#{not empty aprovacaoVagasBean.rotinas}"
+					reflow="true"
+					value="#{aprovacaoVagasBean.rotinas}"
+					paginator="true"
+					rows="10"
 					paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-					rowsPerPageTemplate="5,10,15" id="tableVaga" lazy="true">
+					rowsPerPageTemplate="5,10,15"
+					id="tableVaga"
+					lazy="true">
 					<f:facet name="header">
 						#{msg['vagas']}
 					</f:facet>
-					<p:column headerText="#{msg['data']}" style="text-align:center"
-						sortBy="#{rotina.data}" filterBy="#{rotina.data}">
+					<p:column
+						headerText="#{msg['data']}"
+						style="text-align:center"
+						sortBy="#{rotina.data}"
+						filterBy="#{rotina.data}">
 						<h:outputText value="#{rotina.data}">
-							<f:convertDateTime timeZone="pt_BR" pattern="dd/MM/yyyy" />
+							<f:convertDateTime
+								timeZone="pt_BR"
+								pattern="dd/MM/yyyy" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{msg['tipo.periodo']}"
+					<p:column
+						headerText="#{msg['tipo.periodo']}"
 						style="text-align:center"
 						sortBy="#{rotina.vaga.tipoPeriodo.descricao}"
 						filterBy="#{rotina.vaga.tipoPeriodo.descricao}">
 						<h:outputText value="#{rotina.vaga.tipoPeriodo.descricao}" />
 					</p:column>
-					<p:column headerText="#{msg['valor.periodo.reais']}"
-						style="text-align:center" sortBy="#{rotina.vaga.valorPeriodo}"
+					<p:column
+						headerText="#{msg['valor.periodo.reais']}"
+						style="text-align:center"
+						sortBy="#{rotina.vaga.valorPeriodo}"
 						filterBy="#{rotina.vaga.valorPeriodo}">
 						<h:outputText value="#{rotina.vaga.valorPeriodo} Reais" />
 					</p:column>
-					<p:column headerText="#{msg['atividades']}"
+					<p:column
+						headerText="#{msg['atividades']}"
 						style="text-align:center">
-						<ui:repeat var="atividade" value="#{rotina.vaga.tiposAtividade}">
+						<ui:repeat
+							var="atividade"
+							value="#{rotina.vaga.tiposAtividade}">
 							<h:outputText value="#{atividade.descricao}" />
 							<br />
 						</ui:repeat>
 					</p:column>
-					<p:column headerText="#{msg['visualizar']}">
-						<p:commandButton value="#{msg['visualizar']}"/>
+					<p:column headerText="#{msg['acoes']}">
+						<p:panelGrid
+							columns="2"
+							layout="grid">
+							<p:commandButton value="#{msg['editar']}" />
+							<p:commandButton value="#{msg['excluir']}" />
+						</p:panelGrid>
 					</p:column>
 				</p:dataTable>
 			</p:panelGrid>

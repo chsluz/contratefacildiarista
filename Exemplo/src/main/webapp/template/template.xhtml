@@ -11,6 +11,7 @@
 	<h:outputScript library="js" name="firebase.js" />
 	<h:outputScript library="primefaces/jquery" name="jquery.js" />
 	<h:outputScript library="js" name="mapbox.js" />
+	<h:outputScript library="js" name="script.js"/>
 	<script
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVfcPnHvNli_y2b9qeYKcIv6keSRGjEc8" />
 	<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
@@ -33,6 +34,7 @@
 		firebase.initializeApp(config);
 
 		$.noConflict();
+		localeData_pt_br();
 	</script>
 
 	<p:ajaxStatus onstart="PF('statusDialog').show()"

@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.joda.time.LocalDate;
+import org.primefaces.context.RequestContext;
 
 import br.com.contratediarista.entity.Endereco;
 import br.com.contratediarista.entity.Rotina;
@@ -77,6 +78,7 @@ public class VagasBean implements Serializable {
 			buscaEnderecoBean.setCidade(endereco.getBairro().getCidade());
 			buscaEnderecoBean.setEstado(buscaEnderecoBean.getCidade().getEstado());
 			buscaEnderecoBean.buscarCep();
+			RequestContext.getCurrentInstance().execute("carregarMapa()");
 		}
 		atividadesSelecionadas = new ArrayList<>();
 		tipoPeriodo = null;
