@@ -160,50 +160,6 @@
 						update="panelCadastroVaga" />
 				</p:panelGrid>
 			</p:panelGrid>
-			<p:panelGrid columns="1" layout="grid" id="panelTableVaga">
-				<p:dataTable var="rotina"
-					rendered="#{not empty aprovacaoVagasBean.rotinas}" reflow="true"
-					value="#{vagasBean.rotinas}" paginator="true" rows="10"
-					paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-					rowsPerPageTemplate="5,10,15" id="tableVaga" lazy="true">
-					<f:facet name="header">
-						#{msg['vagas']}
-					</f:facet>
-					<p:column headerText="#{msg['data']}" style="text-align:center"
-						sortBy="#{rotina.data}" filterBy="#{rotina.data}">
-						<h:outputText value="#{rotina.data}">
-							<f:convertDateTime timeZone="pt_BR" pattern="dd/MM/yyyy" />
-						</h:outputText>
-					</p:column>
-					<p:column headerText="#{msg['tipo.periodo']}"
-						style="text-align:center"
-						sortBy="#{rotina.vaga.tipoPeriodo.descricao}"
-						filterBy="#{rotina.vaga.tipoPeriodo.descricao}">
-						<h:outputText value="#{rotina.vaga.tipoPeriodo.descricao}" />
-					</p:column>
-					<p:column headerText="#{msg['valor.periodo.reais']}"
-						style="text-align:center" sortBy="#{rotina.vaga.valorPeriodo}"
-						filterBy="#{rotina.vaga.valorPeriodo}">
-						<h:outputText value="#{rotina.vaga.valorPeriodo} Reais" />
-					</p:column>
-					<p:column headerText="#{msg['atividades']}"
-						style="text-align:center">
-						<ui:repeat var="atividade" value="#{rotina.vaga.tiposAtividade}">
-							<h:outputText value="#{atividade.descricao}" />
-							<br />
-						</ui:repeat>
-					</p:column>
-					<p:column headerText="#{msg['acoes']}">
-						<p:panelGrid columns="2" layout="grid">
-							<p:commandButton action="#{vagasBean.editar(rotina)}"
-								value="#{msg['editar']}" />
-							<p:commandButton value="#{msg['excluir']}"
-								update="panelTableVaga"
-								action="#{vagasBean.excluir(rotina)}" />
-						</p:panelGrid>
-					</p:column>
-				</p:dataTable>
-			</p:panelGrid>
 		</p:panelGrid>
 	</ui:define>
 </ui:composition>

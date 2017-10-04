@@ -29,7 +29,7 @@ public class RotinaService implements Serializable {
 
 	@Inject
 	private RotinaDao rotinaDao;
-	
+
 	@Inject
 	private UsuarioDao usuarioDao;
 
@@ -89,7 +89,21 @@ public class RotinaService implements Serializable {
 					.build();
 		}
 	}
-	
+
+	@POST
+	@Path("/alterar")
+	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
+	public Response alterar(Rotina rotina) {
+		try {
+			rotinaDao.alterar(rotina);
+			return Response.ok().build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+					.build();
+		}
+	}
+
 	@POST
 	@Path("excluir")
 	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })

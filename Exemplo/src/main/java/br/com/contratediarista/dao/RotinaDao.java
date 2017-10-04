@@ -39,12 +39,15 @@ public class RotinaDao implements Serializable {
 	public void salvar(Rotina rotina) throws Exception {
 		dao.salvar(rotina);
 	}
-	
+
+	public void alterar(Rotina rotina) throws Exception {
+		dao.alterar(rotina);
+	}
+
 	public void excluir(Rotina rotina) throws Exception {
 		dao.excluir(rotina);
 	}
 
-	
 	public List<Rotina> listarRotinasPorDataEUsuario(Date dataInicial, Date dataFinal, Usuario usuario) {
 		try {
 			StringBuilder sql = new StringBuilder(" SELECT r FROM  Rotina r ");
@@ -54,7 +57,7 @@ public class RotinaDao implements Serializable {
 			query.setParameter("dataInicial", dataInicial);
 			query.setParameter("dataFinal", dataFinal);
 			query.setParameter("usuario", usuario);
-			return (List<Rotina>) query.getResultList();
+			return query.getResultList();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

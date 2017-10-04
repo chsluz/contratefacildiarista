@@ -43,7 +43,7 @@ public class LoginBean implements Serializable {
 	private FacesUtil facesUtil;
 
 	private Usuario usuario;
-	
+
 	private Usuario usuarioLogin;
 
 	private String idUsuario;
@@ -65,7 +65,7 @@ public class LoginBean implements Serializable {
 		Response response = usuarioService.buscarUsuarioByUid(idUsuario);
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			usuarioLogin = (Usuario) response.getEntity();
-			if (usuario != null) {
+			if (usuarioLogin != null) {
 				facesContext.getExternalContext().getSessionMap().put("usuario", usuarioLogin);
 				facesContext.getExternalContext().redirect("pagina_inicial.jsf");
 			}
@@ -74,6 +74,7 @@ public class LoginBean implements Serializable {
 
 	public void deslogar() throws IOException {
 		facesContext.getExternalContext().getSessionMap().put("usuario", null);
+		facesContext.getExternalContext().invalidateSession();
 		facesContext.getExternalContext().redirect("../publico/login.jsf");
 	}
 
@@ -85,7 +86,7 @@ public class LoginBean implements Serializable {
 		try {
 			String cpf = new String(usuario.getCpf());
 			cpf = Utils.removerAcentos(cpf);
-			if(!Utils.validarCpf(cpf)) {
+			if (!Utils.validarCpf(cpf)) {
 				RequestContext.getCurrentInstance().execute("excluirLogin();");
 				facesUtil.exibirMsgErro(facesUtil.getLabel("cpf.invalido"));
 				return;
@@ -149,5 +150,5 @@ public class LoginBean implements Serializable {
 	public void setUsuarioLogin(Usuario usuarioLogin) {
 		this.usuarioLogin = usuarioLogin;
 	}
-	
+
 }

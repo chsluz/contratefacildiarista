@@ -61,9 +61,11 @@ public class AprovacaoVagasBean implements Serializable {
 			usuarioLogado = (Usuario) response.getEntity();
 		}
 		rotina = (Rotina) facesContext.getExternalContext().getSessionMap().get("rotina");
-		response = rotinaService.restoreById(rotina.getId());
-		if (response.getStatus() == Status.OK.getStatusCode()) {
-			rotina = (Rotina) response.getEntity();
+		if (rotina != null) {
+			response = rotinaService.restoreById(rotina.getId());
+			if (response.getStatus() == Status.OK.getStatusCode()) {
+				rotina = (Rotina) response.getEntity();
+			}
 		}
 	}
 
@@ -81,7 +83,7 @@ public class AprovacaoVagasBean implements Serializable {
 
 	public void aprovar() {
 		try {
-			Response response = rotinaService.salvar(rotina);
+			Response response = rotinaService.alterar(rotina);
 			if (response.getStatus() == Status.OK.getStatusCode()) {
 				facesUtil.exibirMsgSucesso(facesUtil.getLabel("salvo.sucesso"));
 			} else {
