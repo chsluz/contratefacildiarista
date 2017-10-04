@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<ui:composition template="/template/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="corpo">
+		<p:panelGrid columns="1" id="panelAprovacao" layout="grid">
+			<h1>#{msg['aprovar']}</h1>
+			<p:panelGrid columns="3" layout="grid">
+				<h:panelGroup>
+					<p:outputLabel value="#{msg['data']}: " />
+					<p:outputLabel value="#{aprovacaoVagasBean.rotina.data}" />
+				</h:panelGroup>
+				<h:panelGroup>
+					<p:outputLabel value="#{msg['dia.semana']}: " />
+					<p:outputLabel
+						value="#{aprovacaoVagasBean.rotina.diaSemana.descricao}" />
+				</h:panelGroup>
+				<h:panelGroup>
+					<p:outputLabel value="#{msg['periodo']}: " />
+					<p:outputLabel
+						value="#{aprovacaoVagasBean.rotina.vaga.tipoPeriodo.descricao}" />
+				</h:panelGroup>
+				<h:panelGroup>
+					<p:outputLabel value="#{msg['valor']}: " />
+					<p:outputLabel
+						value="#{aprovacaoVagasBean.rotina.vaga.valorPeriodo} Reais" />
+				</h:panelGroup>
+				<h:panelGroup>
+					<p:outputLabel value="#{msg['atividades']}: " />
+					<h:panelGroup>
+						<ui:repeat var="atividade"
+							value="#{aprovacaoVagasBean.rotina.vaga.tiposAtividade}">
+							<p:outputLabel value="#{atividade.descricao}" />
+							<br />
+						</ui:repeat>
+					</h:panelGroup>
+				</h:panelGroup>
+				<h:panelGroup>
+					<p:outputLabel value="#{msg['prestadores']}: " />
+					<p:selectOneMenu required="true" converter="usuarioConverter"
+						requiredMessage="#{msg['necessario.selecionar.prestador']}"
+						value="#{aprovacaoVagasBean.rotina.prestadorSelecionado}">
+						<f:selectItem itemLabel="#{msg['selecione']}" />
+						<f:selectItems var="prestador" itemLabel="#{prestador.nome}"
+							itemValue="#{prestador}"
+							value="#{aprovacaoVagasBean.rotina.prestadores}" />
+					</p:selectOneMenu>
+				</h:panelGroup>
+			</p:panelGrid>
+			<p:commandButton action="#{aprovacaoVagasBean.aprovar()}"
+				style="width:100px;float:right;" value="#{msg['aprovar']}" />
+		</p:panelGrid>
+	</ui:define>
+</ui:composition>

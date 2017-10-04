@@ -77,7 +77,6 @@ public class VagasBean implements Serializable {
 			buscaEnderecoBean.setEndereco(endereco);
 			buscaEnderecoBean.setCidade(endereco.getBairro().getCidade());
 			buscaEnderecoBean.setEstado(buscaEnderecoBean.getCidade().getEstado());
-			buscaEnderecoBean.buscarCep();
 			RequestContext.getCurrentInstance().execute("carregarMapa()");
 		}
 		atividadesSelecionadas = new ArrayList<>();

@@ -77,11 +77,25 @@ public class RotinaService implements Serializable {
 	}
 
 	@POST
-	@Path("salvar")
+	@Path("/salvar")
 	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
 	public Response salvar(Rotina rotina) {
 		try {
 			rotinaDao.salvar(rotina);
+			return Response.ok().build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+					.build();
+		}
+	}
+	
+	@POST
+	@Path("excluir")
+	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
+	public Response excluir(Rotina rotina) {
+		try {
+			rotinaDao.excluir(rotina);
 			return Response.ok().build();
 		} catch (Exception e) {
 			e.printStackTrace();

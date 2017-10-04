@@ -62,11 +62,16 @@ public class VisualizarVagaBean implements Serializable {
 
 	public void canditatar() {
 		try {
+
 			if (usuarioLogado == null) {
 				facesUtil.exibirMsgErro(facesUtil.getLabel("erro.ao.vincular.usuario.vaga"));
 			}
 			if (rotina.getPrestadores() == null) {
 				rotina.setPrestadores(new ArrayList<>());
+			}
+			if (rotina.getPrestadores().size() > 10) {
+				facesUtil.exibirMsgErro(facesUtil.getLabel("numero.maximo.candidatos.ja.preenchido"));
+				return;
 			}
 			if (!rotina.getPrestadores().contains(usuarioLogado)) {
 				rotina.getPrestadores().add(usuarioLogado);
@@ -82,12 +87,11 @@ public class VisualizarVagaBean implements Serializable {
 			facesUtil.exibirMsgErro(facesUtil.getLabel("erro.salvar"));
 		}
 	}
-	
+
 	public boolean renderizarBotaoCandidatar() {
-		if(rotina.getPrestadores() != null && rotina.getPrestadores().contains(usuarioLogado)) {
+		if (rotina.getPrestadores() != null && rotina.getPrestadores().contains(usuarioLogado)) {
 			return false;
-		}
-		else {
+		} else {
 			return true;
 		}
 	}

@@ -13,6 +13,7 @@ import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuModel;
 
 import br.com.contratediarista.entity.Usuario;
+import br.com.contratediarista.enuns.TipoUsuario;
 import br.com.contratediarista.utils.FacesUtil;
 
 @Named
@@ -29,14 +30,24 @@ public class MenuBean implements Serializable {
 	@PostConstruct
 	public void init() {
 		Usuario usuarioLogado = facesUtil.getUsuarioLogado();
-		menuModel = new DefaultMenuModel();
-		//First submenu
-		DefaultSubMenu cadastro = new DefaultSubMenu(facesUtil.getLabel("cadastrar"));
+		TipoUsuario tipo = usuarioLogado.getTipoUsuario();
 
-		DefaultMenuItem item = new DefaultMenuItem(facesUtil.getLabel("vaga"));
-		item.setHref("../../paginas/contratante/cadastrar_vaga.jsf");
-		item.setIcon("ui-icon-home");
-		cadastro.addElement(item);
+		menuModel = new DefaultMenuModel();
+		// First submenu
+		DefaultSubMenu cadastro = new DefaultSubMenu(facesUtil.getLabel("cadastrar"));
+		DefaultMenuItem item;
+		if (tipo == TipoUsuario.CONTRATANTE) {
+			item = new DefaultMenuItem(facesUtil.getLabel("vaga"));
+			item.setHref("../../paginas/contratante/cadastrar_vaga.jsf");
+			item.setIcon("ui-icon-home");
+			cadastro.addElement(item);
+		}
+		if(tipo == TipoUsuario.PRESTADOR) {
+			item = new DefaultMenuItem(facesUtil.getLabel("disponibilidade"));
+			item.setHref("../../paginas/prestador/cadastrar_disponibilidade.jsf");
+			item.setIcon("ui-icon-home");
+			cadastro.addElement(item);
+		}
 
 		item = new DefaultMenuItem(facesUtil.getLabel("tipo.de.atividade"));
 		item.setHref("../../paginas/publico/tipo_atividade.jsf");
@@ -44,15 +55,29 @@ public class MenuBean implements Serializable {
 		cadastro.addElement(item);
 
 		DefaultSubMenu consulta = new DefaultSubMenu(facesUtil.getLabel("consultar"));
-		item = new DefaultMenuItem(facesUtil.getLabel("vaga"));
-		item.setHref("../../paginas/prestador/consultar_vaga.jsf");
-		item.setIcon("ui-icon-home");
-		consulta.addElement(item);
-		
-		item = new DefaultMenuItem(facesUtil.getLabel("aprovacao.vaga"));
-		item.setHref("../../paginas/contratante/aprovacao_vaga.jsf");
-		item.setIcon("ui-icon-home");
-		consulta.addElement(item);
+		if (tipo == TipoUsuario.PRESTADOR) {
+			item = new DefaultMenuItem(facesUtil.getLabel("vaga"));
+			item.setHref("../../paginas/prestador/consultar_vaga.jsf");
+			item.setIcon("ui-icon-home");
+			consulta.addElement(item);
+			
+			item = new DefaultMenuItem(facesUtil.getLabel("visualizar.vagas.vinculadas"));
+			item.setHref("../../paginas/prestador/visualizar_vagas_vinculadas.jsf");
+			item.setIcon("ui-icon-home");
+			consulta.addElement(item);
+		}
+
+		if (tipo == TipoUsuario.CONTRATANTE) {
+			item = new DefaultMenuItem(facesUtil.getLabel("aprovacao.vaga"));
+			item.setHref("../../paginas/contratante/aprovacao_vaga.jsf");
+			item.setIcon("ui-icon-home");
+			consulta.addElement(item);
+			
+			item = new DefaultMenuItem(facesUtil.getLabel("visualizar.disponibilidade.prestador"));
+			item.setHref("../../paginas/contratante/visualizar_disponibilidade_prestador.jsf");
+			item.setIcon("ui-icon-home");
+			consulta.addElement(item);
+		}
 
 		menuModel.addElement(cadastro);
 		menuModel.addElement(consulta);

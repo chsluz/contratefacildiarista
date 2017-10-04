@@ -39,6 +39,10 @@ public class RotinaDao implements Serializable {
 	public void salvar(Rotina rotina) throws Exception {
 		dao.salvar(rotina);
 	}
+	
+	public void excluir(Rotina rotina) throws Exception {
+		dao.excluir(rotina);
+	}
 
 	
 	public List<Rotina> listarRotinasPorDataEUsuario(Date dataInicial, Date dataFinal, Usuario usuario) {
