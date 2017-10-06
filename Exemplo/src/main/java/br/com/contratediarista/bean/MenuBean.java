@@ -33,7 +33,7 @@ public class MenuBean implements Serializable {
 		TipoUsuario tipo = usuarioLogado.getTipoUsuario();
 
 		menuModel = new DefaultMenuModel();
-		// First submenu
+
 		DefaultSubMenu cadastro = new DefaultSubMenu(facesUtil.getLabel("cadastrar"));
 		DefaultMenuItem item;
 		if (tipo == TipoUsuario.CONTRATANTE) {
@@ -42,7 +42,7 @@ public class MenuBean implements Serializable {
 			item.setIcon("ui-icon-home");
 			cadastro.addElement(item);
 		}
-		if(tipo == TipoUsuario.PRESTADOR) {
+		if (tipo == TipoUsuario.PRESTADOR) {
 			item = new DefaultMenuItem(facesUtil.getLabel("disponibilidade"));
 			item.setHref("../../paginas/prestador/cadastrar_disponibilidade.jsf");
 			item.setIcon("ui-icon-home");
@@ -60,8 +60,8 @@ public class MenuBean implements Serializable {
 			item.setHref("../../paginas/prestador/consultar_vaga.jsf");
 			item.setIcon("ui-icon-home");
 			consulta.addElement(item);
-			
-			item = new DefaultMenuItem(facesUtil.getLabel("visualizar.vagas.vinculadas"));
+
+			item = new DefaultMenuItem(facesUtil.getLabel("vagas.vinculadas"));
 			item.setHref("../../paginas/prestador/visualizar_vagas_vinculadas.jsf");
 			item.setIcon("ui-icon-home");
 			consulta.addElement(item);
@@ -72,8 +72,8 @@ public class MenuBean implements Serializable {
 			item.setHref("../../paginas/contratante/aprovacao_vaga.jsf");
 			item.setIcon("ui-icon-home");
 			consulta.addElement(item);
-			
-			item = new DefaultMenuItem(facesUtil.getLabel("visualizar.disponibilidade.prestador"));
+
+			item = new DefaultMenuItem(facesUtil.getLabel("disponibilidade.prestador"));
 			item.setHref("../../paginas/contratante/visualizar_disponibilidade_prestador.jsf");
 			item.setIcon("ui-icon-home");
 			consulta.addElement(item);
