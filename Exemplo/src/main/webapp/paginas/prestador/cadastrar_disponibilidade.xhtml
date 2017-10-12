@@ -8,6 +8,146 @@
 	<ui:define name="corpo">
 		<p:panelGrid columns="1" id="panelCadastroVaga" layout="grid">
 			<h1>#{msg['cadastro.disponibilidade']}</h1>
+
+			<h:panelGroup>
+				<p:outputLabel value="#{msg['data']}" />
+				<p:calendar locale="pt_BR" id="data" required="true"
+					requiredMessage="#{msg['data.obrigatorio']}"
+					placeholder="99/99/9999" pattern="dd/MM/yyyy"
+					mindate="#{cadastrarDisponibilidadeBean.dataMinima}"
+					value="#{cadastrarDisponibilidadeBean.disponibilidade.data}"
+					mask="99/99/9999" size="15" />
+			</h:panelGroup>
+			<p:panelGrid layout="grid" columns="2">
+				<h:panelGroup>
+					<p:outputLabel value="#{msg['periodo']}" />
+					<p:selectOneMenu id="selectPeriodo" required="true"
+						requiredMessage="#{msg['selecione.um.periodo']}"
+						value="#{cadastrarDisponibilidadeBean.disponibilidade.tipoPeriodo}">
+						<f:selectItem itemLabel="#{msg['selecione']}" />
+						<f:selectItems
+							value="#{cadastrarDisponibilidadeBean.tiposPeriodo}"
+							var="tipoPeriodo" itemValue="#{tipoPeriodo}"
+							itemLabel="#{tipoPeriodo.descricao}" />
+					</p:selectOneMenu>
+				</h:panelGroup>
+				<h:panelGroup>
+					<p:outputLabel value="#{msg['valor.periodo']}" />
+					<p:inputMask required="true"
+						requiredMessage="#{msg['valor.periodo.obrigatorio']}"
+						value="#{cadastrarDisponibilidadeBean.disponibilidade.valorPeriodo}"
+						mask="?999" />
+				</h:panelGroup>
+			</p:panelGrid>
+			<p:outputLabel value="#{msg['atividades']}" />
+			<p:selectManyMenu converter="tipoAtividadeConverter" required="true"
+				requiredMessage="#{msg['selecione.pelo.menos.uma.atividade']}"
+				id="selectAtividades" value="#{cadastrarDisponibilidadeBean.atividadesSelecionadas}"
+				filter="true" filterMatchMode="contains" showCheckbox="true">
+				<f:selectItems value="#{cadastrarDisponibilidadeBean.tiposAtividades}" var="tipo"
+					itemValue="#{tipo}" itemLabel="#{tipo.descricao}" />
+			</p:selectManyMenu>
+
+			<p:panelGrid columns="2" layout="grid"
+				columnClasses="ui-grid-col-6,ui-grid-col-6">
+				<p:panelGrid id="groupEndereco" columns="2" layout="grid">
+					<h:panelGroup id="groupEstado">
+						<h:outputText value="#{msg['estado']}:" />
+						<p:selectOneMenu styleClass="selectEstado"
+							converter="estadoConverter" value="#{buscaEnderecoBean.estado}"
+							id="estado">
+							<f:selectItem itemLabel="#{msg['selecione']}" itemValue="null" />
+							<f:selectItems itemLabel="#{estado.nome}" itemValue="#{estado}"
+								var="estado" value="#{buscaEnderecoBean.listarEstados}" />
+							<p:ajax event="itemSelect"
+								listener="#{buscaEnderecoBean.selectEstado}" update="cidade" />
+						</p:selectOneMenu>
+					</h:panelGroup>
+					<h:panelGroup id="groupCidade">
+						<h:outputText value="#{msg['cidade']}:" />
+						<p:selectOneMenu styleClass="selectCidade"
+							converter="cidadeConverter" value="#{buscaEnderecoBean.cidade}"
+							id="cidade">
+							<f:selectItem itemLabel="#{msg['cidade']}" itemValue="null" />
+							<f:selectItems var="cidade" itemLabel="#{cidade.nome}"
+								itemValue="#{cidade}" value="#{buscaEnderecoBean.listarCidades}" />
+							<p:ajax event="itemSelect"
+								listener="#{buscaEnderecoBean.selectCidade}" update="bairro" />
+						</p:selectOneMenu>
+					</h:panelGroup>
+					<h:panelGroup id="groupBairro">
+						<h:outputText value="#{msg['bairro']}:" />
+						<p:selectOneMenu required="true" styleClass="selectBairro"
+							requiredMessage="#{msg['bairro.obrigatorio']}"
+							value="#{buscaEnderecoBean.endereco.bairro}" id="bairro"
+							converter="bairroConverter">
+							<f:selectItem itemLabel="#{msg['selecione']}" itemValue="null" />
+							<f:selectItems itemValue="#{bairro}" var="bairro"
+								itemLabel="#{bairro.descricao}"
+								value="#{buscaEnderecoBean.listarBairros}" />
+						</p:selectOneMenu>
+					</h:panelGroup>
+					<h:panelGroup id="groupRua">
+						<h:outputText value="#{msg['rua']}:" />
+						<p:inputText placeholder="Rua João da silva" required="true"
+							requiredMessage="#{msg['rua.obrigatorio']}"
+							value="#{buscaEnderecoBean.endereco.rua}" id="rua" />
+					</h:panelGroup>
+					<h:panelGroup id="groupNumero">
+						<h:outputText value="#{msg['numero']}:" />
+						<p:inputMask id="numero"
+							value="#{buscaEnderecoBean.endereco.numero}" />
+					</h:panelGroup>
+					<h:panelGroup id="groupCep">
+						<p:panelGrid style="width:100%" columns="1">
+							<h:outputText value="#{msg['cep']}:" />
+							<p:panelGrid style="width:100%" columns="2"
+								columnClasses="ui-grid-col-8,ui-grid-col-4">
+								<p:inputMask required="true"
+									requiredMessage="#{msg['cep.obrigatorio']}" mask="99.999-999"
+									placeholder="99.999-999"
+									value="#{buscaEnderecoBean.endereco.cep}" id="cep" />
+								<p:commandButton update="groupEndereco"
+									action="#{buscaEnderecoBean.buscarCep}" icon="ui-icon-search"
+									oncomplete="init()" partialSubmit="true" process="cep,@this">
+								</p:commandButton>
+							</p:panelGrid>
+
+						</p:panelGrid>
+					</h:panelGroup>
+					<h:panelGroup id="groupComplemento">
+						<h:outputText value="Complemento:" />
+						<p:inputText value="#{buscaEnderecoBean.endereco.complemento}" />
+					</h:panelGroup>
+					<p:spacer />
+					<h:panelGroup id="groupLatitude">
+						<h:outputText value="Latitude:" />
+						<p:inputText id="latitude"
+							value="#{buscaEnderecoBean.endereco.latitude}" />
+					</h:panelGroup>
+					<h:panelGroup id="groupLongitude">
+						<h:outputText value="Longitude:" />
+						<p:inputText id="longitude"
+							value="#{buscaEnderecoBean.endereco.longitude}" />
+					</h:panelGroup>
+				</p:panelGrid>
+				<h:panelGroup id="mapa">
+					<script>
+				 	google.maps.event.addDomListener(window, 'load', init);
+				</script>
+					<div>
+						<div id="map" style="height: 600px; position: relative;"></div>
+					</div>
+				</h:panelGroup>
+				<p:panelGrid columns="2" layout="grid">
+					<p:commandButton immediate="true" process="@this" value="cancelar"
+						action="#{cadastrarDisponibilidadeBean.cancelar()}"
+						update="panelCadastroVaga" />
+					<p:commandButton value="salvar"
+						action="#{cadastrarDisponibilidadeBean.salvar()}"
+						update="panelCadastroVaga" />
+				</p:panelGrid>
+			</p:panelGrid>
 		</p:panelGrid>
 	</ui:define>
 </ui:composition>

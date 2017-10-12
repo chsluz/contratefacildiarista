@@ -26,6 +26,9 @@ public class MenuBean implements Serializable {
 	private FacesUtil facesUtil;
 
 	MenuModel menuModel;
+	
+	public MenuBean() {
+	}
 
 	@PostConstruct
 	public void init() {
@@ -65,6 +68,11 @@ public class MenuBean implements Serializable {
 			item.setHref("../../paginas/prestador/visualizar_vagas_vinculadas.jsf");
 			item.setIcon("ui-icon-home");
 			consulta.addElement(item);
+			
+			item = new DefaultMenuItem(facesUtil.getLabel("disponibilidade"));
+			item.setHref("../../paginas/prestador/consultar_disponibilidades_cadastradas.jsf");
+			item.setIcon("ui-icon-home");
+			consulta.addElement(item);
 		}
 
 		if (tipo == TipoUsuario.CONTRATANTE) {
@@ -75,6 +83,11 @@ public class MenuBean implements Serializable {
 
 			item = new DefaultMenuItem(facesUtil.getLabel("disponibilidade.prestador"));
 			item.setHref("../../paginas/contratante/visualizar_disponibilidade_prestador.jsf");
+			item.setIcon("ui-icon-home");
+			consulta.addElement(item);
+			
+			item = new DefaultMenuItem(facesUtil.getLabel("calendario"));
+			item.setHref("../../paginas/contratante/visualizar_vagas_prestador_aprovado.jsf");
 			item.setIcon("ui-icon-home");
 			consulta.addElement(item);
 		}

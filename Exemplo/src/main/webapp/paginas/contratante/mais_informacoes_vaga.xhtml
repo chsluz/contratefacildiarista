@@ -10,38 +10,38 @@
 		<p:panelGrid id="panelVisualizarVaga" columns="1" layout="grid">
 			<h1>#{msg['visualizacao.informacoes.vaga']}</h1>
 			<p:panelGrid columns="1" layout="grid">
-				<h3>#{msg['contratante.selecionado']}</h3>
+				<h3>#{msg['prestador.selecionado']}</h3>
 				<h:panelGroup>
 					<h:outputLabel value="#{msg['nome']}: " />
 					<h:outputLabel
-						value="#{visualizarVagaBean.rotina.vaga.contratante.nome}" />
+						value="#{visualizarVagasPrestadorAprovadoBean.rotinaSelecionada.prestadorSelecionado.nome}" />
 				</h:panelGroup>
 
 				<p:panelGrid columns="2" layout="grid">
 					<h:panelGroup>
 						<h:outputLabel value="#{msg['avaliacao']}: " />
 						<h:outputLabel
-							value="#{visualizarVagaBean.rotina.vaga.contratante.mediaAprovacaoUsuario}" />
+							value="#{visualizarVagasPrestadorAprovadoBean.rotinaSelecionada.prestadorSelecionado.mediaAprovacaoUsuario}" />
 					</h:panelGroup>
 					<h:panelGroup>
 						<h:outputLabel value="#{msg['qtde.avaliacao']}: " />
 						<h:outputLabel
-							value="#{visualizarVagaBean.rotina.vaga.contratante.quantidadeAvaliacoesUsuario}" />
+							value="#{visualizarVagasPrestadorAprovadoBean.rotinaSelecionada.prestadorSelecionado.quantidadeAvaliacoesUsuario}" />
 					</h:panelGroup>
 					<h:panelGroup>
 						<h:outputLabel value="#{msg['tipo.periodo']}: " />
 						<h:outputLabel
-							value="#{visualizarVagaBean.rotina.vaga.tipoPeriodo.descricao}" />
+							value="#{visualizarVagasPrestadorAprovadoBean.rotinaSelecionada.vaga.tipoPeriodo.descricao}" />
 					</h:panelGroup>
 					<h:panelGroup>
 						<h:outputLabel value="#{msg['valor.periodo']}: " />
 						<h:outputLabel
-							value="#{visualizarVagaBean.rotina.vaga.valorPeriodo} R$" />
+							value="#{visualizarVagasPrestadorAprovadoBean.rotinaSelecionada.vaga.valorPeriodo} R$" />
 					</h:panelGroup>
 					<h:panelGroup>
 						<h:outputLabel value="#{msg['data']}: " />
 						<h:outputText
-							value="#{visualizarVagaBean.rotina.data}">
+							value="#{visualizarVagasPrestadorAprovadoBean.rotinaSelecionada.data}">
 							<f:convertDateTime timeZone="pt_BR" pattern="dd/MM/yyyy" />
 						</h:outputText>
 					</h:panelGroup>
@@ -59,46 +59,37 @@
 			</h:panelGroup>
 			<p:panelGrid columns="2" layout="grid">
 				<p:inputText style="display:none" id="latitude"
-					value="#{visualizarVagaBean.rotina.vaga.endereco.latitude}" />
+					value="#{visualizarVagasPrestadorAprovadoBean.rotinaSelecionada.vaga.endereco.latitude}" />
 				<p:inputText style="display:none" id="longitude"
-					value="#{visualizarVagaBean.rotina.vaga.endereco.longitude}" />
+					value="#{visualizarVagasPrestadorAprovadoBean.rotinaSelecionada.vaga.endereco.longitude}" />
 				<h:panelGroup>
 					<h:outputLabel value="#{msg['rua']}: " />
 					<h:outputLabel
-						value="#{visualizarVagaBean.rotina.vaga.endereco.rua}" />
+						value="#{visualizarVagasPrestadorAprovadoBean.rotinaSelecionada.vaga.endereco.rua}" />
 				</h:panelGroup>
 				<h:panelGroup>
 					<h:outputLabel value="#{msg['numero']}: " />
 					<h:outputLabel
-						value="#{visualizarVagaBean.rotina.vaga.endereco.numero}" />
+						value="#{visualizarVagasPrestadorAprovadoBean.rotinaSelecionada.vaga.endereco.numero}" />
 				</h:panelGroup>
 				<h:panelGroup>
 					<h:outputLabel value="#{msg['bairro']}: " />
 					<h:outputLabel
-						value="#{visualizarVagaBean.rotina.vaga.endereco.bairro.descricao}" />
+						value="#{visualizarVagasPrestadorAprovadoBean.rotinaSelecionada.vaga.endereco.bairro.descricao}" />
 				</h:panelGroup>
 				<h:panelGroup>
 					<h:outputLabel value="#{msg['cidade']}: " />
 					<h:outputLabel
-						value="#{visualizarVagaBean.rotina.vaga.endereco.bairro.cidade.nome}" />
+						value="#{visualizarVagasPrestadorAprovadoBean.rotinaSelecionada.vaga.endereco.bairro.cidade.nome}" />
 				</h:panelGroup>
 				<h:panelGroup>
 					<h:outputLabel value="#{msg['complemento']}: " />
 					<h:outputLabel
-						value="#{visualizarVagaBean.rotina.vaga.endereco.complemento}" />
+						value="#{visualizarVagasPrestadorAprovadoBean.rotinaSelecionada.vaga.endereco.complemento}" />
 				</h:panelGroup>
 				<h:panelGroup>
 				</h:panelGroup>
-
 			</p:panelGrid>
-			<p:commandButton update="panelVisualizarVaga"
-				rendered="#{visualizarVagaBean.renderizarBotaoCandidatar()}"
-				style="float:right;width:200px;"
-				action="#{visualizarVagaBean.canditatar()}"
-				value="#{msg['candidatar.se']}" />
-			<h:outputText
-				rendered="#{not visualizarVagaBean.renderizarBotaoCandidatar()}"
-				style="float:right;" value="#{msg['voce.ja.se.candidatou.a.vaga']}" />
 		</p:panelGrid>
 	</ui:define>
 </ui:composition>

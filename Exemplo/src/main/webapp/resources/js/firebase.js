@@ -108,8 +108,24 @@
 	}
 	
 	function excluirLogin() {
+		console.log('excluirLogin()');
 		var email = document.getElementById('emailCadastro').value;
 		var password = document.getElementById('senhaCadastro').value;
+		logarUser(email, password);
+		setTimeout(function() {
+			var user = firebase.auth().currentUser;
+			user.delete().then(function() {
+				console.log('usuario excluido com sucesso no firebase');
+			}, function(error) {
+				 console.log('erro ao excluir usuario no firebase.');
+			});
+		}, 1000);
+	}
+	
+	function excluirUsuarioFirebaseLogin() {
+		console.log('excluirUsuarioFirebaseLogin()');
+		var email = document.getElementById('email').value;
+		var password = document.getElementById('senha').value;
 		logarUser(email, password);
 		setTimeout(function() {
 			var user = firebase.auth().currentUser;

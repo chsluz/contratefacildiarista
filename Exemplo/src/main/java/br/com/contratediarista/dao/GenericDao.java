@@ -33,7 +33,10 @@ public class GenericDao<T> implements Serializable {
 			em.persist(t);
 			em.getTransaction().commit();
 		} catch (Exception e) {
-			em.getTransaction().rollback();
+			e.printStackTrace();
+			if (em.getTransaction().isActive()) {
+				em.getTransaction().rollback();
+			}
 			throw new Exception(e.getCause());
 		}
 	}
@@ -99,7 +102,9 @@ public class GenericDao<T> implements Serializable {
 			em.merge(t);
 			em.getTransaction().commit();
 		} catch (Exception e) {
-			em.getTransaction().rollback();
+			if (em.getTransaction().isActive()) {
+				em.getTransaction().rollback();
+			}
 			throw new Exception(e.getCause());
 		}
 	}
@@ -110,10 +115,12 @@ public class GenericDao<T> implements Serializable {
 			em.remove(t);
 			em.getTransaction().commit();
 		} catch (Exception e) {
-			em.getTransaction().rollback();
+			e.printStackTrace();
+			if (em.getTransaction().isActive()) {
+				em.getTransaction().rollback();
+			}
 			throw new Exception(e.getCause());
 		}
 	}
-	
 
 }

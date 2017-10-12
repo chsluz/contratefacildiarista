@@ -30,6 +30,7 @@
 				</h:panelGroup>
 				<h:panelGroup>
 					<p:outputLabel value="#{msg['atividades']}: " />
+					<br />
 					<h:panelGroup>
 						<ui:repeat var="atividade"
 							value="#{aprovacaoVagasBean.rotina.vaga.tiposAtividade}">
@@ -40,18 +41,35 @@
 				</h:panelGroup>
 				<h:panelGroup>
 					<p:outputLabel value="#{msg['prestadores']}: " />
-					<p:selectOneMenu required="true" converter="usuarioConverter"
-						requiredMessage="#{msg['necessario.selecionar.prestador']}"
-						value="#{aprovacaoVagasBean.rotina.prestadorSelecionado}">
-						<f:selectItem itemLabel="#{msg['selecione']}" />
-						<f:selectItems var="prestador" itemLabel="#{prestador.nome}"
-							itemValue="#{prestador}"
-							value="#{aprovacaoVagasBean.rotina.prestadores}" />
-					</p:selectOneMenu>
+					<p:dataTable
+						rendered="#{not empty aprovacaoVagasBean.rotina.prestadores}"
+						value="#{aprovacaoVagasBean.rotina.prestadores}" var="prestador">
+						<p:column colspan="8">
+							<h:outputText value="#{prestador.nome}" />
+						</p:column>
+						<p:column>
+							<p:commandButton
+								action="#{aprovacaoVagasBean.visualizarInformacoesPrestador(prestador)}"
+								icon="ui-icon-person" />
+						</p:column>
+					</p:dataTable>
+				</h:panelGroup>
+				<h:panelGroup>
+					<p:outputLabel value="#{msg['prestador']}: " />
+					<p:panelGrid
+						rendered="#{aprovacaoVagasBean.rotina.prestadorSelecionado != null}"
+						columns="2" columnClasses="ui-grid-col-8,ui-grid-col-4"
+						layout="grid">
+						<h:panelGroup>
+							<h:outputText
+								value="#{aprovacaoVagasBean.rotina.prestadorSelecionado.nome}" />
+						</h:panelGroup>
+						<h:panelGroup>
+							<p:commandButton update="panelAprovacao" action="#{aprovacaoVagasBean.removerUsuarioSelecionado()}" icon="ui-icon-trash"/>
+						</h:panelGroup>
+					</p:panelGrid>
 				</h:panelGroup>
 			</p:panelGrid>
-			<p:commandButton action="#{aprovacaoVagasBean.aprovar()}"
-				style="width:100px;float:right;" value="#{msg['aprovar']}" />
 		</p:panelGrid>
 	</ui:define>
 </ui:composition>

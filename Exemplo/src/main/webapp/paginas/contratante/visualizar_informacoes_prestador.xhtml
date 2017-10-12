@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<ui:composition template="/template/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="corpo">
+		<h:outputScript library="js" name="mapaVisualizacao.js" />
+		<p:panelGrid id="panelVisualizarInformacoesPrestador" columns="1"
+			layout="grid">
+			<h1>#{msg['visualizacao.informacoes.prestador']}</h1>
+			<h:panelGroup id="panelMapa" style="height:500px">
+				<h:panelGroup id="mapa">
+					<script>
+				 			google.maps.event.addDomListener(window, 'load', iniciarMapaVisualizacao);
+						</script>
+					<div>
+						<div id="map" style="height: 500px; position: relative;"></div>
+					</div>
+				</h:panelGroup>
+			</h:panelGroup>
+			<p:panelGrid columns="2" layout="grid">
+				<p:inputText style="display:none" id="latitude"
+					value="#{aprovacaoVagasBean.prestadorSelecionado.endereco.latitude}" />
+				<p:inputText style="display:none" id="longitude"
+					value="#{aprovacaoVagasBean.prestadorSelecionado.endereco.longitude}" />
+			</p:panelGrid>
+			<p:panelGrid columns="2" style="float:right;" layout="grid">
+				<p:panelGrid columns="2">
+					<p:commandButton
+						action="#{aprovacaoVagasBean.removerPrestador(aprovacaoVagasBean.prestadorSelecionado)}"
+						value="Remover" />
+					<p:commandButton action="#{aprovacaoVagasBean.aprovar()}" value="Aprovar" />
+				</p:panelGrid>
+			</p:panelGrid>
+		</p:panelGrid>
+	</ui:define>
+</ui:composition>

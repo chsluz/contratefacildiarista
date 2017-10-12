@@ -10,31 +10,69 @@
 	<ui:define name="logout"></ui:define>
 	<ui:define name="menu"></ui:define>
 	<ui:define name="corpo">
+
+		<script>
+		function loginFacebook() {
+			console.log('login facebook');
+			var provider = new firebase.auth.FacebookAuthProvider();
+			provider.addScope('email');
+			provider.setCustomParameters({
+				  'display': 'popup'
+				});
+
+			firebase.auth().signInWithPopup(provider).then(function(result) {
+				  var token = result.credential.accessToken;
+				  var user = result.user;
+				  $("#idUsuario").val(user.uid);
+				  logarUsuarioFacebook();
+				}).catch(function(error) {
+				  var errorCode = error.code;
+				  $("#idErroLogin").val(errorCode);
+				  var errorMessage = error.message;
+				  var email = error.email;
+				  var credential = error.credential;
+				  erroLogin();
+				});
+		}
+	</script>
+
 		<h:inputHidden id="idUsuario" value="#{loginBean.idUsuario}" />
 		<h:inputHidden id="idErroLogin" value="#{loginBean.msgErro}" />
 		<p:remoteCommand name="logarUsuario"
 			actionListener="#{loginBean.logar()}" />
+		<p:remoteCommand name="logarUsuarioFacebook"
+			actionListener="#{loginBean.logarFacebook()}" />
 		<p:remoteCommand name="erroLogin"
 			actionListener="#{loginBean.exibirMensagemErro()}" />
+
+
+
 		<p:panelGrid columns="3"
-			columnClasses="ui-grid-col-2,ui-grid-col-8,ui-grid-col-2"
+			columnClasses="ui-grid-col-3,ui-grid-col-6,ui-grid-col-3"
 			layout="grid" styleClass="ui-g-12">
 			<h:panelGroup>
 			</h:panelGroup>
 			<h:panelGroup>
 				<p:panel>
 					<div align="center">
-						<p:panelGrid columns="2" layout="grid">
-							<h:outputText value="Email:" />
+						<p:panelGrid columns="1" layout="grid">
+							<h:outputLabel style="text-align:center"
+								value="Olá! Escolha uma opção para entrar" />
+							<p:graphicImage library="img" style="height:35px;"
+								name="fb-login-btn.png" onclick="loginFacebook();" />
+							<h:outputLabel style="text-align:center" value="ou" />
+							<h:outputText value="Email" />
 							<p:inputText id="email" placeholder="teste@teste.com" />
-							<h:outputText value="Senha:" />
+							<h:outputText value="Senha" />
 							<p:password id="senha" placeholder="********" />
-						</p:panelGrid>
-						<p:panelGrid columns="2" layout="grid">
 							<p:commandButton update="mensagem" onclick="logar()"
 								value="Logar" />
-							<p:commandLink value="Novo? Cadastre-se"
-								action="#{loginBean.cadastrarNovo()}" />
+							<p:panelGrid columns="2" layout="grid">
+								<p:commandLink value="Esqueci a senha" />
+								<p:commandLink value="Novo? Cadastre-se"
+									action="#{loginBean.cadastrarNovo()}" />
+							</p:panelGrid>
+
 						</p:panelGrid>
 					</div>
 				</p:panel>

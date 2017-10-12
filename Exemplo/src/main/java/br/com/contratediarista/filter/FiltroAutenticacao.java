@@ -41,30 +41,21 @@ public class FiltroAutenticacao implements Filter {
 			return;
 		} else {
 			TipoUsuario tipoUsuario = user.getTipoUsuario();
-			if (hreq.getRequestURI().contains("login") || hreq.getRequestURI().contains("cadastro_usuario")) {
-				hres.sendRedirect("pagina_inicial.jsf");
-				return;
-			} else if (hreq.getRequestURI().equals("/ContrateDiarista/")) {
-				hres.sendRedirect("paginas/publico/pagina_inicial.jsf");
-				return;
-			} else if (hreq.getRequestURI().contains("pagina_inicial")) {
-				chain.doFilter(request, response);
-				return;
-			} else if (TipoUsuario.ADMINISTRADOR.equals(tipoUsuario) || hreq.getRequestURI().contains("/publico/")) {
+			if (TipoUsuario.ADMINISTRADOR.equals(tipoUsuario)) {
 				chain.doFilter(request, response);
 				return;
 			} else if (TipoUsuario.CONTRATANTE.equals(user.getTipoUsuario())) {
-				if (hreq.getRequestURI().contains("/contratante/") || hreq.getRequestURI().contains("/publico/")) {
+				if (hreq.getRequestURI().contains("/contratante/")) {
 					chain.doFilter(request, response);
 				} else {
-					hres.sendRedirect("acesso_negado.jsf");
+					hres.sendRedirect("../../paginas/contratante/visualizar_vagas_prestador_aprovado.jsf");
 				}
 				return;
 			} else if (TipoUsuario.PRESTADOR.equals(user.getTipoUsuario())) {
-				if (hreq.getRequestURI().contains("/prestador/") || hreq.getRequestURI().contains("/publico/")) {
+				if (hreq.getRequestURI().contains("/prestador/")) {
 					chain.doFilter(request, response);
 				} else {
-					hres.sendRedirect("acesso_negado.jsf");
+					hres.sendRedirect("../../paginas/prestador/visualizar_vagas_vinculadas.jsf");
 				}
 				return;
 			} else {

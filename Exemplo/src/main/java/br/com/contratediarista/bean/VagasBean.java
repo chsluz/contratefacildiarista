@@ -35,6 +35,7 @@ public class VagasBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Date dataInicial;
 	private Date dataFinal;
+	private Date dataMinima;
 	private TipoPeriodo tipoPeriodo;
 	private DiasSemana[] diasSelecionados;
 	private Endereco endereco;
@@ -68,6 +69,7 @@ public class VagasBean implements Serializable {
 	public void instanciarNovo() {
 		dataInicial = new Date();
 		dataFinal = new Date();
+		dataMinima = new Date();
 		usuarioLogado = facesUtil.getUsuarioLogado();
 		vaga = new Vaga();
 		if (usuarioLogado != null) {
@@ -224,6 +226,14 @@ public class VagasBean implements Serializable {
 
 	public void setVaga(Vaga vaga) {
 		this.vaga = vaga;
+	}
+
+	public Date getDataMinima() {
+		return dataMinima;
+	}
+
+	public void setDataMinima(Date dataMinima) {
+		this.dataMinima = dataMinima;
 	}
 
 }

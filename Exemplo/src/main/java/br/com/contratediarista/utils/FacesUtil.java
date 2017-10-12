@@ -3,9 +3,9 @@ package br.com.contratediarista.utils;
 import java.io.Serializable;
 import java.util.ResourceBundle;
 
-import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.Response;
@@ -15,7 +15,7 @@ import br.com.contratediarista.entity.Usuario;
 import br.com.contratediarista.service.UsuarioService;
 
 @Named
-@RequestScoped
+@ViewScoped
 public class FacesUtil implements Serializable {
 
 	/**

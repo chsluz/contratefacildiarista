@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,59 +14,59 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.contratediarista.enuns.TipoPeriodo;
 
 @Entity
-@Table(name="vaga")
-public class Vaga implements Serializable{
+@Table(name = "disponibilidade")
+public class Disponibilidade implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id",nullable=false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false)
 	private int id;
-	
+
 	@NotNull(message = "Data é Obrigatório")
 	@Temporal(TemporalType.DATE)
-	@Column(name = "data",nullable=false)
-	private Date dataCadastrada;
-	
+	@Column(name = "data", nullable = false)
+	private Date data;
+
 	@NotNull(message = "Usuário é Obrigatório")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario")
-	private Usuario contratante;
-	
+	private Usuario prestador;
+
 	@NotNull(message = "Endereço é Obrigatório")
-	@ManyToOne(fetch = FetchType.LAZY,cascade= CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_endereco")
+	@Cascade(CascadeType.ALL)
 	private Endereco endereco;
-	
+
 	@NotNull(message = "Período é Obrigatório")
 	@Column(name = "id_tipo_periodo", nullable = false)
 	private TipoPeriodo tipoPeriodo;
-	
-	@NotNull(message="Valor do período é Obrigatório")
-	@Column(name="valor_periodo",nullable=false)
+
+	@NotNull(message = "Valor do período é Obrigatório")
+	@Column(name = "valor_periodo", nullable = false)
 	private Integer valorPeriodo;
-	
-	@NotEmpty(message="Tipos de Atividade é Obrigatório")
-	@ManyToMany(fetch = FetchType.LAZY,cascade= CascadeType.ALL)
-	@JoinTable(name = "vaga_has_atividade", joinColumns = { @JoinColumn(name = "id_vaga") }, inverseJoinColumns = {
-			@JoinColumn(name = "id_tipo_atividade") })
+
+	@NotEmpty(message = "Tipos de Atividade é Obrigatório")
+	@Cascade(CascadeType.PERSIST)
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "disponibilidade_has_atividade", joinColumns = {
+			@JoinColumn(name = "id_disponibilidade") }, inverseJoinColumns = {
+					@JoinColumn(name = "id_tipo_atividade") })
 	private List<TipoAtividade> tiposAtividade;
-	
-	@NotEmpty(message="Rotina é Obrigatório")
-	@OneToMany(fetch = FetchType.LAZY,cascade= CascadeType.ALL,mappedBy="vaga")
-	private List<Rotina> rotinas;
 
 	public int getId() {
 		return id;
@@ -77,20 +76,20 @@ public class Vaga implements Serializable{
 		this.id = id;
 	}
 
-	public Date getDataCadastrada() {
-		return dataCadastrada;
+	public Date getData() {
+		return data;
 	}
 
-	public void setDataCadastrada(Date dataCadastrada) {
-		this.dataCadastrada = dataCadastrada;
+	public void setData(Date data) {
+		this.data = data;
 	}
 
-	public Usuario getContratante() {
-		return contratante;
+	public Usuario getPrestador() {
+		return prestador;
 	}
 
-	public void setContratante(Usuario contratante) {
-		this.contratante = contratante;
+	public void setPrestador(Usuario prestador) {
+		this.prestador = prestador;
 	}
 
 	public Endereco getEndereco() {
@@ -109,28 +108,20 @@ public class Vaga implements Serializable{
 		this.tipoPeriodo = tipoPeriodo;
 	}
 
-	public List<TipoAtividade> getTiposAtividade() {
-		return tiposAtividade;
-	}
-
-	public void setTiposAtividade(List<TipoAtividade> tiposAtividade) {
-		this.tiposAtividade = tiposAtividade;
-	}
-
-	public List<Rotina> getRotinas() {
-		return rotinas;
-	}
-
-	public void setRotinas(List<Rotina> rotinas) {
-		this.rotinas = rotinas;
-	}
-	
 	public Integer getValorPeriodo() {
 		return valorPeriodo;
 	}
 
 	public void setValorPeriodo(Integer valorPeriodo) {
 		this.valorPeriodo = valorPeriodo;
+	}
+
+	public List<TipoAtividade> getTiposAtividade() {
+		return tiposAtividade;
+	}
+
+	public void setTiposAtividade(List<TipoAtividade> tiposAtividade) {
+		this.tiposAtividade = tiposAtividade;
 	}
 
 	@Override
@@ -149,10 +140,11 @@ public class Vaga implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Vaga other = (Vaga) obj;
+		Disponibilidade other = (Disponibilidade) obj;
 		if (id != other.id)
 			return false;
 		return true;
 	}
 	
+
 }

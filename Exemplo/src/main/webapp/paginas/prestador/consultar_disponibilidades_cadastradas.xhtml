@@ -6,49 +6,36 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 	<ui:define name="corpo">
-		<p:panelGrid columns="1" id="visualizarDisponibilidade" layout="grid">
-			<p:panelGrid columns="4" layout="grid">
-				<h:panelGroup id="panelDataInicial">
+		<p:panelGrid id="panelConsultarVaga" columns="1" layout="grid">
+			<h1>#{msg['consultar.disponibilidades.cadastradas']}</h1>
+			<p:panelGrid layout="grid" columns="2">
+				<h:panelGroup>
 					<p:outputLabel value="#{msg['data.inicial']}" />
 					<p:calendar locale="pt_BR" id="data" pattern="dd/MM/yyyy"
-						mindate="#{visualizarDisponibilidadePrestadorBean.dataMinima}"
+						mindate="#{consultarDisponibilidadeCadastradaBean.dataMinima}"
 						placeholder="99/99/9999"
-						value="#{visualizarDisponibilidadePrestadorBean.dataInicial}"
+						value="#{consultarDisponibilidadeCadastradaBean.dataInicial}"
 						mask="99/99/9999" size="15" />
 				</h:panelGroup>
-				<h:panelGroup id="panelDataFinal">
+				<h:panelGroup>
 					<p:outputLabel value="#{msg['data.final']}" />
 					<p:calendar locale="pt_BR" id="dataFinal" pattern="dd/MM/yyyy"
 						placeholder="99/99/9999"
-						mindate="#{visualizarDisponibilidadePrestadorBean.dataMinima}"
-						value="#{visualizarDisponibilidadePrestadorBean.dataFinal}"
+						mindate="#{consultarDisponibilidadeCadastradaBean.dataMinima}"
+						value="#{consultarDisponibilidadeCadastradaBean.dataFinal}"
 						mask="99/99/9999" size="15" />
-				</h:panelGroup>
-				<h:panelGroup id="panelValorInicial">
-					<p:outputLabel value="#{msg['valor.inicial']}" />
-					<p:inputText
-						required="true"
-						requiredMessage="#{msg['valor.inicial.obrigatorio']}"
-						value="#{visualizarDisponibilidadePrestadorBean.valorInicial}" />
-				</h:panelGroup>
-				<h:panelGroup id="panelValorFinal">
-					<p:outputLabel value="#{msg['valor.final']}" />
-					<p:inputText
-						required="true"
-						requiredMessage="#{msg['valor.final.obrigatorio']}"	
-						value="#{visualizarDisponibilidadePrestadorBean.valorFinal}" />
 				</h:panelGroup>
 			</p:panelGrid>
 			<p:panelGrid columns="1" layout="grid">
 				<p:commandButton value="Buscar" update="panelTableDisponibilidade"
-					action="#{visualizarDisponibilidadePrestadorBean.buscar()}"
+					action="#{consultarDisponibilidadeCadastradaBean.buscar()}"
 					style="float:right;width:100px" />
 			</p:panelGrid>
 			<p:panelGrid columns="1" layout="grid" id="panelTableDisponibilidade">
 				<p:dataTable var="disponibilidade"
-					rendered="#{not empty visualizarDisponibilidadePrestadorBean.disponibilidades}"
+					rendered="#{not empty consultarDisponibilidadeCadastradaBean.disponibilidades}"
 					reflow="true"
-					value="#{visualizarDisponibilidadePrestadorBean.disponibilidades}"
+					value="#{consultarDisponibilidadeCadastradaBean.disponibilidades}"
 					paginator="true" rows="10"
 					paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
 					rowsPerPageTemplate="5,10,15" id="tableVaga" lazy="true">
@@ -58,11 +45,6 @@
 					<p:column headerText="#{msg['id']}" style="text-align:center"
 						sortBy="#{rotina.id}" filterBy="#{rotina.id}">
 						<h:outputText value="#{disponibilidade.id}" />
-					</p:column>
-					<p:column headerText="#{msg['nome']}" style="text-align:center"
-						sortBy="#{disponibilidade.prestador.nome}"
-						filterBy="#{disponibilidade.prestador.nome}">
-						<h:outputText value="#{disponibilidade.prestador.nome}"/>
 					</p:column>
 					<p:column headerText="#{msg['data']}" style="text-align:center"
 						sortBy="#{disponibilidade.data}"
@@ -91,9 +73,12 @@
 						</ui:repeat>
 					</p:column>
 					<p:column headerText="#{msg['acoes']}">
-						<p:commandButton value="#{msg['contratar']}"
-							action="#{visualizarDisponibilidadePrestadorBean.contratar(disponibilidade)}"
-							update="panelTableDisponibilidade"/>
+						<p:commandButton value="#{msg['excluir']}"
+							update="panelTableDisponibilidade,panelConsultarVaga"
+							action="#{consultarDisponibilidadeCadastradaBean.excluir}">
+							<f:setPropertyActionListener value="#{disponibilidade}"
+								target="#{consultarDisponibilidadeCadastradaBean.disponibilidade}" />
+						</p:commandButton>
 					</p:column>
 				</p:dataTable>
 			</p:panelGrid>

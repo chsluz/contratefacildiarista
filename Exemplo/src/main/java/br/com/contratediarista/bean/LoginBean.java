@@ -6,8 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.Response;
@@ -22,7 +22,7 @@ import br.com.contratediarista.utils.FacesUtil;
 import br.com.contratediarista.utils.Utils;
 
 @Named
-@SessionScoped
+@ViewScoped
 public class LoginBean implements Serializable {
 
 	/**
@@ -32,6 +32,8 @@ public class LoginBean implements Serializable {
 
 	@Inject
 	private UsuarioService usuarioService;
+	
+	private boolean isFacebook;
 
 	@Inject
 	private FacesContext facesContext;
@@ -50,6 +52,9 @@ public class LoginBean implements Serializable {
 
 	private String msgErro;
 
+	public LoginBean() {
+	}
+	
 	@PostConstruct
 	public void init() {
 		instanciarNovo();
@@ -58,7 +63,30 @@ public class LoginBean implements Serializable {
 	public void instanciarNovo() {
 		usuario = new Usuario();
 		usuarioLogin = new Usuario();
-
+		idUsuario = "";
+	}
+	
+	public void logarFacebook() throws IOException {
+		Usuario userFacebook = null;
+		isFacebook = true;
+		Response response = usuarioService.buscarUsuarioByUid(idUsuario);
+		if(response.getStatus() == Status.OK.getStatusCode()) {
+			userFacebook = (Usuario) response.getEntity();
+		}
+		if(userFacebook == null) {
+			facesContext.getExternalContext().redirect("cadastro_usuario.jsf");
+		}
+		else {
+			logar();
+		}
+	}
+	
+	public String getUsuarioLogado() {
+		Usuario usuario = facesUtil.getUsuarioLogado();
+		if(usuario != null) {
+			return "Usuário: " + usuario.getNome(); 
+		}
+		return "";
 	}
 
 	public void logar() throws IOException {
@@ -69,6 +97,10 @@ public class LoginBean implements Serializable {
 				facesContext.getExternalContext().getSessionMap().put("usuario", usuarioLogin);
 				facesContext.getExternalContext().redirect("pagina_inicial.jsf");
 			}
+			else {
+				facesUtil.exibirMsgErro(facesUtil.getLabel("usuario.nao.cadastrado"));
+				RequestContext.getCurrentInstance().execute("excluirUsuarioFirebaseLogin()");
+			}
 		}
 	}
 
@@ -76,6 +108,7 @@ public class LoginBean implements Serializable {
 		facesContext.getExternalContext().getSessionMap().put("usuario", null);
 		facesContext.getExternalContext().invalidateSession();
 		facesContext.getExternalContext().redirect("../publico/login.jsf");
+		instanciarNovo();
 	}
 
 	public void exibirMensagemErro() {
@@ -103,14 +136,23 @@ public class LoginBean implements Serializable {
 			facesUtil.exibirMsgErro(facesUtil.getLabel("erro.salvar"));
 		}
 	}
+	
+	public Usuario verificarUsuarioJaExistente(String uid) {
+		Response response = usuarioService.buscarUsuarioByUid(uid);
+		if(response.getStatus() == Status.OK.getStatusCode()) {
+			return (Usuario) response.getEntity();
+		}else {
+			return null;
+		}
+	}
 
 	public void cadastrarNovo() throws IOException {
-		usuario = new Usuario();
+		instanciarNovo();
 		facesContext.getExternalContext().redirect("cadastro_usuario.jsf");
 	}
 
 	public void cancelar() throws IOException {
-		usuario = new Usuario();
+		instanciarNovo();
 		facesContext.getExternalContext().redirect("login.jsf");
 	}
 
@@ -149,6 +191,14 @@ public class LoginBean implements Serializable {
 
 	public void setUsuarioLogin(Usuario usuarioLogin) {
 		this.usuarioLogin = usuarioLogin;
+	}
+
+	public boolean isFacebook() {
+		return isFacebook;
+	}
+
+	public void setFacebook(boolean isFacebook) {
+		this.isFacebook = isFacebook;
 	}
 
 }

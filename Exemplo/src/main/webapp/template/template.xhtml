@@ -9,9 +9,9 @@
 	<title><ui:insert name="titulo">Contratação de Diaristas</ui:insert></title>
 	<h:outputStylesheet name="style.css" library="css" />
 	<h:outputScript library="js" name="firebase.js" />
-	<h:outputScript library="primefaces/jquery" name="jquery.js" />
+	<h:outputScript library="primefaces" name="jquery/jquery.js" />
 	<h:outputScript library="js" name="mapbox.js" />
-	<h:outputScript library="js" name="script.js"/>
+	<h:outputScript library="js" name="script.js" />
 	<script
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVfcPnHvNli_y2b9qeYKcIv6keSRGjEc8" />
 	<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
@@ -32,10 +32,21 @@
 			messagingSenderId : "166088401573"
 		};
 		firebase.initializeApp(config);
-
-		$.noConflict();
 		localeData_pt_br();
 	</script>
+	<script>
+	  window.fbAsyncInit = function() {
+	    FB.init({
+	      appId      : '1900732833582088',
+	      xfbml      : true,
+	      version    : 'v2.10'
+	    });
+	    FB.AppEvents.logPageView();
+	  };
+	
+	</script>
+	
+	
 
 	<p:ajaxStatus onstart="PF('statusDialog').show()"
 		onsuccess="PF('statusDialog').hide()" />
@@ -52,13 +63,16 @@
 			<div class="ui-g">
 				<div id="conteudo" class="ui-g-12">
 					<ui:insert name="logout">
-						<div style="height: 50px;">
+						<div style="height: 80px;">
+
 							<h:panelGroup id="panelAcoes" style="float:right">
-								<p:commandButton styleClass="material-icons"
-									immediate="true"
+
+								<p:commandButton styleClass="material-icons" immediate="true"
 									action="#{loginBean.deslogar()}" value="exit_to_app">
 								</p:commandButton>
 							</h:panelGroup>
+							<h:outputLabel style="float:right;margin-right:10px;"
+								value="#{loginBean.usuarioLogado}" />
 						</div>
 					</ui:insert>
 					<div class="ui-g-2" style="height: 550px;">

@@ -26,14 +26,15 @@
 					<p:panelGrid id="panelCadastro" layout="grid"
 						columnClasses="ui-grid-col-12" style="overflow:auto;" columns="1">
 						<p:fieldset legend="#{msg['dados.usuario']}">
-							<p:panelGrid columns="2" layout="grid">
-								<h:panelGroup id="groupEmail">
+							<p:panelGrid columns="2"
+								layout="grid">
+								<h:panelGroup rendered="#{!loginBean.facebook}" id="groupEmail">
 									<h:outputText value="#{msg['email']}:" />
 									<p:inputText required="true"
 										requiredMessage="#{msg['email.obrigatorio']}"
 										id="emailCadastro" placeholder="teste@teste.com" />
 								</h:panelGroup>
-								<h:panelGroup id="groupSenha">
+								<h:panelGroup rendered="#{!loginBean.facebook}" id="groupSenha">
 									<h:outputText value="#{msg['senha']}:" />
 									<p:password required="true"
 										requiredMessage="#{msg['senha.obrigatorio']}"
@@ -63,10 +64,9 @@
 								</h:panelGroup>
 								<h:panelGroup id="groupDataNasc">
 									<h:outputText value="#{msg['data.nasc']}:" />
-									<p:calendar required="true" styleClass="dtNasc" mask="99/99/9999"
-										placeholder="99/99/9999"
-										pattern="dd/MM/yyyy"
-										locale="pt_BR"
+									<p:calendar required="true" styleClass="dtNasc"
+										mask="99/99/9999" placeholder="99/99/9999"
+										pattern="dd/MM/yyyy" locale="pt_BR"
 										requiredMessage="#{msg['data.nasc.obrigatorio']}"
 										id="dataNasc" value="#{loginBean.usuario.dataNascimento}">
 									</p:calendar>
@@ -170,8 +170,12 @@
 						<h:panelGrid columns="2">
 							<p:commandButton value="Cancelar"
 								action="#{loginBean.cancelar()}" immediate="true" />
-							<p:commandButton onclick="criarNovoUsuario()"
-								update="mensagem,panelCadastro" value="Salvar" />
+							<p:commandButton rendered="#{!loginBean.facebook}"
+								onclick="criarNovoUsuario()" update="mensagem,panelCadastro"
+								value="Salvar" />
+							<p:commandButton rendered="#{loginBean.facebook}"
+								action="#{loginBean.salvar()}" update="mensagem,panelCadastro"
+								value="Salvar" />
 						</h:panelGrid>
 					</p:panelGrid>
 				</h:panelGroup>

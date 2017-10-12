@@ -163,5 +163,17 @@ public class Endereco implements Serializable {
 		}
 		return true;
 	}
+	
+	public static Endereco copy(Endereco endereco) {
+		Endereco copia = new Endereco();
+		copia.setBairro(endereco.getBairro());
+		copia.setCep(endereco.getCep());
+		copia.setComplemento(endereco.getComplemento());
+		copia.setLatitude(endereco.getLatitude());
+		copia.setLongitude(endereco.getLongitude());
+		copia.setNumero(endereco.getNumero());
+		copia.setRua(endereco.getRua());
+		return copia;
+	}
 
 }

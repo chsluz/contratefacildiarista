@@ -57,13 +57,35 @@ public class RotinaService implements Serializable {
 	@POST
 	@Path("/buscar-rotina-por-usuario-data/{uid}/{dataInicial}/{dataFinal}")
 	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
-	public Response buscarPorUsuarioEData(@PathParam(value = "uid") String uid, @PathParam(value = "dataInicial") String dataInicial,
-			@PathParam(value = "dataFinal") String dataFinal) {
+	public Response buscarPorUsuarioEData(@PathParam(value = "uid") String uid,
+			@PathParam(value = "dataInicial") String dataInicial, @PathParam(value = "dataFinal") String dataFinal) {
 		try {
 			Date dataIni = sdf.parse(dataInicial);
 			Date dataFin = sdf.parse(dataFinal);
 			Usuario usuario = usuarioDao.buscarUsuarioPorChave(uid);
 			List<Rotina> rotinas = rotinaDao.listarRotinasPorDataEUsuario(dataIni, dataFin, usuario);
+			if (rotinas != null) {
+				return Response.ok(rotinas).build();
+			} else {
+				return Response.noContent().build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+					.build();
+		}
+	}
+	
+	@POST
+	@Path("/buscar-rotinas-vinculadas/{uid}/{dataInicial}/{dataFinal}")
+	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
+	public Response buscarPorUsuarioEDataVinculada(@PathParam(value = "uid") String uid,
+			@PathParam(value = "dataInicial") String dataInicial, @PathParam(value = "dataFinal") String dataFinal) {
+		try {
+			Date dataIni = sdf.parse(dataInicial);
+			Date dataFin = sdf.parse(dataFinal);
+			Usuario usuario = usuarioDao.buscarUsuarioPorChave(uid);
+			List<Rotina> rotinas = rotinaDao.listarRotinasVinculadasPorDataEUsuario(dataIni, dataFin, usuario);
 			if (rotinas != null) {
 				return Response.ok(rotinas).build();
 			} else {
@@ -111,6 +133,28 @@ public class RotinaService implements Serializable {
 		try {
 			rotinaDao.excluir(rotina);
 			return Response.ok().build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+					.build();
+		}
+	}
+
+	@POST
+	@Path("/buscar-vagas-usuario/{uid}/{dataInicial}/{dataFinal}")
+	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
+	public Response buscarVagasUsuario(@PathParam(value = "uid") String uid,
+			@PathParam(value = "dataInicial") String dataInicial, @PathParam(value = "dataFinal") String dataFinal) {
+		try {
+			Usuario usuario = usuarioDao.buscarUsuarioPorChave(uid);
+			Date dataIni = sdf.parse(dataInicial);
+			Date dataFin = sdf.parse(dataFinal);
+			List<Rotina> rotinas = rotinaDao.buscarVagasPorUsuario(usuario, dataIni, dataFin);
+			if (rotinas != null) {
+				return Response.ok(rotinas).build();
+			} else {
+				return Response.noContent().build();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.status(Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")

@@ -14,24 +14,23 @@
 			<h1>#{msg['visualizar.vagas.vinculadas']}</h1>
 			<p:schedule
 				leftHeaderTemplate=""
-				timeZone="America/Sao_Paulo" locale="pt_BR"
+				locale="pt_BR"
 				rightHeaderTemplate="prev,next"
 				centerTemplate="month"
 				draggable="false"
-				id="teste"
+				id="scheduleVagas"
 				value="#{visualizarVagasVinculadasBean.eventModel}"
 				widgetVar="myschedule">
 				<p:ajax
 					event="eventSelect"
 					listener="#{visualizarVagasVinculadasBean.onEventSelect}"
-					update="eventDetails"
-					oncomplete="PF('eventDialog').show();" />
+					 />
 			</p:schedule>
 
 
 			<p:dialog
 				widgetVar="eventDialog"
-				header="Event Details"
+				header="Resumo da Vaga"
 				showEffect="clip"
 				hideEffect="clip">
 				<h:panelGrid

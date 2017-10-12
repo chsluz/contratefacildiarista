@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,6 +18,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import br.com.contratediarista.enuns.DiasSemana;
 
@@ -47,7 +49,8 @@ public class Rotina implements Serializable {
 	@JoinColumn(name = "id_vaga")
 	private Vaga vaga;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Cascade(CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "rotina_has_prestador", joinColumns = { @JoinColumn(name = "id_rotina") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_usuario") })
 	private List<Usuario> prestadores;

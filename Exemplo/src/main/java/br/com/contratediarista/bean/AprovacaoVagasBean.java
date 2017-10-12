@@ -34,6 +34,7 @@ public class AprovacaoVagasBean implements Serializable {
 	private TipoPeriodo tipoPeriodo;
 	private List<Rotina> rotinas;
 	private Rotina rotina;
+	private Usuario prestadorSelecionado;
 
 	@Inject
 	private RotinaService rotinaService;
@@ -61,11 +62,34 @@ public class AprovacaoVagasBean implements Serializable {
 			usuarioLogado = (Usuario) response.getEntity();
 		}
 		rotina = (Rotina) facesContext.getExternalContext().getSessionMap().get("rotina");
+		prestadorSelecionado = (Usuario) facesContext.getExternalContext().getSessionMap().get("prestadorSelecionado");
 		if (rotina != null) {
 			response = rotinaService.restoreById(rotina.getId());
 			if (response.getStatus() == Status.OK.getStatusCode()) {
 				rotina = (Rotina) response.getEntity();
+				rotina.getPrestadores().size();
 			}
+		}
+		if (prestadorSelecionado != null) {
+			response = usuarioService.buscarUsuarioByUid(prestadorSelecionado.getUid());
+			if (response.getStatus() == Status.OK.getStatusCode()) {
+				prestadorSelecionado = (Usuario) response.getEntity();
+			}
+		}
+	}
+
+	public void removerPrestador(Usuario prestador) throws IOException {
+		Response response = rotinaService.restoreById(rotina.getId());
+		if (response.getStatus() == Status.OK.getStatusCode()) {
+			rotina = (Rotina) response.getEntity();
+			if (!rotina.getPrestadores().isEmpty()) {
+				rotina.getPrestadores().remove(prestador);
+				response = rotinaService.alterar(rotina);
+				facesContext.getExternalContext().redirect("aprovar_vaga_contratante.jsf");
+				facesContext.getExternalContext().getSessionMap().put("rotina", rotina);
+			}
+		} else {
+			facesUtil.exibirMsgErro(facesUtil.getLabel("erro.remover.prestador"));
 		}
 	}
 
@@ -83,6 +107,7 @@ public class AprovacaoVagasBean implements Serializable {
 
 	public void aprovar() {
 		try {
+			rotina.setPrestadorSelecionado(prestadorSelecionado);
 			Response response = rotinaService.alterar(rotina);
 			if (response.getStatus() == Status.OK.getStatusCode()) {
 				facesUtil.exibirMsgSucesso(facesUtil.getLabel("salvo.sucesso"));
@@ -95,9 +120,10 @@ public class AprovacaoVagasBean implements Serializable {
 		}
 	}
 
-	public void excluir(Rotina rotina) {
+	public void removerUsuarioSelecionado() {
 		try {
-			Response response = rotinaService.excluir(rotina);
+			rotina.setPrestadorSelecionado(null);
+			Response response = rotinaService.alterar(rotina);
 			if (response.getStatus() == Status.OK.getStatusCode()) {
 				facesUtil.exibirMsgSucesso(facesUtil.getLabel("excluido.sucesso"));
 			} else {
@@ -109,9 +135,45 @@ public class AprovacaoVagasBean implements Serializable {
 		}
 	}
 
+	public void excluir(Rotina rotina) {
+		try {
+			rotina = recuperarEntidade(rotina);
+			Response response = rotinaService.excluir(rotina);
+			if (response.getStatus() == Status.OK.getStatusCode()) {
+				rotinas.remove(rotina);
+				facesUtil.exibirMsgSucesso(facesUtil.getLabel("excluido.sucesso"));
+			} else {
+				facesUtil.exibirMsgErro(facesUtil.getLabel("erro.excluir"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			facesUtil.exibirMsgErro(facesUtil.getLabel("erro.excluir"));
+		}
+	}
+
 	public void editar(Rotina rotinaEditada) throws IOException {
-		facesContext.getExternalContext().redirect("aprovar_vaga_contratante.jsf");
-		facesContext.getExternalContext().getSessionMap().put("rotina", rotinaEditada);
+		Response response = rotinaService.restoreById(rotinaEditada.getId());
+		if (response.getStatus() == Status.OK.getStatusCode()) {
+			rotinaEditada = (Rotina) response.getEntity();
+			facesContext.getExternalContext().redirect("aprovar_vaga_contratante.jsf");
+			facesContext.getExternalContext().getSessionMap().put("rotina", rotinaEditada);
+			facesContext.getExternalContext().getSessionMap().put("prestadorSelecionado", null);
+		}
+	}
+
+	public void visualizarInformacoesPrestador(Usuario prestador) throws IOException {
+		facesContext.getExternalContext().redirect("visualizar_informacoes_prestador.jsf");
+		facesContext.getExternalContext().getSessionMap().put("rotina", rotina);
+		facesContext.getExternalContext().getSessionMap().put("prestadorSelecionado", prestador);
+	}
+
+	public Rotina recuperarEntidade(Rotina rotina) {
+		Response response = rotinaService.restoreById(rotina.getId());
+		if (response.getStatus() == Status.OK.getStatusCode()) {
+			return (Rotina) response.getEntity();
+		} else {
+			return null;
+		}
 	}
 
 	public Date getDataInicial() {
@@ -160,6 +222,14 @@ public class AprovacaoVagasBean implements Serializable {
 
 	public void setTipoPeriodo(TipoPeriodo tipoPeriodo) {
 		this.tipoPeriodo = tipoPeriodo;
+	}
+
+	public Usuario getPrestadorSelecionado() {
+		return prestadorSelecionado;
+	}
+
+	public void setPrestadorSelecionado(Usuario prestadorSelecionado) {
+		this.prestadorSelecionado = prestadorSelecionado;
 	}
 
 }

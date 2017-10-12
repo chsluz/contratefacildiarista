@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<ui:composition template="/template/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="corpo">
+		<p:panelGrid columns="1" id="panelVisualizarVagas" layout="grid">
+			<h1>#{msg['visualizar.vagas.aprovadas']}</h1>
+			<p:schedule leftHeaderTemplate="" locale="pt_BR"
+				rightHeaderTemplate="prev,next" centerTemplate="month"
+				draggable="false" id="scheduleVagas"
+				value="#{visualizarVagasPrestadorAprovadoBean.eventModel}"
+				widgetVar="myschedule">
+				<p:ajax event="eventSelect"
+					listener="#{visualizarVagasPrestadorAprovadoBean.onEventSelect}" />
+			</p:schedule>
+
+
+			<p:dialog widgetVar="eventDialog" header="Resumo da Vaga"
+				showEffect="clip" hideEffect="clip">
+				<h:panelGrid id="eventDetails" columns="2">
+					<p:outputLabel for="title" value="Titles:" />
+					<p:inputText id="title"
+						value="#{visualizarVagasPrestadorAprovadoBean.event.title}"
+						required="true" />
+					<p:outputLabel for="from" value="From:" />
+					<p:calendar id="from"
+						value="#{visualizarVagasPrestadorAprovadoBean.event.startDate}"
+						timeZone="GMT+2" pattern="dd/MM/yyyy HH:mm" />
+					<p:outputLabel for="to" value="To:" />
+					<p:calendar id="to"
+						value="#{visualizarVagasPrestadorAprovadoBean.event.endDate}"
+						timeZone="GMT+2" pattern="dd/MM/yyyy HH:mm" />
+				</h:panelGrid>
+			</p:dialog>
+		</p:panelGrid>
+	</ui:define>
+</ui:composition>

@@ -89,7 +89,9 @@ public class VisualizarVagaBean implements Serializable {
 	}
 
 	public boolean renderizarBotaoCandidatar() {
-		if (rotina.getPrestadores() != null && rotina.getPrestadores().contains(usuarioLogado)) {
+		if ((rotina.getPrestadores() != null && rotina.getPrestadores().contains(usuarioLogado))
+				|| (rotina.getPrestadorSelecionado() != null
+						&& rotina.getPrestadorSelecionado().equals(usuarioLogado))) {
 			return false;
 		} else {
 			return true;
