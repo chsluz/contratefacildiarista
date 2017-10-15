@@ -23,8 +23,10 @@ import org.primefaces.model.DefaultScheduleModel;
 import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
 
+import br.com.contratediarista.entity.Avaliacao;
 import br.com.contratediarista.entity.Rotina;
 import br.com.contratediarista.entity.Usuario;
+import br.com.contratediarista.service.AvaliacaoService;
 import br.com.contratediarista.service.RotinaService;
 import br.com.contratediarista.utils.FacesUtil;
 
@@ -37,6 +39,7 @@ public class VisualizarVagasPrestadorAprovadoBean implements Serializable {
 	private Usuario usuarioAvaliado;
 	private Rotina rotinaSelecionada;
 	private Usuario usuarioLogado;
+	private Avaliacao avaliacao;
 	@Inject
 	private FacesContext facesContext;
 
@@ -45,6 +48,9 @@ public class VisualizarVagasPrestadorAprovadoBean implements Serializable {
 
 	@Inject
 	private FacesUtil facesUtil;
+
+	@Inject
+	private AvaliacaoService avaliacaoService;
 
 	@Inject
 	private RotinaService rotinaService;
@@ -60,19 +66,21 @@ public class VisualizarVagasPrestadorAprovadoBean implements Serializable {
 
 	@SuppressWarnings("unchecked")
 	public void instanciarNovo() {
-		Date dataInicial = new Date();
+		avaliacao = new Avaliacao();
 		Calendar calendarInicial = Calendar.getInstance();
 		calendarInicial.add(Calendar.MONTH, -2);
 		Calendar calendarFinal = Calendar.getInstance();
 		calendarFinal.add(Calendar.MONTH, 1);
+		Date dataInicial = calendarInicial.getTime();
 		Date dataFinal = calendarFinal.getTime();
 		List<Rotina> rotinas = new ArrayList<>();
 		usuarioLogado = facesUtil.getUsuarioLogado();
 		rotinaSelecionada = (Rotina) facesContext.getExternalContext().getSessionMap().get("rotina");
-		if(rotinaSelecionada != null) {
+		usuarioAvaliado = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuarioAvaliado");
+		if (rotinaSelecionada != null) {
 			rotinaSelecionada = restaurar(rotinaSelecionada);
 		}
-		
+
 		Response response = rotinaService.buscarPorUsuarioEDataVinculada(usuarioLogado.getUid(),
 				formatoJson.format(dataInicial), formatoJson.format(dataFinal));
 		if (response.getStatus() == Status.OK.getStatusCode()) {
@@ -95,26 +103,57 @@ public class VisualizarVagasPrestadorAprovadoBean implements Serializable {
 		Date data = event.getStartDate();
 		String dataAtual = formatoData.format(new Date());
 		rotinaSelecionada = (Rotina) event.getData();
-		if(data.before(formatoData.parse(dataAtual))) {
+		if (data.before(formatoData.parse(dataAtual))) {
 			facesContext.getExternalContext().redirect("avaliar_prestador.jsf");
-			usuarioAvaliado = rotinaSelecionada.getPrestadorSelecionado();
-		}
-		else {
+			facesContext.getExternalContext().getSessionMap().put("usuarioAvaliado",
+					(Usuario) rotinaSelecionada.getPrestadorSelecionado());
+			facesContext.getExternalContext().getSessionMap().put("rotina", (Rotina) event.getData());
+		} else {
 			facesContext.getExternalContext().redirect("mais_informacoes_vaga.jsf");
-			facesContext.getExternalContext().getSessionMap().put("rotina",(Rotina) event.getData());
+			facesContext.getExternalContext().getSessionMap().put("rotina", (Rotina) event.getData());
 		}
 	}
 
 	public Rotina restaurar(Rotina rotina) {
 		Response response = rotinaService.restoreById(rotina.getId());
-		if(response.getStatus() == Status.OK.getStatusCode()) {
+		if (response.getStatus() == Status.OK.getStatusCode()) {
 			return (Rotina) response.getEntity();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
-	
+
+	public void avaliar() {
+		avaliacao.setAvaliador(usuarioLogado);
+		avaliacao.setUsuario(usuarioAvaliado);
+		avaliacao.setData(rotinaSelecionada.getData());
+		Response response = avaliacaoService.buscarAvaliacaoSalvaPrestadorContratante(usuarioAvaliado.getUid(),
+				usuarioAvaliado.getUid(), formatoJson.format(avaliacao.getData()));
+		if (response.getStatus() == Status.OK.getStatusCode()
+				|| response.getStatus() == Status.NO_CONTENT.getStatusCode()) {
+			if (response.getStatus() == Status.OK.getStatusCode()) {
+				Avaliacao retorno = (Avaliacao) response.getEntity();
+				avaliacao.setId(retorno.getId());
+				response = avaliacaoService.alterar(avaliacao);
+				if (response.getStatus() == Status.OK.getStatusCode()) {
+					facesUtil.exibirMsgSucesso(facesUtil.getLabel("avaliacao.alterada.sucesso"));
+				} else {
+					facesUtil.exibirMsgErro(facesUtil.getLabel("erro.salvar.avaliacao"));
+				}
+			} else {
+				response = avaliacaoService.salvar(avaliacao);
+				if (response.getStatus() == Status.OK.getStatusCode()) {
+					facesUtil.exibirMsgSucesso(facesUtil.getLabel("avaliacao.salva.sucesso"));
+				} else {
+					facesUtil.exibirMsgErro(facesUtil.getLabel("erro.salvar.avaliacao"));
+				}
+
+			}
+		} else {
+			facesUtil.exibirMsgErro(facesUtil.getLabel("erro.salvar.avaliacao"));
+		}
+	}
+
 	public ScheduleModel getEventModel() {
 		return eventModel;
 	}
@@ -145,6 +184,14 @@ public class VisualizarVagasPrestadorAprovadoBean implements Serializable {
 
 	public void setRotinaSelecionada(Rotina rotinaSelecionada) {
 		this.rotinaSelecionada = rotinaSelecionada;
+	}
+
+	public Avaliacao getAvaliacao() {
+		return avaliacao;
+	}
+
+	public void setAvaliacao(Avaliacao avaliacao) {
+		this.avaliacao = avaliacao;
 	}
 
 }

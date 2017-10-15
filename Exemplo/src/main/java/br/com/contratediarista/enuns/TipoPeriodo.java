@@ -22,6 +22,20 @@ public enum TipoPeriodo {
 		}
 		return null;
 	}
+	
+	public static TipoPeriodo getValor(int ordem) {
+		if (MANHA.ordinal() == ordem) {
+			return MANHA;
+		}
+		if (TARDE.ordinal() == ordem) {
+			return TARDE;
+		}
+		if (INTEGRAL.ordinal() == ordem) {
+			return INTEGRAL;
+		}
+	
+		return null;
+	}
 
 	/**
 	 * Obtem o valor de descricao.

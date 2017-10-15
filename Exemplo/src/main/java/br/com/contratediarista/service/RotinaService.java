@@ -21,7 +21,7 @@ import br.com.contratediarista.entity.Rotina;
 import br.com.contratediarista.entity.Usuario;
 
 @RequestScoped
-@Path("rotina")
+@Path("/rotina")
 public class RotinaService implements Serializable {
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 

@@ -22,6 +22,8 @@ import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.google.gson.annotations.Expose;
+
 import br.com.contratediarista.enuns.TipoUsuario;
 
 @Entity
@@ -35,38 +37,46 @@ public class Usuario implements Serializable {
 
 	@Id
 	@Column(name = "uid", nullable = false)
+	@Expose
 	private String uid;
 
 	@Size(max = 100, message = "Nome não pode conter mais que 100 caracteres")
 	@NotBlank(message = "{nome} {e.obrigatorio}")
 	@Column(name = "nome", nullable = false)
+	@Expose
 	private String nome;
 
 	@NotEmpty(message = "Cpf é obrigatório")
 	@Size(max = 15, message = "Cpf não pode conter mais que 15 dígitos")
 	@Column(name = "cpf", nullable = false, unique = true)
+	@Expose
 	private String cpf;
 
 	@NotNull(message = "Tipo de usuário é Obrigatório")
 	@Column(name = "id_tipo_usuario", nullable = false)
+	@Expose
 	private TipoUsuario tipoUsuario;
 
 	@NotNull(message = "Endereço é Obrigatório")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_endereco")
 	@Cascade(CascadeType.ALL)
+	@Expose
 	private Endereco endereco;
 
 	@NotNull(message = "Data de nascimento é Obrigatório")
 	@Temporal(TemporalType.DATE)
 	@Column(name = "data_nascimento")
+	@Expose
 	private Date dataNascimento;
 
 	@Size(max = 12, message = "Telefone não pode conter mais que 12 dígitos")
 	@Column(name = "telefone")
+	@Expose
 	private String telefone;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = javax.persistence.CascadeType.ALL, mappedBy = "usuario")
+	@Expose
 	private List<Avaliacao> avaliacoes;
 
 	public String getUid() {

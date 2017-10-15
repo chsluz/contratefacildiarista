@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<ui:composition template="/template/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="corpo">
+		<p:panelGrid columns="1" id="panelVisualizarVagas" layout="grid">
+			<h1>#{msg['avaliar.contratante']}</h1>
+			<p:panelGrid columns="1" layout="grid">
+				<h:panelGroup>
+					<h:outputLabel value="#{msg['nome']}: " />
+					<h:outputLabel
+						value="#{visualizarVagasVinculadasBean.usuarioAvaliado.nome}" />
+				</h:panelGroup>
+			</p:panelGrid>
+			<p:panelGrid columns="2" layout="grid">
+				<h:panelGroup>
+					<h:outputLabel value="#{msg['data']}: " />
+					<h:outputText
+						value="#{visualizarVagasVinculadasBean.rotinaSelecionada.data}">
+						<f:convertDateTime timeZone="pt_BR" pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputLabel value="#{msg['tipo.periodo']}: " />
+					<h:outputLabel
+						value="#{visualizarVagasVinculadasBean.rotinaSelecionada.vaga.tipoPeriodo.descricao}" />
+				</h:panelGroup>
+				<h:panelGroup>
+					<p:outputLabel value="Digite a nota: (Valor deve ser entre 0 e 5)" />
+					<br />
+					<p:inputNumber required="true" requiredMessage="Digite uma nota"
+						value="#{visualizarVagasVinculadasBean.avaliacao.nota}"
+						placeholder="5" minValue="0" maxValue="5" />
+				</h:panelGroup>
+				<h:panelGroup>
+					<p:outputLabel value="Observação" />
+					<br />
+					<p:inputText
+						value="#{visualizarVagasVinculadasBean.avaliacao.observacao}"
+						maxlength="255" placeholder="Digite sua observação aqui" />
+				</h:panelGroup>
+			</p:panelGrid>
+			<p:panelGrid columns="1" layout="grid">
+				<p:commandButton value="Avaliar"
+					action="#{visualizarVagasVinculadasBean.avaliar()}"
+					style="width:100px;float:right;" />
+			</p:panelGrid>
+
+		</p:panelGrid>
+	</ui:define>
+</ui:composition>

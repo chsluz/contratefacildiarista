@@ -45,7 +45,7 @@ public class Rotina implements Serializable {
 	private DiasSemana diaSemana;
 
 	@NotNull(message = "Vaga é Obrigatório")
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_vaga")
 	private Vaga vaga;
 

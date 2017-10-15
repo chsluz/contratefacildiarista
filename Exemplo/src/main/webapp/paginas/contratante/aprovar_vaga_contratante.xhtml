@@ -39,13 +39,25 @@
 						</ui:repeat>
 					</h:panelGroup>
 				</h:panelGroup>
+			</p:panelGrid>
+			<p:panelGrid columns="2" layout="grid">
 				<h:panelGroup>
 					<p:outputLabel value="#{msg['prestadores']}: " />
 					<p:dataTable
+						reflow="true"
 						rendered="#{not empty aprovacaoVagasBean.rotina.prestadores}"
 						value="#{aprovacaoVagasBean.rotina.prestadores}" var="prestador">
-						<p:column colspan="8">
+						<p:column>
+							<f:facet name="header">
+								#{msg['nome']}
+							</f:facet>
 							<h:outputText value="#{prestador.nome}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								#{msg['avaliacao']}
+							</f:facet>
+							<h:outputText value="#{prestador.mediaAprovacaoUsuario}" />
 						</p:column>
 						<p:column>
 							<p:commandButton
@@ -65,7 +77,9 @@
 								value="#{aprovacaoVagasBean.rotina.prestadorSelecionado.nome}" />
 						</h:panelGroup>
 						<h:panelGroup>
-							<p:commandButton update="panelAprovacao" action="#{aprovacaoVagasBean.removerUsuarioSelecionado()}" icon="ui-icon-trash"/>
+							<p:commandButton update="panelAprovacao"
+								action="#{aprovacaoVagasBean.removerUsuarioSelecionado()}"
+								icon="ui-icon-trash" />
 						</h:panelGroup>
 					</p:panelGrid>
 				</h:panelGroup>

@@ -1,6 +1,7 @@
 package br.com.contratediarista.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,8 +12,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.google.gson.annotations.Expose;
 
 @Entity
 @Table(name = "avaliacao")
@@ -23,14 +28,17 @@ public class Avaliacao implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="id")
+	@Expose
 	private Integer id;
 	
 	@NotNull(message="Nota é obrigatório")
 	@Column(name="nota",nullable=false)
+	@Expose
 	private Integer nota;
 	
 	@Size(max = 300, message = "Descrição não pode conter mais que 300 caracteres")
 	@Column(name = "observacao")
+	@Expose
 	private String observacao;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -40,6 +48,12 @@ public class Avaliacao implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario_avaliador")
 	private Usuario avaliador;
+	
+	@NotNull(message = "Data é Obrigatório")
+	@Temporal(TemporalType.DATE)
+	@Column(name = "data")
+	@Expose
+	private Date data;
 
 	public Integer getId() {
 		return id;
@@ -79,6 +93,14 @@ public class Avaliacao implements Serializable {
 
 	public void setAvaliador(Usuario avaliador) {
 		this.avaliador = avaliador;
+	}
+	
+	public Date getData() {
+		return data;
+	}
+
+	public void setData(Date data) {
+		this.data = data;
 	}
 
 	@Override

@@ -84,14 +84,24 @@
 					<f:facet name="header">
 						#{msg['vagas']}
 					</f:facet>
-					<p:column headerText="#{msg['id']}" style="text-align:center"
-						sortBy="#{rotina.id}" filterBy="#{rotina.id}">
-						<h:outputText value="#{rotina.id}" />
-					</p:column>
 					<p:column headerText="#{msg['contratante']}"
 						style="text-align:center" sortBy="#{rotina.vaga.contratante.nome}"
 						filterBy="#{rotina.vaga.contratante.nome}">
 						<h:outputText value="#{rotina.vaga.contratante.nome}" />
+					</p:column>
+					<p:column headerText="#{msg['avaliacao']}"
+						style="text-align:center"
+						sortBy="#{rotina.vaga.contratante.mediaAprovacaoUsuario}"
+						filterBy="#{rotina.vaga.contratante.mediaAprovacaoUsuario}">
+						<h:outputText
+							value="#{rotina.vaga.contratante.mediaAprovacaoUsuario}" />
+					</p:column>
+					<p:column headerText="#{msg['qtde.avaliacao']}"
+						style="text-align:center"
+						sortBy="#{rotina.vaga.contratante.quantidadeAvaliacoesUsuario}"
+						filterBy="#{rotina.vaga.contratante.quantidadeAvaliacoesUsuario}">
+						<h:outputText
+							value="#{rotina.vaga.contratante.quantidadeAvaliacoesUsuario}" />
 					</p:column>
 					<p:column headerText="#{msg['data']}" style="text-align:center"
 						sortBy="#{rotina.data}" filterBy="#{rotina.data}">
@@ -117,7 +127,7 @@
 							<br />
 						</ui:repeat>
 					</p:column>
-					<p:column headerText="#{msg['visualizar']}">
+					<p:column headerText="#{msg['acoes']}">
 						<p:commandButton value="#{msg['visualizar']}"
 							action="#{buscarVagaBean.visualizar(rotina)}">
 						</p:commandButton>
