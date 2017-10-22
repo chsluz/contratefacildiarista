@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.google.gson.annotations.Expose;
+
 @Entity
 @Table(name="cidade")
 public class Cidade implements Serializable {
@@ -26,16 +28,19 @@ public class Cidade implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id")
+	@Expose
 	private int id;
 	
 	@NotNull(message="Nome é obrigatório")
 	@Size(max=100,message="Nome não pode conter mais que 100 caracteres")
 	@Column(name="nome",length=100,nullable=false)
+	@Expose
 	private String nome;
 	
 	@NotNull(message="Estado é obrigatório")
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="id_estado")
+	@Expose
 	private Estado estado;
 
 	public int getId() {

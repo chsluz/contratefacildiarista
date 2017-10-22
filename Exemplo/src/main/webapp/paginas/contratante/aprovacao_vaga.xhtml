@@ -13,7 +13,6 @@
 				<h:panelGroup>
 					<p:outputLabel value="#{msg['data.inicial']}" />
 					<p:calendar locale="pt_BR" id="dataInicial" required="true"
-						mindate="#{aprovacaoVagasBean.dataMinima}"
 						requiredMessage="#{msg['data.inicial.obrigatorio']}"
 						placeholder="99/99/9999" pattern="dd/MM/yyyy"
 						value="#{aprovacaoVagasBean.dataInicial}" mask="99/99/9999"

@@ -117,7 +117,7 @@ public class BuscarVagaBean implements Serializable {
 			jsonObject.add("diasSelecionados", arraDias);
 		}
 		if(tipoPeriodo != null) {
-			jsonObject.addProperty("periodo", tipoPeriodo.getDescricao());
+			jsonObject.addProperty("periodo", tipoPeriodo.ordinal());
 		}
 		if(tiposAtividades != null && !tiposAtividades.isEmpty()) {
 			JsonArray arrayTipoAtividades = new JsonArray();

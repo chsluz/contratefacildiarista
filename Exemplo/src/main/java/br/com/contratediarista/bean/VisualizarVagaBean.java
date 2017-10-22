@@ -2,10 +2,12 @@ package br.com.contratediarista.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.Response;
@@ -20,7 +22,7 @@ import br.com.contratediarista.service.UsuarioService;
 import br.com.contratediarista.utils.FacesUtil;
 
 @Named
-@RequestScoped
+@ViewScoped
 public class VisualizarVagaBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -62,25 +64,28 @@ public class VisualizarVagaBean implements Serializable {
 
 	public void canditatar() {
 		try {
-
+			List<Usuario> usuarios = rotina.getPrestadores();
 			if (usuarioLogado == null) {
 				facesUtil.exibirMsgErro(facesUtil.getLabel("erro.ao.vincular.usuario.vaga"));
 			}
-			if (rotina.getPrestadores() == null) {
-				rotina.setPrestadores(new ArrayList<>());
+			if (usuarios == null) {
+				usuarios = new ArrayList<>();
 			}
 			if (rotina.getPrestadores().size() > 10) {
 				facesUtil.exibirMsgErro(facesUtil.getLabel("numero.maximo.candidatos.ja.preenchido"));
 				return;
 			}
-			if (!rotina.getPrestadores().contains(usuarioLogado)) {
-				rotina.getPrestadores().add(usuarioLogado);
-				Response response = rotinaService.salvar(rotina);
+			rotina = recuperarEntidade(rotina);
+			if (!usuarios.contains(usuarioLogado)) {
+				usuarios.add(usuarioLogado);
+				rotina.setPrestadores(new HashSet<>(usuarios));
+				Response response = rotinaService.alterar(rotina);
 				if (response.getStatus() == Status.OK.getStatusCode()) {
 					facesUtil.exibirMsgSucesso(facesUtil.getLabel("salvo.sucesso"));
 				} else {
 					facesUtil.exibirMsgErro(facesUtil.getLabel("erro.salvar"));
 				}
+				RequestContext.getCurrentInstance().execute("iniciarMapaVisualizacao()");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -98,6 +103,16 @@ public class VisualizarVagaBean implements Serializable {
 		}
 	}
 
+	
+	public Rotina recuperarEntidade(Rotina rotina) {
+		Response response = rotinaService.restoreById(rotina.getId());
+		if (response.getStatus() == Status.OK.getStatusCode()) {
+			return (Rotina) response.getEntity();
+		} else {
+			return null;
+		}
+	}
+	
 	public Rotina getRotina() {
 		return rotina;
 	}

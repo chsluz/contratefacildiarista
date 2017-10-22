@@ -2,7 +2,6 @@ package br.com.contratediarista.bean;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,8 +12,11 @@ import javax.inject.Named;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.primefaces.model.LazyDataModel;
+
 import br.com.contratediarista.entity.Disponibilidade;
 import br.com.contratediarista.entity.Usuario;
+import br.com.contratediarista.lazy.AbstractLazyDataModel;
 import br.com.contratediarista.service.DisponibilidadeService;
 import br.com.contratediarista.utils.FacesUtil;
 
@@ -28,7 +30,7 @@ public class ConsultarDisponibilidadeCadastradaBean implements Serializable {
 	private Date dataFinal;
 	private Date dataMinima;
 	private Disponibilidade disponibilidade;
-	private List<Disponibilidade> disponibilidades;
+	private LazyDataModel<Disponibilidade> disponibilidadesLazy;
 	private Usuario usuarioLogado;
 
 	@Inject
@@ -55,7 +57,7 @@ public class ConsultarDisponibilidadeCadastradaBean implements Serializable {
 
 	@SuppressWarnings("unchecked")
 	public void buscar() {
-		disponibilidades = new ArrayList<Disponibilidade>();
+		disponibilidadesLazy = new AbstractLazyDataModel<>(null);
 		if (dataFinal.before(dataInicial)) {
 			facesUtil.exibirMsgErro(facesUtil.getLabel("data.final.nao.pode.ser.menor.que.data.inicial"));
 			return;
@@ -63,7 +65,8 @@ public class ConsultarDisponibilidadeCadastradaBean implements Serializable {
 		Response response = disponibilidadeService.buscarPorUsuarioEData(usuarioLogado.getUid(),
 				sdf.format(dataInicial), sdf.format(dataFinal));
 		if (response.getStatus() == Status.OK.getStatusCode()) {
-			disponibilidades = (List<Disponibilidade>) response.getEntity();
+			List<Disponibilidade> disponibilidades = (List<Disponibilidade>) response.getEntity();
+			disponibilidadesLazy = new AbstractLazyDataModel<>(disponibilidades);
 		}
 	}
 
@@ -74,7 +77,7 @@ public class ConsultarDisponibilidadeCadastradaBean implements Serializable {
 				disponibilidade = (Disponibilidade) response.getEntity();
 				response = disponibilidadeService.excluir(disponibilidade);
 				if (response.getStatus() == Status.OK.getStatusCode()) {
-					disponibilidades.remove(disponibilidade);
+					buscar();
 					facesUtil.exibirMsgSucesso(facesUtil.getLabel("excluido.sucesso"));
 				} else {
 					facesUtil.exibirMsgErro(facesUtil.getLabel("erro.excluir"));
@@ -114,12 +117,12 @@ public class ConsultarDisponibilidadeCadastradaBean implements Serializable {
 		this.dataMinima = dataMinima;
 	}
 
-	public List<Disponibilidade> getDisponibilidades() {
-		return disponibilidades;
+	public LazyDataModel<Disponibilidade> getDisponibilidadesLazy() {
+		return disponibilidadesLazy;
 	}
 
-	public void setDisponibilidades(List<Disponibilidade> disponibilidades) {
-		this.disponibilidades = disponibilidades;
+	public void setDisponibilidadesLazy(LazyDataModel<Disponibilidade> disponibilidadesLazy) {
+		this.disponibilidadesLazy = disponibilidadesLazy;
 	}
 
 	public Disponibilidade getDisponibilidade() {

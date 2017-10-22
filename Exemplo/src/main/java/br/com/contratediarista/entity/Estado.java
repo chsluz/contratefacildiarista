@@ -12,6 +12,8 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.google.gson.annotations.Expose;
+
 @Entity
 @Table(name = "estado")
 public class Estado implements Serializable {
@@ -24,16 +26,19 @@ public class Estado implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
+	@Expose
 	private int id;
 
 	@Size(max = 100, message = "Nome não pode conter mais que 100 caracteres")
 	@NotEmpty(message = "Nome é obrigatório")
 	@Column(name = "nome", nullable = false, length = 100)
+	@Expose
 	private String nome;
 
 	@Size(max = 2, message = "Sigla não pode conter mais que 2 caracteres")
 	@NotEmpty(message = "Sigla é obrigatório")
 	@Column(name = "sigla", nullable = false, length = 2)
+	@Expose
 	private String sigla;
 
 	public int getId() {

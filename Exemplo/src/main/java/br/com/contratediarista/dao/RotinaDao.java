@@ -45,6 +45,7 @@ public class RotinaDao implements Serializable {
 	}
 
 	public void excluir(Rotina rotina) throws Exception {
+		rotina.getVaga().getRotinas().remove(rotina);
 		dao.excluir(rotina);
 	}
 

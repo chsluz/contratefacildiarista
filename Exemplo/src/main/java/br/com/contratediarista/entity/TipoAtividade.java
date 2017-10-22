@@ -13,6 +13,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.google.gson.JsonObject;
+import com.google.gson.annotations.Expose;
 
 @Entity
 @Table(name="tipo_atividade")
@@ -23,11 +24,13 @@ public class TipoAtividade implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id")
+	@Expose
 	private int id;
 	
 	@Size(max = 100, message = "Descrição não pode conter mais que 100 caracteres")
 	@NotBlank(message = "{descricao} {e.obrigatorio}")
 	@Column(name = "descricao", nullable = false)
+	@Expose
 	private String descricao;
 
 	public int getId() {

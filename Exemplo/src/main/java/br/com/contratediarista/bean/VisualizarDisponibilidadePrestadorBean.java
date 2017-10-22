@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -105,22 +106,22 @@ public class VisualizarDisponibilidadePrestadorBean implements Serializable {
 			}
 			if (rotina == null) {
 				List<TipoAtividade> atividades = new ArrayList<>();
-				for(TipoAtividade atividade : disponibilidade.getTiposAtividade()) {
+				for (TipoAtividade atividade : disponibilidade.getTiposAtividade()) {
 					atividades.add(atividade);
 				}
-				
+
 				Vaga vaga = new Vaga();
 				vaga.setContratante(usuarioLogado);
 				vaga.setDataCadastrada(new Date());
 				vaga.setEndereco(Endereco.copy(usuarioLogado.getEndereco()));
 				vaga.setTipoPeriodo(disponibilidade.getTipoPeriodo());
 				vaga.setValorPeriodo(disponibilidade.getValorPeriodo());
-				vaga.setTiposAtividade(atividades);
-				vaga.setRotinas(new ArrayList<>());
+				vaga.setTiposAtividade(new HashSet<>(atividades));
+				vaga.setRotinas(new HashSet<>());
 
 				rotina = new Rotina();
 				rotina.setData(disponibilidade.getData());
-				rotina.setPrestadores(Arrays.asList(disponibilidade.getPrestador()));
+				rotina.setPrestadores(new HashSet<>(Arrays.asList(disponibilidade.getPrestador())));
 				rotina.setPrestadorSelecionado(disponibilidade.getPrestador());
 				rotina.setVaga(vaga);
 				LocalDate dataSelecionada = LocalDate.fromDateFields(disponibilidade.getData());

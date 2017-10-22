@@ -64,11 +64,7 @@ public class AprovacaoVagasBean implements Serializable {
 		rotina = (Rotina) facesContext.getExternalContext().getSessionMap().get("rotina");
 		prestadorSelecionado = (Usuario) facesContext.getExternalContext().getSessionMap().get("prestadorSelecionado");
 		if (rotina != null) {
-			response = rotinaService.restoreById(rotina.getId());
-			if (response.getStatus() == Status.OK.getStatusCode()) {
-				rotina = (Rotina) response.getEntity();
-				rotina.getPrestadores().size();
-			}
+			rotina = recuperarEntidade(rotina);
 		}
 		if (prestadorSelecionado != null) {
 			response = usuarioService.buscarUsuarioByUid(prestadorSelecionado.getUid());

@@ -31,6 +31,7 @@ public class GenericDao<T> implements Serializable {
 		try {
 			em.getTransaction().begin();
 			em.persist(t);
+			em.flush();
 			em.getTransaction().commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -100,6 +101,7 @@ public class GenericDao<T> implements Serializable {
 		try {
 			em.getTransaction().begin();
 			em.merge(t);
+			em.flush();
 			em.getTransaction().commit();
 		} catch (Exception e) {
 			if (em.getTransaction().isActive()) {
@@ -121,6 +123,11 @@ public class GenericDao<T> implements Serializable {
 			}
 			throw new Exception(e.getCause());
 		}
+	}
+	
+	public T refresh(T t) {
+		em.refresh(t);
+		return t;
 	}
 
 }

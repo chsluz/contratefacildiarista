@@ -16,6 +16,8 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.google.gson.annotations.Expose;
+
 @Entity
 @Table(name = "endereco")
 public class Endereco implements Serializable {
@@ -28,34 +30,42 @@ public class Endereco implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
+	@Expose
 	private Long id;
 
 	@NotEmpty(message = "Rua é obrigatório")
 	@Size(max = 100, message = "Rua não pode conter mais que 100 caracteress")
 	@Column(name = "rua", length = 100, nullable = false)
+	@Expose
 	private String rua;
 
 	@Column(name = "numero", length = 8)
+	@Expose
 	private Integer numero;
 
 	@NotEmpty(message = "Cep é obrigatório")
 	@Size(max = 10, message = "Cep não pode conter mais que 10 dígitos")
 	@Column(name = "cep", length = 10, nullable = false)
+	@Expose
 	private String cep;
 
 	@Size(max = 100, message = "Complemento não pode conter mais que 100 caracteres")
 	@Column(name = "complemento", length = 100)
+	@Expose
 	private String complemento;
 
 	@NotNull(message = "Bairro é obrigatório")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_bairro")
+	@Expose
 	private Bairro bairro;
 
 	@Column(name = "latitude")
+	@Expose
 	private Double latitude = 0.0;
 
 	@Column(name = "longitude")
+	@Expose
 	private Double longitude = 0.0;
 	
 	public Endereco() {

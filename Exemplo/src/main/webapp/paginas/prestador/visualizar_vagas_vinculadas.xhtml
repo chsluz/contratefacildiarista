@@ -1,64 +1,70 @@
 <!DOCTYPE html>
-<ui:composition
-	template="/template/template.xhtml"
+<ui:composition template="/template/template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 	<ui:define name="corpo">
-		<p:panelGrid
-			columns="1"
-			id="panelVisualizarVagas"
-			layout="grid">
+		<script type="text/javascript">
+				PrimeFaces.locales['tr'] = {
+						closeText : 'Fechar',
+						prevText : 'Anterior',
+						nextText : 'Próximo',
+						currentText : 'Começo',
+						monthNames : [ 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio',
+								'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro',
+								'Dezembro' ],
+						monthNamesShort : [ 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul',
+								'Ago', 'Set', 'Out', 'Nov', 'Dez' ],
+						dayNames : [ 'Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta',
+								'Sexta', 'Sábado' ],
+						dayNamesShort : [ 'Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb' ],
+						dayNamesMin : [ 'D', 'S', 'T', 'Q', 'Q', 'S', 'S' ],
+						weekHeader : 'Semana',
+						firstDay : 0,
+						isRTL : false,
+						showMonthAfterYear : false,
+						yearSuffix : '',
+						timeOnlyTitle : 'São Horas',
+						timeText : 'Tempo',
+						hourText : 'Hora',
+						minuteText : 'Minuto',
+						secondText : 'Segundo',
+						ampm : false,
+						month : 'Mês',
+						week : 'Semana',
+						day : 'Dia',
+						allDayText : 'Todo o Dia'
+					};
+		</script>
+		<p:panelGrid columns="1" id="panelVisualizarVagas" layout="grid">
 			<h1>#{msg['visualizar.vagas.vinculadas']}</h1>
-			<p:schedule
-				leftHeaderTemplate=""
-				locale="pt_BR"
-				rightHeaderTemplate="prev,next"
-				centerTemplate="month"
-				draggable="false"
+			<p:schedule leftHeaderTemplate="prev" locale="tr"
+				rightHeaderTemplate="next" centerTemplate="month" draggable="false"
 				id="scheduleVagas"
 				value="#{visualizarVagasVinculadasBean.eventModel}"
 				widgetVar="myschedule">
-				<p:ajax
-					event="eventSelect"
-					listener="#{visualizarVagasVinculadasBean.onEventSelect}"
-					 />
+				<p:ajax event="eventSelect"
+					listener="#{visualizarVagasVinculadasBean.onEventSelect}" />
 			</p:schedule>
 
 
-			<p:dialog
-				widgetVar="eventDialog"
-				header="Resumo da Vaga"
-				showEffect="clip"
-				hideEffect="clip">
-				<h:panelGrid
-					id="eventDetails"
-					columns="2">
-					<p:outputLabel
-						for="title"
-						value="Titles:" />
-					<p:inputText
-						id="title"
+			<p:dialog widgetVar="eventDialog" header="Resumo da Vaga"
+				showEffect="clip" hideEffect="clip">
+				<h:panelGrid id="eventDetails" columns="2">
+					<p:outputLabel for="title" value="Titles:" />
+					<p:inputText id="title"
 						value="#{visualizarVagasVinculadasBean.event.title}"
 						required="true" />
-					<p:outputLabel
-						for="from"
-						value="From:" />
-					<p:calendar
-						id="from"
+					<p:outputLabel for="from" value="From:" />
+					<p:calendar id="from"
 						value="#{visualizarVagasVinculadasBean.event.startDate}"
-						timeZone="GMT+2"
-						pattern="dd/MM/yyyy HH:mm" />
-					<p:outputLabel
-						for="to"
-						value="To:" />
-					<p:calendar
-						id="to"
+						timeZone="GMT+2" pattern="dd/MM/yyyy HH:mm" />
+					<p:outputLabel for="to" value="To:" />
+					<p:calendar id="to"
 						value="#{visualizarVagasVinculadasBean.event.endDate}"
-						timeZone="GMT+2"
-						pattern="dd/MM/yyyy HH:mm" />
+						timeZone="GMT+2" pattern="dd/MM/yyyy HH:mm" />
 				</h:panelGrid>
 			</p:dialog>
 		</p:panelGrid>

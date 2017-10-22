@@ -2,7 +2,7 @@ package br.com.contratediarista.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -77,7 +77,7 @@ public class Usuario implements Serializable {
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = javax.persistence.CascadeType.ALL, mappedBy = "usuario")
 	@Expose
-	private List<Avaliacao> avaliacoes;
+	private Set<Avaliacao> avaliacoes;
 
 	public String getUid() {
 		return uid;
@@ -135,11 +135,11 @@ public class Usuario implements Serializable {
 		this.telefone = telefone;
 	}
 	
-	public List<Avaliacao> getAvaliacoes() {
+	public Set<Avaliacao> getAvaliacoes() {
 		return avaliacoes;
 	}
 
-	public void setAvaliacoes(List<Avaliacao> avaliacoes) {
+	public void setAvaliacoes(Set<Avaliacao> avaliacoes) {
 		this.avaliacoes = avaliacoes;
 	}
 

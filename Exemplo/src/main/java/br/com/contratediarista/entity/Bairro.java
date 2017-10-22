@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.google.gson.annotations.Expose;
+
 @Entity
 @Table(name="bairro")
 public class Bairro implements Serializable{
@@ -25,15 +27,18 @@ public class Bairro implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id",nullable=false)
+	@Expose
 	private int id;
 	
 	@NotNull(message="Descrição é obrigatório")
 	@Column(name="descricao",nullable=false,unique=true)
+	@Expose
 	private String descricao;
 	
 	@NotNull(message="Cidade é obrigatório")
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="id_cidade")
+	@Expose
 	private Cidade cidade;
 
 	public int getId() {

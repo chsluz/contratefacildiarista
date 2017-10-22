@@ -40,8 +40,7 @@
 					</h:panelGroup>
 					<h:panelGroup>
 						<h:outputLabel value="#{msg['data']}: " />
-						<h:outputText
-							value="#{visualizarVagaBean.rotina.data}">
+						<h:outputText value="#{visualizarVagaBean.rotina.data}">
 							<f:convertDateTime timeZone="pt_BR" pattern="dd/MM/yyyy" />
 						</h:outputText>
 					</h:panelGroup>
@@ -91,14 +90,16 @@
 				</h:panelGroup>
 
 			</p:panelGrid>
-			<p:commandButton update="panelVisualizarVaga"
-				rendered="#{visualizarVagaBean.renderizarBotaoCandidatar()}"
-				style="float:right;width:200px;"
-				action="#{visualizarVagaBean.canditatar()}"
-				value="#{msg['candidatar.se']}" />
-			<h:outputText
-				rendered="#{not visualizarVagaBean.renderizarBotaoCandidatar()}"
-				style="float:right;" value="#{msg['voce.ja.se.candidatou.a.vaga']}" />
+			<h:panelGroup id="panelCandidato">
+				<p:commandButton update="panelCandidato"
+					rendered="#{visualizarVagaBean.renderizarBotaoCandidatar()}"
+					style="float:right;width:200px;"
+					action="#{visualizarVagaBean.canditatar()}"
+					value="#{msg['candidatar.se']}" />
+				<h:outputText id="textCandidato"
+					rendered="#{not visualizarVagaBean.renderizarBotaoCandidatar()}"
+					style="float:right;" value="#{msg['voce.ja.se.candidatou.a.vaga']}" />
+			</h:panelGroup>
 		</p:panelGrid>
 	</ui:define>
 </ui:composition>

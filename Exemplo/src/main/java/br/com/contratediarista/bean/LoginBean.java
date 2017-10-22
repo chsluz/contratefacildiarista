@@ -57,6 +57,10 @@ public class LoginBean implements Serializable {
 	
 	@PostConstruct
 	public void init() {
+		Boolean login = (Boolean) facesContext.getExternalContext().getSessionMap().get("isFacebook");
+		if(login != null) {
+			isFacebook = login;
+		}
 		instanciarNovo();
 	}
 
@@ -75,6 +79,7 @@ public class LoginBean implements Serializable {
 		}
 		if(userFacebook == null) {
 			facesContext.getExternalContext().redirect("cadastro_usuario.jsf");
+			facesContext.getExternalContext().getSessionMap().put("isFacebook", true);
 		}
 		else {
 			logar();
@@ -90,12 +95,13 @@ public class LoginBean implements Serializable {
 	}
 
 	public void logar() throws IOException {
+		facesContext.getExternalContext().getSessionMap().put("isFacebook", false);
 		Response response = usuarioService.buscarUsuarioByUid(idUsuario);
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			usuarioLogin = (Usuario) response.getEntity();
 			if (usuarioLogin != null) {
 				facesContext.getExternalContext().getSessionMap().put("usuario", usuarioLogin);
-				facesContext.getExternalContext().redirect("pagina_inicial.jsf");
+				facesContext.getExternalContext().redirect("");
 			}
 			else {
 				facesUtil.exibirMsgErro(facesUtil.getLabel("usuario.nao.cadastrado"));
@@ -148,6 +154,7 @@ public class LoginBean implements Serializable {
 
 	public void cadastrarNovo() throws IOException {
 		instanciarNovo();
+		facesContext.getExternalContext().getSessionMap().put("isFacebook", false);
 		facesContext.getExternalContext().redirect("cadastro_usuario.jsf");
 	}
 

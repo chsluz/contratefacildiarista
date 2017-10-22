@@ -33,35 +33,26 @@
 			</p:panelGrid>
 			<p:panelGrid columns="1" layout="grid" id="panelTableDisponibilidade">
 				<p:dataTable var="disponibilidade"
-					rendered="#{not empty consultarDisponibilidadeCadastradaBean.disponibilidades}"
+					rendered="#{not empty consultarDisponibilidadeCadastradaBean.disponibilidadesLazy}"
 					reflow="true"
-					value="#{consultarDisponibilidadeCadastradaBean.disponibilidades}"
+					value="#{consultarDisponibilidadeCadastradaBean.disponibilidadesLazy}"
 					paginator="true" rows="10"
 					paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
 					rowsPerPageTemplate="5,10,15" id="tableVaga" lazy="true">
 					<f:facet name="header">
 						#{msg['disponiblidades']}
 					</f:facet>
-					<p:column headerText="#{msg['id']}" style="text-align:center"
-						sortBy="#{rotina.id}" filterBy="#{rotina.id}">
-						<h:outputText value="#{disponibilidade.id}" />
-					</p:column>
-					<p:column headerText="#{msg['data']}" style="text-align:center"
-						sortBy="#{disponibilidade.data}"
-						filterBy="#{disponibilidade.data}">
+					<p:column headerText="#{msg['data']}" style="text-align:center">
 						<h:outputText value="#{disponibilidade.data}">
 							<f:convertDateTime timeZone="pt_BR" pattern="dd/MM/yyyy" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="#{msg['tipo.periodo']}"
-						style="text-align:center"
-						sortBy="#{disponibilidade.tipoPeriodo.descricao}"
-						filterBy="#{disponibilidade.tipoPeriodo.descricao}">
+						style="text-align:center">
 						<h:outputText value="#{disponibilidade.tipoPeriodo.descricao}" />
 					</p:column>
 					<p:column headerText="#{msg['valor.periodo.reais']}"
-						style="text-align:center" sortBy="#{disponibilidade.valorPeriodo}"
-						filterBy="#{disponibilidade.valorPeriodo}">
+						style="text-align:center">
 						<h:outputText value="#{disponibilidade.valorPeriodo} Reais" />
 					</p:column>
 					<p:column headerText="#{msg['atividades']}"

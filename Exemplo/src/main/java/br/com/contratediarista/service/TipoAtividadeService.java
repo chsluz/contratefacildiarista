@@ -1,6 +1,7 @@
 package br.com.contratediarista.service;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -15,12 +16,17 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import br.com.contratediarista.dao.TipoAtividadeDao;
 import br.com.contratediarista.entity.TipoAtividade;
 
 @RequestScoped
 @Path("tipo-atividade")
 public class TipoAtividadeService implements Serializable {
+	Type type = new TypeToken<List<TipoAtividade>>() {
+	}.getType();
 
 	private static final long serialVersionUID = 1L;
 
@@ -36,6 +42,22 @@ public class TipoAtividadeService implements Serializable {
 	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
 	public Response salvar(TipoAtividade tipo) {
 		try {
+			tipoAtividadeDao.salvar(tipo);
+			return Response.ok().build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+					.build();
+		}
+	}
+	
+	@POST
+	@Path("cadastrar-tipo-atividade/{descricao}")
+	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
+	public Response cadastrarTipoAtividade(@PathParam("descricao") String descricao) {
+		try {
+			TipoAtividade tipo = new TipoAtividade();
+			tipo.setDescricao(descricao);
 			tipoAtividadeDao.salvar(tipo);
 			return Response.ok().build();
 		} catch (Exception e) {
@@ -72,6 +94,21 @@ public class TipoAtividadeService implements Serializable {
 					.build();
 		}
 	}
+	
+	@POST
+	@Path("excluir-tipo-atividade/{id}")
+	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
+	public Response excluirTipoAtividade(@PathParam("id") int id) {
+		try {
+			TipoAtividade tipo = tipoAtividadeDao.restoreById(id);
+			tipoAtividadeDao.excluir(tipo);
+			return Response.ok().build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+					.build();
+		}
+	}
 
 	@POST
 	@Path("buscar-id/{id}")
@@ -91,12 +128,16 @@ public class TipoAtividadeService implements Serializable {
 		}
 	}
 
-	@GET
+	@GET()
+	@Path("/listar-todos")
 	@Produces({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
 	public Response listAll() {
 		try {
+			Gson gson = new Gson();
 			List<TipoAtividade> tiposAtividade = tipoAtividadeDao.listarTodos();
-			return Response.ok(tiposAtividade).build();
+			String json = gson.toJson(tiposAtividade, type);
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+					.entity(gson.fromJson(json, type)).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.status(Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")

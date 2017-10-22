@@ -6,11 +6,43 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 	<ui:define name="corpo">
+		<script type="text/javascript">
+				PrimeFaces.locales['tr'] = {
+						closeText : 'Fechar',
+						prevText : 'Anterior',
+						nextText : 'Próximo',
+						currentText : 'Começo',
+						monthNames : [ 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio',
+								'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro',
+								'Dezembro' ],
+						monthNamesShort : [ 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul',
+								'Ago', 'Set', 'Out', 'Nov', 'Dez' ],
+						dayNames : [ 'Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta',
+								'Sexta', 'Sábado' ],
+						dayNamesShort : [ 'Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb' ],
+						dayNamesMin : [ 'D', 'S', 'T', 'Q', 'Q', 'S', 'S' ],
+						weekHeader : 'Semana',
+						firstDay : 0,
+						isRTL : false,
+						showMonthAfterYear : false,
+						yearSuffix : '',
+						timeOnlyTitle : 'São Horas',
+						timeText : 'Tempo',
+						hourText : 'Hora',
+						minuteText : 'Minuto',
+						secondText : 'Segundo',
+						ampm : false,
+						month : 'Mês',
+						week : 'Semana',
+						day : 'Dia',
+						allDayText : 'Todo o Dia'
+					};
+		</script>
 		<p:panelGrid columns="1" id="panelVisualizarVagas" layout="grid">
 			<h1>#{msg['visualizar.vagas.aprovadas']}</h1>
-			<p:schedule leftHeaderTemplate="" locale="pt_BR"
-				rightHeaderTemplate="prev,next" centerTemplate="month"
-				draggable="false" id="scheduleVagas"
+			<p:schedule leftHeaderTemplate="prev" locale="tr"
+				rightHeaderTemplate="next" centerTemplate="month" timezone="GMT-2"
+				timeZone="" draggable="false" id="scheduleVagas"
 				value="#{visualizarVagasPrestadorAprovadoBean.eventModel}"
 				widgetVar="myschedule">
 				<p:ajax event="eventSelect"

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -103,8 +104,8 @@ public class VagasBean implements Serializable {
 					atividades.add((TipoAtividade) tipoAtividade.getEntity());
 				}
 			}
-			vaga.setTiposAtividade(atividades);
-			vaga.setRotinas(new ArrayList<>());
+			vaga.setTiposAtividade(new HashSet<>(atividades));
+			vaga.setRotinas(new HashSet<>());
 			LocalDate dataIni = LocalDate.fromDateFields(dataInicial);
 			LocalDate dataFin = LocalDate.fromDateFields(dataFinal);
 			List<Date> dias = new ArrayList<>();

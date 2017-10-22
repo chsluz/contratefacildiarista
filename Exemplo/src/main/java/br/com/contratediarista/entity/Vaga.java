@@ -1,8 +1,10 @@
 package br.com.contratediarista.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,51 +25,60 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.google.gson.annotations.Expose;
+
 import br.com.contratediarista.enuns.TipoPeriodo;
 
 @Entity
-@Table(name="vaga")
-public class Vaga implements Serializable{
+@Table(name = "vaga")
+public class Vaga implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id",nullable=false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false)
+	@Expose
 	private int id;
-	
+
 	@NotNull(message = "Data é Obrigatório")
 	@Temporal(TemporalType.DATE)
-	@Column(name = "data",nullable=false)
+	@Column(name = "data", nullable = false)
+	@Expose
 	private Date dataCadastrada;
-	
+
 	@NotNull(message = "Usuário é Obrigatório")
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_usuario")
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "uid_usuario")
+	@Expose
 	private Usuario contratante;
-	
+
 	@NotNull(message = "Endereço é Obrigatório")
-	@ManyToOne(fetch = FetchType.LAZY,cascade= CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_endereco")
+	@Expose
 	private Endereco endereco;
-	
+
 	@NotNull(message = "Período é Obrigatório")
 	@Column(name = "id_tipo_periodo", nullable = false)
+	@Expose
 	private TipoPeriodo tipoPeriodo;
-	
-	@NotNull(message="Valor do período é Obrigatório")
-	@Column(name="valor_periodo",nullable=false)
+
+	@NotNull(message = "Valor do período é Obrigatório")
+	@Column(name = "valor_periodo", nullable = false)
+	@Expose
 	private Integer valorPeriodo;
-	
-	@NotEmpty(message="Tipos de Atividade é Obrigatório")
-	@ManyToMany(fetch = FetchType.LAZY,cascade= CascadeType.ALL)
+
+	@NotEmpty(message = "Tipos de Atividade é Obrigatório")
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "vaga_has_atividade", joinColumns = { @JoinColumn(name = "id_vaga") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_tipo_atividade") })
-	private List<TipoAtividade> tiposAtividade;
-	
-	@NotEmpty(message="Rotina é Obrigatório")
-	@OneToMany(fetch = FetchType.LAZY,cascade= CascadeType.ALL,mappedBy="vaga")
-	private List<Rotina> rotinas;
+	@Expose
+	private Set<TipoAtividade> tiposAtividade;
+
+	@NotEmpty(message = "Rotina é Obrigatório")
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "vaga", orphanRemoval = true)
+	private Set<Rotina> rotinas;
 
 	public int getId() {
 		return id;
@@ -110,21 +121,21 @@ public class Vaga implements Serializable{
 	}
 
 	public List<TipoAtividade> getTiposAtividade() {
-		return tiposAtividade;
+		return new ArrayList<>(tiposAtividade);
 	}
 
-	public void setTiposAtividade(List<TipoAtividade> tiposAtividade) {
+	public void setTiposAtividade(Set<TipoAtividade> tiposAtividade) {
 		this.tiposAtividade = tiposAtividade;
 	}
 
-	public List<Rotina> getRotinas() {
+	public Set<Rotina> getRotinas() {
 		return rotinas;
 	}
 
-	public void setRotinas(List<Rotina> rotinas) {
+	public void setRotinas(Set<Rotina> rotinas) {
 		this.rotinas = rotinas;
 	}
-	
+
 	public Integer getValorPeriodo() {
 		return valorPeriodo;
 	}
@@ -154,5 +165,5 @@ public class Vaga implements Serializable{
 			return false;
 		return true;
 	}
-	
+
 }

@@ -23,6 +23,8 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.google.gson.annotations.Expose;
+
 import br.com.contratediarista.enuns.TipoPeriodo;
 
 @Entity
@@ -34,38 +36,45 @@ public class Disponibilidade implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
+	@Expose
 	private int id;
 
 	@NotNull(message = "Data é Obrigatório")
 	@Temporal(TemporalType.DATE)
 	@Column(name = "data", nullable = false)
+	@Expose
 	private Date data;
 
 	@NotNull(message = "Usuário é Obrigatório")
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_usuario")
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "uid_usuario")
+	@Expose
 	private Usuario prestador;
 
 	@NotNull(message = "Endereço é Obrigatório")
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_endereco")
 	@Cascade(CascadeType.ALL)
+	@Expose
 	private Endereco endereco;
 
 	@NotNull(message = "Período é Obrigatório")
 	@Column(name = "id_tipo_periodo", nullable = false)
+	@Expose
 	private TipoPeriodo tipoPeriodo;
 
 	@NotNull(message = "Valor do período é Obrigatório")
 	@Column(name = "valor_periodo", nullable = false)
+	@Expose
 	private Integer valorPeriodo;
 
 	@NotEmpty(message = "Tipos de Atividade é Obrigatório")
 	@Cascade(CascadeType.PERSIST)
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "disponibilidade_has_atividade", joinColumns = {
 			@JoinColumn(name = "id_disponibilidade") }, inverseJoinColumns = {
 					@JoinColumn(name = "id_tipo_atividade") })
+	@Expose
 	private List<TipoAtividade> tiposAtividade;
 
 	public int getId() {

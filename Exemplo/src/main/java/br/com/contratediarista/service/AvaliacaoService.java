@@ -35,6 +35,43 @@ public class AvaliacaoService implements Serializable {
 	public AvaliacaoService() {
 
 	}
+	
+	
+	@POST
+	@Path("/avaliar-usuario/{uidAvaliador}/{uidAvaliado}/{nota}/{data}/{observacao}")
+	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
+	public Response avaliarUsuario(
+			@PathParam("uidAvaliador") String uidAvaliador,
+			@PathParam("uidAvaliado") String uidAvaliado,
+			@PathParam("nota") int nota,
+			@PathParam("data") String data,
+			@PathParam("observacao") String observacao) {
+		try {
+			Usuario avaliador = usuarioDao.buscarUsuarioPorChave(uidAvaliador);
+			Usuario avaliado = usuarioDao.buscarUsuarioPorChave(uidAvaliado);
+			Date diaAvaliacao = sdf.parse(data);
+			Avaliacao avaliacao = avaliacaoDao.buscarAvaliacaoSalvaPrestadorContratante(avaliador, avaliado, diaAvaliacao);
+			if(avaliacao == null) {
+				avaliacao = new Avaliacao();
+				avaliacao.setData(diaAvaliacao);
+				avaliacao.setAvaliador(avaliador);
+				avaliacao.setUsuario(avaliado);
+				avaliacao.setObservacao(observacao);
+				avaliacao.setNota(nota);
+				avaliacaoDao.salvar(avaliacao);
+			}
+			else {
+				avaliacao.setNota(nota);
+				avaliacao.setObservacao(observacao);
+				avaliacaoDao.alterar(avaliacao);
+			}
+			return Response.ok().build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+					.build();
+		}
+	}
 
 	@POST
 	@Path("/buscar-avaliacao-salva-prestador-contratante/{uidAvaliador}/{uidAvaliado}/{data}")

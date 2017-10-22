@@ -66,11 +66,18 @@ public class AbstractLazyDataModel<T> extends LazyDataModel<T> {
 					try {
 						String filterProperty = it.next();
 						Object filterValue = filters.get(filterProperty);
-						Field field = tipo.getClass().getDeclaredField(filterProperty);
-						field.setAccessible(true);
-						Object value = field.get(tipo);
-						String fieldValue = String.valueOf(value);
-
+						//Field field = tipo.getClass().getDeclaredField(filterProperty);
+						Field[] fields = tipo.getClass().getDeclaredFields();
+						String fieldValue = null;
+						for(Field f : fields) {
+							if(filterProperty.contains(f.getName())) {
+								System.out.println("");
+								f.setAccessible(true);
+								Object value = f.get(tipo);
+								fieldValue = String.valueOf(value);
+							}
+						}
+						
 						if (filterValue == null || fieldValue.startsWith(filterValue.toString())) {
 							match = true;
 						} else {

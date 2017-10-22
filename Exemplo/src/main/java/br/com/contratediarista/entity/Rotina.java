@@ -1,9 +1,12 @@
 package br.com.contratediarista.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,8 +22,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
+import com.google.gson.annotations.Expose;
 
 import br.com.contratediarista.enuns.DiasSemana;
 
@@ -33,30 +35,35 @@ public class Rotina implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
+	@Expose
 	private int id;
 
 	@NotNull(message = "{Data é obrigatório}")
 	@Temporal(TemporalType.DATE)
 	@Column(name = "data")
+	@Expose
 	private Date data;
 
 	@NotNull(message = "Dia da Semana é Obrigatório")
 	@Column(name = "id_dia_semana", nullable = false)
+	@Expose
 	private DiasSemana diaSemana;
 
 	@NotNull(message = "Vaga é Obrigatório")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_vaga")
+	@Expose
 	private Vaga vaga;
 
-	@Cascade(CascadeType.ALL)
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
 	@JoinTable(name = "rotina_has_prestador", joinColumns = { @JoinColumn(name = "id_rotina") }, inverseJoinColumns = {
-			@JoinColumn(name = "id_usuario") })
-	private List<Usuario> prestadores;
+			@JoinColumn(name = "uid_usuario") })
+	@Expose
+	private Set<Usuario> prestadores;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_usuario")
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "uid_usuario")
+	@Expose
 	private Usuario prestadorSelecionado;
 
 	public int getId() {
@@ -92,10 +99,10 @@ public class Rotina implements Serializable {
 	}
 
 	public List<Usuario> getPrestadores() {
-		return prestadores;
+		return new ArrayList<>(prestadores);
 	}
 
-	public void setPrestadores(List<Usuario> prestadores) {
+	public void setPrestadores(Set<Usuario> prestadores) {
 		this.prestadores = prestadores;
 	}
 

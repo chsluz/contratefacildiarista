@@ -1,10 +1,11 @@
 package br.com.contratediarista.service;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -20,9 +21,12 @@ import javax.ws.rs.core.Response.Status;
 import org.joda.time.LocalDate;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
+import br.com.contratediarista.dao.RotinaDao;
 import br.com.contratediarista.dao.TipoAtividadeDao;
 import br.com.contratediarista.dao.UsuarioDao;
 import br.com.contratediarista.dao.VagaDao;
@@ -36,13 +40,19 @@ import br.com.contratediarista.enuns.TipoPeriodo;
 @RequestScoped
 @Path("/vaga")
 public class VagaService implements Serializable {
+	Type typeRotina = new TypeToken<List<Rotina>>() {
+	}.getType();
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	Gson gson = new Gson();
+	Gson gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat("yyyy-MM-dd").create();
 
 	private static final long serialVersionUID = 1L;
 
 	@Inject
 	private VagaDao vagaDao;
+	
+	@Inject
+	private RotinaDao rotinaDao;
 
 	@Inject
 	TipoAtividadeDao tipoAtividadeDao;
@@ -68,7 +78,6 @@ public class VagaService implements Serializable {
 		}
 	}
 
-	@SuppressWarnings("unlikely-arg-type")
 	@POST
 	@Path("/cadastrar-vaga")
 	public Response cadastrarVaga(String json) {
@@ -143,8 +152,8 @@ public class VagaService implements Serializable {
 			vaga.setValorPeriodo(valorPeriodo);
 			vaga.setDataCadastrada(new Date());
 			vaga.setTipoPeriodo(periodo);
-			vaga.setTiposAtividade(tiposAtividade);
-			vaga.setRotinas(new ArrayList<>());
+			vaga.setTiposAtividade(new HashSet<>(tiposAtividade));
+			vaga.setRotinas(new HashSet<>());
 			LocalDate dataIni = LocalDate.fromDateFields(dataInicial);
 			LocalDate dataFin = LocalDate.fromDateFields(dataFinal);
 			List<Date> dias = new ArrayList<>();
@@ -226,7 +235,7 @@ public class VagaService implements Serializable {
 					}
 				}
 				if (jsonObject.get("periodo") != null) {
-					tipoPeriodo = TipoPeriodo.getFromDescricao(jsonObject.get("periodo").getAsString());
+					tipoPeriodo = TipoPeriodo.getValor(jsonObject.get("periodo").getAsInt());
 				}
 				if (jsonObject.get("tiposAtividade") != null) {
 					JsonArray arrayTiposAtividade = jsonObject.get("tiposAtividade").getAsJsonArray();
@@ -245,10 +254,17 @@ public class VagaService implements Serializable {
 			}
 			List<Rotina> rotinas = vagaDao.buscarRotinasPorDataEValor(dataInicial, dataFinal, valorInicial, valorFinal,
 					tipoPeriodo, tiposAtividades, diasSemanas);
+			
 			if (rotinas.isEmpty()) {
 				return Response.status(Status.NO_CONTENT).build();
 			} else {
-				return Response.status(Status.OK).entity(rotinas).build();
+				List<Rotina> rotinasRestauradas = new ArrayList<>();
+				for(Rotina r : rotinas) {
+					rotinasRestauradas.add(rotinaDao.restoreById(r.getId()));
+				}
+				String retorno = gsonBuilder.toJson(rotinasRestauradas, typeRotina);
+				return Response.status(Status.OK).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+				.entity(gson.fromJson(retorno, typeRotina)).build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

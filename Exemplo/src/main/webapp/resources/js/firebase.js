@@ -28,7 +28,7 @@
 	        else {
 		        console.log('usuario vazio');
 		    }
-		}, 1000);
+		}, 2000);
 	}
 	
 	function logarUser(email,senha) {
