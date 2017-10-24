@@ -60,6 +60,7 @@ public class LoginBean implements Serializable {
 		Boolean login = (Boolean) facesContext.getExternalContext().getSessionMap().get("isFacebook");
 		if(login != null) {
 			isFacebook = login;
+			idUsuario = (String) facesContext.getExternalContext().getSessionMap().get("uidUsuario");
 		}
 		instanciarNovo();
 	}
@@ -67,7 +68,6 @@ public class LoginBean implements Serializable {
 	public void instanciarNovo() {
 		usuario = new Usuario();
 		usuarioLogin = new Usuario();
-		idUsuario = "";
 	}
 	
 	public void logarFacebook() throws IOException {
@@ -80,6 +80,7 @@ public class LoginBean implements Serializable {
 		if(userFacebook == null) {
 			facesContext.getExternalContext().redirect("cadastro_usuario.jsf");
 			facesContext.getExternalContext().getSessionMap().put("isFacebook", true);
+			facesContext.getExternalContext().getSessionMap().put("uidUsuario", idUsuario);
 		}
 		else {
 			logar();
@@ -131,6 +132,9 @@ public class LoginBean implements Serializable {
 				return;
 			}
 			usuario.setEndereco(buscaEnderecoBean.getEndereco());
+			if(idUsuario.equals("")) {
+				throw new Exception("Id usuário vazio");
+			}
 			usuario.setUid(idUsuario);
 			usuarioService.salvar(usuario);
 			instanciarNovo();

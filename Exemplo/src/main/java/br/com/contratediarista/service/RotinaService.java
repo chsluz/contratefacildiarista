@@ -169,10 +169,12 @@ public class RotinaService implements Serializable {
 			Date dataFin = sdf.parse(dataFinal);
 			Usuario usuario = usuarioDao.buscarUsuarioPorChave(uid);
 			List<Rotina> rotinas = rotinaDao.listarRotinasVinculadasPorDataEUsuario(dataIni, dataFin, usuario);
-			if (rotinas != null) {
-				return Response.ok(rotinas).build();
+			if (rotinas.isEmpty()) {
+				return Response.status(Status.NO_CONTENT).build();
 			} else {
-				return Response.noContent().build();
+				String retorno = gsonBuilder.toJson(rotinas, typeRotina);
+				return Response.status(Status.OK).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+				.entity(gsonBuilder.fromJson(retorno, typeRotina)).build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

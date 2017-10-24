@@ -77,7 +77,7 @@ public class Vaga implements Serializable {
 	private Set<TipoAtividade> tiposAtividade;
 
 	@NotEmpty(message = "Rotina é Obrigatório")
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "vaga", orphanRemoval = true)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "vaga")
 	private Set<Rotina> rotinas;
 
 	public int getId() {

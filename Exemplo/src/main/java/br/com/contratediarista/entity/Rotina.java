@@ -118,7 +118,9 @@ public class Rotina implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((diaSemana == null) ? 0 : diaSemana.hashCode());
 		result = prime * result + id;
+		result = prime * result + ((vaga == null) ? 0 : vaga.hashCode());
 		return result;
 	}
 
@@ -131,9 +133,18 @@ public class Rotina implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Rotina other = (Rotina) obj;
+		if (diaSemana != other.diaSemana)
+			return false;
 		if (id != other.id)
+			return false;
+		if (vaga == null) {
+			if (other.vaga != null)
+				return false;
+		} else if (!vaga.equals(other.vaga))
 			return false;
 		return true;
 	}
+
+
 
 }

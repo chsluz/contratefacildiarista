@@ -1,7 +1,9 @@
 package br.com.contratediarista.dao;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -45,7 +47,15 @@ public class RotinaDao implements Serializable {
 	}
 
 	public void excluir(Rotina rotina) throws Exception {
-		rotina.getVaga().getRotinas().remove(rotina);
+		int position = 0;
+		List<Rotina> rotinas = new ArrayList<>(rotina.getVaga().getRotinas());
+		for(Rotina r : rotinas) {
+			if(rotina.getId() == r.getId()) {
+				position = rotinas.indexOf(r);
+			}
+		}
+		rotinas.remove(position);
+		rotina.getVaga().setRotinas(new HashSet<>(rotinas));
 		dao.excluir(rotina);
 	}
 
