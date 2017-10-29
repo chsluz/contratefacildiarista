@@ -97,7 +97,7 @@ public class VisualizarDisponibilidadePrestadorBean implements Serializable {
 			if (response.getStatus() == Status.OK.getStatusCode()) {
 				rotinas = (List<Rotina>) response.getEntity();
 			}
-			if (!rotinas.isEmpty()) {
+			if (rotinas != null && !rotinas.isEmpty()) {
 				for (Rotina r : rotinas) {
 					if (r.getVaga().getTipoPeriodo() == disponibilidade.getTipoPeriodo()) {
 						rotina = r;

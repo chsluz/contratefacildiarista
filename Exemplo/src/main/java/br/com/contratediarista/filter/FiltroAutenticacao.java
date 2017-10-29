@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import br.com.contratediarista.entity.Usuario;
+import br.com.contratediarista.enuns.Ativo;
 import br.com.contratediarista.enuns.TipoUsuario;
 
 @WebFilter("/paginas/*")
@@ -40,6 +41,18 @@ public class FiltroAutenticacao implements Filter {
 			}
 			return;
 		} else {
+			
+			if(hreq.getRequestURI().contains("bloqueado")) {
+				chain.doFilter(request, response);
+				return;
+			}
+			else if(user.getAtivo() == Ativo.NAO) {
+				chain.doFilter(request, response);
+			}
+			if(hreq.getRequestURI().equals("/ContrateDiarista/")) {
+				hres.sendRedirect("paginas/publico/login.jsf");
+				return;
+			}
 			TipoUsuario tipoUsuario = user.getTipoUsuario();
 			if (TipoUsuario.ADMINISTRADOR.equals(tipoUsuario)) {
 				chain.doFilter(request, response);
@@ -64,6 +77,10 @@ public class FiltroAutenticacao implements Filter {
 				}
 				return;
 			} else {
+				if(hreq.getRequestURI().contains("login")) {
+					hres.sendRedirect("../../paginas/moderador/consultar_solicitacao.jsf");
+				}
+				
 				if (hreq.getRequestURI().contains("/moderador/") || hreq.getRequestURI().contains("/publico/")) {
 					chain.doFilter(request, response);
 				} else {

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<ui:composition template="/template/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="corpo">
+		<p:panelGrid columns="1" layout="grid" id="panelTipoAtividade">
+			<h1>#{msg['consultar.solicitacao.reclamacao']}</h1>
+			<p:dataTable var="solicitacao" reflow="true"
+				value="#{consultarSolicitacaoBean.solicitacoes}" paginator="true"
+				rows="10"
+				paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+				rowsPerPageTemplate="5,10,15" id="tableTipoAtividade" lazy="true">
+				<f:facet name="header">
+						Solicitações
+					</f:facet>
+				<p:column style="text-align:center" headerText="Tipo Solicitação">
+					<h:outputText value="#{solicitacao.tipoSolicitacao.descricao}" />
+				</p:column>
+				<p:column style="text-align:center" headerText="Observação">
+					<h:outputText value="#{solicitacao.observacao}" />
+				</p:column>
+				<p:column style="text-align:center" headerText="Usuário">
+					<h:outputText rendered="#{solicitacao.usuario != null}"
+						value="#{solicitacao.usuario.nome}" />
+					<h:outputText rendered="#{solicitacao.usuario == null}" value="" />
+				</p:column>
+
+				<p:column headerText="#{msg['acoes']}" style="text-align:center">
+					<p:panelGrid columns="2" layout="grid">
+						<p:commandButton
+							update="panelTipoAtividade"
+							action="#{consultarSolicitacaoBean.excluir(solicitacao)}"
+							value="remover" />
+						<p:commandButton
+							update="panelTipoAtividade"
+							action="#{consultarSolicitacaoBean.bloquearUsuario(solicitacao)}"
+							rendered="#{solicitacao.usuario != null}" value="bloquear" />
+					</p:panelGrid>
+				</p:column>
+			</p:dataTable>
+		</p:panelGrid>
+	</ui:define>
+</ui:composition>

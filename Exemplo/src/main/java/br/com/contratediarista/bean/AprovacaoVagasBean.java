@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -79,7 +80,9 @@ public class AprovacaoVagasBean implements Serializable {
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			rotina = (Rotina) response.getEntity();
 			if (!rotina.getPrestadores().isEmpty()) {
-				rotina.getPrestadores().remove(prestador);
+				List<Usuario> usuarios = rotina.getPrestadores();
+				usuarios.remove(prestador);
+				rotina.setPrestadores(new HashSet<>(usuarios));
 				response = rotinaService.alterar(rotina);
 				facesContext.getExternalContext().redirect("aprovar_vaga_contratante.jsf");
 				facesContext.getExternalContext().getSessionMap().put("rotina", rotina);

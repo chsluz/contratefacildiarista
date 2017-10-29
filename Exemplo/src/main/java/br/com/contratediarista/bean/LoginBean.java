@@ -2,7 +2,7 @@ package br.com.contratediarista.bean;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response.Status;
 import org.primefaces.context.RequestContext;
 
 import br.com.contratediarista.entity.Usuario;
+import br.com.contratediarista.enuns.Ativo;
 import br.com.contratediarista.enuns.TipoUsuario;
 import br.com.contratediarista.service.UsuarioService;
 import br.com.contratediarista.utils.FacesUtil;
@@ -32,7 +33,7 @@ public class LoginBean implements Serializable {
 
 	@Inject
 	private UsuarioService usuarioService;
-	
+
 	private boolean isFacebook;
 
 	@Inject
@@ -54,11 +55,11 @@ public class LoginBean implements Serializable {
 
 	public LoginBean() {
 	}
-	
+
 	@PostConstruct
 	public void init() {
 		Boolean login = (Boolean) facesContext.getExternalContext().getSessionMap().get("isFacebook");
-		if(login != null) {
+		if (login != null) {
 			isFacebook = login;
 			idUsuario = (String) facesContext.getExternalContext().getSessionMap().get("uidUsuario");
 		}
@@ -69,28 +70,27 @@ public class LoginBean implements Serializable {
 		usuario = new Usuario();
 		usuarioLogin = new Usuario();
 	}
-	
+
 	public void logarFacebook() throws IOException {
 		Usuario userFacebook = null;
 		isFacebook = true;
 		Response response = usuarioService.buscarUsuarioByUid(idUsuario);
-		if(response.getStatus() == Status.OK.getStatusCode()) {
+		if (response.getStatus() == Status.OK.getStatusCode()) {
 			userFacebook = (Usuario) response.getEntity();
 		}
-		if(userFacebook == null) {
+		if (userFacebook == null) {
 			facesContext.getExternalContext().redirect("cadastro_usuario.jsf");
 			facesContext.getExternalContext().getSessionMap().put("isFacebook", true);
 			facesContext.getExternalContext().getSessionMap().put("uidUsuario", idUsuario);
-		}
-		else {
+		} else {
 			logar();
 		}
 	}
-	
+
 	public String getUsuarioLogado() {
 		Usuario usuario = facesUtil.getUsuarioLogado();
-		if(usuario != null) {
-			return "Usuário: " + usuario.getNome(); 
+		if (usuario != null) {
+			return "Usuário: " + usuario.getNome();
 		}
 		return "";
 	}
@@ -100,11 +100,18 @@ public class LoginBean implements Serializable {
 		Response response = usuarioService.buscarUsuarioByUid(idUsuario);
 		if (response.getStatus() == Status.OK.getStatusCode()) {
 			usuarioLogin = (Usuario) response.getEntity();
+
 			if (usuarioLogin != null) {
-				facesContext.getExternalContext().getSessionMap().put("usuario", usuarioLogin);
-				facesContext.getExternalContext().redirect("");
-			}
-			else {
+				if (usuarioLogin.getAtivo() == Ativo.NAO) {
+					RequestContext.getCurrentInstance().execute("deslogarUsuario()");
+					facesContext.getExternalContext().redirect("usuario_bloqueado.jsf");
+					facesContext.getExternalContext().getSessionMap().put("usuario", usuarioLogin);
+				} else {
+					facesContext.getExternalContext().redirect("");
+					facesContext.getExternalContext().getSessionMap().put("usuario", usuarioLogin);
+				}
+
+			} else {
 				facesUtil.exibirMsgErro(facesUtil.getLabel("usuario.nao.cadastrado"));
 				RequestContext.getCurrentInstance().execute("excluirUsuarioFirebaseLogin()");
 			}
@@ -132,7 +139,7 @@ public class LoginBean implements Serializable {
 				return;
 			}
 			usuario.setEndereco(buscaEnderecoBean.getEndereco());
-			if(idUsuario.equals("")) {
+			if (idUsuario.equals("")) {
 				throw new Exception("Id usuário vazio");
 			}
 			usuario.setUid(idUsuario);
@@ -146,12 +153,12 @@ public class LoginBean implements Serializable {
 			facesUtil.exibirMsgErro(facesUtil.getLabel("erro.salvar"));
 		}
 	}
-	
+
 	public Usuario verificarUsuarioJaExistente(String uid) {
 		Response response = usuarioService.buscarUsuarioByUid(uid);
-		if(response.getStatus() == Status.OK.getStatusCode()) {
+		if (response.getStatus() == Status.OK.getStatusCode()) {
 			return (Usuario) response.getEntity();
-		}else {
+		} else {
 			return null;
 		}
 	}
@@ -168,7 +175,9 @@ public class LoginBean implements Serializable {
 	}
 
 	public List<TipoUsuario> getTiposUsuario() {
-		List<TipoUsuario> tipos = Arrays.asList(TipoUsuario.values());
+		List<TipoUsuario> tipos = new ArrayList<>();
+		tipos.add(TipoUsuario.CONTRATANTE);
+		tipos.add(TipoUsuario.PRESTADOR);
 		return tipos;
 	}
 

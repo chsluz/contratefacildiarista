@@ -44,18 +44,35 @@ public class MenuBean implements Serializable {
 			item.setHref("../../paginas/contratante/cadastrar_vaga.jsf");
 			item.setIcon("ui-icon-home");
 			cadastro.addElement(item);
+			
+			item = new DefaultMenuItem(facesUtil.getLabel("tipo.de.atividade"));
+			item.setHref("../../paginas/publico/tipo_atividade.jsf");
+			item.setIcon("ui-icon-home");
+			cadastro.addElement(item);
+			
+			item = new DefaultMenuItem(facesUtil.getLabel("cad.solicitacao"));
+			item.setHref("../../paginas/publico/solicitacao_reclamacao.jsf");
+			item.setIcon("ui-icon-home");
+			cadastro.addElement(item);
 		}
 		if (tipo == TipoUsuario.PRESTADOR) {
 			item = new DefaultMenuItem(facesUtil.getLabel("disponibilidade"));
 			item.setHref("../../paginas/prestador/cadastrar_disponibilidade.jsf");
 			item.setIcon("ui-icon-home");
 			cadastro.addElement(item);
+			
+			item = new DefaultMenuItem(facesUtil.getLabel("tipo.de.atividade"));
+			item.setHref("../../paginas/publico/tipo_atividade.jsf");
+			item.setIcon("ui-icon-home");
+			cadastro.addElement(item);
+			
+			item = new DefaultMenuItem(facesUtil.getLabel("cad.solicitacao"));
+			item.setHref("../../paginas/publico/solicitacao_reclamacao.jsf");
+			item.setIcon("ui-icon-home");
+			cadastro.addElement(item);
 		}
 
-		item = new DefaultMenuItem(facesUtil.getLabel("tipo.de.atividade"));
-		item.setHref("../../paginas/publico/tipo_atividade.jsf");
-		item.setIcon("ui-icon-home");
-		cadastro.addElement(item);
+		
 
 		DefaultSubMenu consulta = new DefaultSubMenu(facesUtil.getLabel("consultar"));
 		if (tipo == TipoUsuario.PRESTADOR) {

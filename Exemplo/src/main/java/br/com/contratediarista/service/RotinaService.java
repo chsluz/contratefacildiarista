@@ -3,6 +3,7 @@ package br.com.contratediarista.service;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -103,7 +104,9 @@ public class RotinaService implements Serializable {
 		try {
 			Usuario usuario = usuarioDao.buscarUsuarioPorChave(uidUsuario);
 			Rotina rotina = rotinaDao.restoreById(idRotina);
-			rotina.getPrestadores().remove(usuario);
+			List<Usuario> usuarios = rotina.getPrestadores();
+			usuarios.remove(usuario);
+			rotina.setPrestadores(new HashSet<>(usuarios));
 			rotinaDao.alterar(rotina);
 			return Response.ok().build();
 		} catch (Exception e) {
@@ -120,10 +123,12 @@ public class RotinaService implements Serializable {
 		try {
 			Usuario usuario = usuarioDao.buscarUsuarioPorChave(uidUsuario);
 			Rotina rotina = rotinaDao.restoreById(idRotina);
-			if(rotina.getPrestadores() == null) {
-				rotina.setPrestadores(new HashSet<>());
+			List<Usuario> usuarios = new ArrayList<>();
+			if(rotina.getPrestadores() != null && !rotina.getPrestadores().isEmpty()) {
+				usuarios.addAll(rotina.getPrestadores());
 			}
-			rotina.getPrestadores().add(usuario);
+			usuarios.add(usuario);
+			rotina.setPrestadores(new HashSet<>(usuarios));
 			rotinaDao.alterar(rotina);
 			return Response.ok().build();
 		} catch (Exception e) {
@@ -216,6 +221,8 @@ public class RotinaService implements Serializable {
 	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
 	public Response excluir(Rotina rotina) {
 		try {
+			rotina.setPrestadores(null);
+			rotina.setPrestadorSelecionado(null);
 			rotinaDao.excluir(rotina);
 			return Response.ok().build();
 		} catch (Exception e) {
@@ -231,6 +238,8 @@ public class RotinaService implements Serializable {
 	public Response excluirRotina(@PathParam("id") int id) {
 		try {
 			Rotina rotina = rotinaDao.restoreById(id);
+			rotina.setPrestadores(null);
+			rotina.setPrestadorSelecionado(null);
 			rotinaDao.excluir(rotina);
 			return Response.ok().build();
 		} catch (Exception e) {

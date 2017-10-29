@@ -18,6 +18,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.primefaces.event.SelectEvent;
 
@@ -25,6 +26,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import br.com.contratediarista.dao.BairroDao;
 import br.com.contratediarista.entity.Bairro;
 import br.com.contratediarista.entity.Cep;
 import br.com.contratediarista.entity.Cidade;
@@ -63,6 +65,9 @@ public class BuscaEnderecoBean implements Serializable {
 
 	@Inject
 	private EstadoService estadoService;
+
+	@Inject
+	private BairroDao bairroDao;
 
 	private Estado estado;
 
@@ -240,20 +245,40 @@ public class BuscaEnderecoBean implements Serializable {
 				Cep cepJson = new Gson().fromJson(jsonResponse, Cep.class);
 				endereco.setRua(cepJson.getLogradouro());
 				Response resultadoEstado = estadoService.restoreBySigla(cepJson.getUf());
-				Response resultadoCidade = cidadeService.restoreByNome(cepJson.getLocalidade());
-				Response resultadoBairro = bairroService.restoreByDescricao(cepJson.getBairro());
-				if (resultadoEstado.getEntity() != null) {
+				if (resultadoEstado.getStatus() == Status.OK.getStatusCode() && resultadoEstado.getEntity() != null) {
 					estado = (Estado) resultadoEstado.getEntity();
+					Response resultadoCidade = cidadeService.restoreByNomeEEstado(cepJson.getLocalidade(),
+							estado.getId());
+					if (resultadoCidade.getStatus() == Status.OK.getStatusCode()
+							&& resultadoCidade.getEntity() != null) {
+						cidade = (Cidade) resultadoCidade.getEntity();
+						Response resultadoBairro = bairroService.restoreByDescricaoCidade(cepJson.getBairro(),
+								cidade.getId());
+						Bairro bairro = null;
+						if (resultadoBairro.getStatus() == Status.OK.getStatusCode()
+								&& resultadoBairro.getEntity() != null) {
+							bairro = (Bairro) resultadoBairro.getEntity();
+						}
+						if (bairro == null) {
+							Bairro novo = new Bairro();
+							novo.setCidade(cidade);
+							novo.setDescricao(cepJson.getBairro());
+							try {
+								bairroDao.salvar(novo);
+								bairro = bairroDao.restoreByDescricaoCidade(cepJson.getBairro(), cidade.getId());
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+						if (bairro != null) {
+							endereco.setBairro(bairro);
+							buscarCoordenadas();
+						}
+					}
 				}
-				if (resultadoCidade.getEntity() != null) {
-					cidade = (Cidade) resultadoCidade.getEntity();
 
-				}
-				if (resultadoBairro.getEntity() != null) {
-					endereco.setBairro((Bairro) resultadoBairro.getEntity());
-				}
 			}
-			buscarCoordenadas();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -261,8 +286,8 @@ public class BuscaEnderecoBean implements Serializable {
 	}
 
 	/***
-	 * Método responsável por buscar as coordenadas do cadastro de endereço ao clicar no botão pesquisar
-	 * da latitude e longitude
+	 * Método responsável por buscar as coordenadas do cadastro de endereço ao
+	 * clicar no botão pesquisar da latitude e longitude
 	 *
 	 * @throws MagicTradeException
 	 */
@@ -274,10 +299,7 @@ public class BuscaEnderecoBean implements Serializable {
 		if (endereco.getBairro().getDescricao() != null) {
 			busca.append(" ").append(endereco.getBairro().getDescricao().trim());
 		}
-		busca.append(" ")
-				.append(cidade.getNome().trim())
-				.append(" ")
-				.append(estado.getSigla().trim());
+		busca.append(" ").append(cidade.getNome().trim()).append(" ").append(estado.getSigla().trim());
 
 		String urlModificada;
 		try {
@@ -290,8 +312,7 @@ public class BuscaEnderecoBean implements Serializable {
 		Client cliente = ClientBuilder.newClient();
 		WebTarget target = cliente.target(url);
 
-		String jsonResponse = target.request()
-				.accept(MediaType.APPLICATION_JSON).get(String.class);
+		String jsonResponse = target.request().accept(MediaType.APPLICATION_JSON).get(String.class);
 
 		if (!jsonResponse.isEmpty() && !jsonResponse.contains("ZERO_RESULTS")) {
 			JsonObject jsonObject = new Gson().fromJson(jsonResponse, JsonObject.class);

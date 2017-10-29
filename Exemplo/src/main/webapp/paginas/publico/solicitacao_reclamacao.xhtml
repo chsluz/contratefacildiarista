@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<ui:composition template="/template/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="corpo">
+		<p:panelGrid columns="1" layout="grid" id="panelReclamacao">
+			<h1>#{msg['cadastro.solicitacao.reclamacao']}</h1>
+			<p:panelGrid layout="grid" columns="2">
+				<h:panelGroup>
+						Tipo Solicitação: 
+						<p:selectOneMenu
+						value="#{cadastrarSolicitacaoBean.solicitacao.tipoSolicitacao}">
+						<f:selectItems
+							value="#{cadastrarSolicitacaoBean.tiposSolicitacao}" var="tipo"
+							itemLabel="#{tipo.descricao}" itemValue="#{tipo}" />
+					</p:selectOneMenu>
+				</h:panelGroup>
+				<h:panelGroup>
+						Usuário: 
+						<p:selectOneMenu
+						converter="usuarioConverter"
+						value="#{cadastrarSolicitacaoBean.solicitacao.usuario}">
+						<f:selectItem itemLabel="Selecione" />
+						<f:selectItems value="#{cadastrarSolicitacaoBean.usuarios}"
+							var="usuario" itemLabel="#{usuario.nome}" itemValue="#{usuario}" />
+					</p:selectOneMenu>
+				</h:panelGroup>
+			</p:panelGrid>
+			<p:panelGrid columns="1" layout="grid">
+				<h:panelGroup>
+						Obeservação: 
+						<p:inputText required="true" requiredMessage="Digite a observação"
+						value="#{cadastrarSolicitacaoBean.solicitacao.observacao}" />
+				</h:panelGroup>
+				<p:commandButton value="Cadastrar"
+					update="panelReclamacao"
+					action="#{cadastrarSolicitacaoBean.salvar()}"
+					style="width:150px;float:right;" />
+			</p:panelGrid>
+		</p:panelGrid>
+	</ui:define>
+</ui:composition>

@@ -24,6 +24,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.google.gson.annotations.Expose;
 
+import br.com.contratediarista.enuns.Ativo;
 import br.com.contratediarista.enuns.TipoUsuario;
 
 @Entity
@@ -56,6 +57,10 @@ public class Usuario implements Serializable {
 	@Column(name = "id_tipo_usuario", nullable = false)
 	@Expose
 	private TipoUsuario tipoUsuario;
+	
+	@Column(name = "ativo")
+	@Expose
+	private Ativo ativo = Ativo.SIM;
 
 	@NotNull(message = "Endereço é Obrigatório")
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -97,6 +102,14 @@ public class Usuario implements Serializable {
 
 	public String getCpf() {
 		return cpf;
+	}
+
+	public Ativo getAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(Ativo ativo) {
+		this.ativo = ativo;
 	}
 
 	public void setCpf(String cpf) {

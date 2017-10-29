@@ -70,5 +70,19 @@ public class CidadeService implements Serializable {
 					.type(MediaType.APPLICATION_JSON + ";charset=UTF-8").build();
 		}
 	}
+	
+	@GET
+	@Path(value = "restore-nome-estado/{nome}/{idEstado}")
+	@Produces({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
+	public Response restoreByNomeEEstado(@PathParam(value = "nome") String nome,@PathParam("idEstado") int idEstado) {
+		try {
+			Cidade cidade = cidadeDao.restoreByNomeEstado(nome, idEstado);
+			return Response.ok(cidade).build();
+		} catch (Exception e) {
+			return Response.status(INTERNAL_SERVER_ERROR)
+					.type(MediaType.APPLICATION_JSON + ";charset=UTF-8").build();
+		}
+	}
+	
 
 }

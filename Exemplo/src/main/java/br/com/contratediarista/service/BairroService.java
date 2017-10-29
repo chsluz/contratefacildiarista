@@ -69,5 +69,18 @@ public class BairroService implements Serializable {
 					.type(MediaType.APPLICATION_JSON + ";charset=UTF-8").build();
 		}
 	}
+	
+	@GET
+	@Path(value = "restore-descricao-cidade/{descricao}/{idCidade}")
+	@Produces({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
+	public Response restoreByDescricaoCidade(@PathParam(value = "descricao") String descricao,@PathParam(value = "idCidade") int idCidade) {
+		try {
+			Bairro bairro = bairroDao.restoreByDescricaoCidade(descricao, idCidade);
+			return Response.ok(bairro).build();
+		} catch (Exception e) {
+			return Response.status(INTERNAL_SERVER_ERROR)
+					.type(MediaType.APPLICATION_JSON + ";charset=UTF-8").build();
+		}
+	}
 
 }
