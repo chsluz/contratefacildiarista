@@ -50,7 +50,7 @@ public class VagaService implements Serializable {
 
 	@Inject
 	private VagaDao vagaDao;
-	
+
 	@Inject
 	private RotinaDao rotinaDao;
 
@@ -96,7 +96,7 @@ public class VagaService implements Serializable {
 				String uidUsuario = jsonObject.get("uid").getAsString();
 				usuario = usuarioDao.buscarUsuarioPorChave(uidUsuario);
 			}
-			if(jsonObject.get("valorPeriodo") != null) {
+			if (jsonObject.get("valorPeriodo") != null) {
 				valorPeriodo = jsonObject.get("valorPeriodo").getAsInt();
 			}
 			if (jsonObject.get("dataInicial") != null) {
@@ -143,9 +143,9 @@ public class VagaService implements Serializable {
 					}
 				}
 			}
-			
-			if(tiposAtividade.isEmpty()) {
-			 	tiposAtividade.addAll(tipoAtividadeDao.listarTodos());
+
+			if (tiposAtividade.isEmpty()) {
+				tiposAtividade.addAll(tipoAtividadeDao.listarTodos());
 			}
 			vaga.setEndereco(usuario.getEndereco());
 			vaga.setContratante(usuario);
@@ -161,6 +161,7 @@ public class VagaService implements Serializable {
 				dias.add(data.toDate());
 			}
 			dias.add(dataFin.toDate());
+			HashSet<Rotina> rotinas = new HashSet<>();
 			for (Date data : dias) {
 				LocalDate dataSelecionada = LocalDate.fromDateFields(data);
 				DiasSemana diaSemana = DiasSemana.getValor(dataSelecionada.getDayOfWeek());
@@ -169,9 +170,10 @@ public class VagaService implements Serializable {
 					rotina.setData(data);
 					rotina.setDiaSemana(diaSemana);
 					rotina.setVaga(vaga);
-					vaga.getRotinas().add(rotina);
+					rotinas.add(rotina);
 				}
 			}
+			vaga.setRotinas(rotinas);
 			vagaDao.salvar(vaga);
 			return Response.ok().build();
 		} catch (Exception e) {
@@ -210,8 +212,12 @@ public class VagaService implements Serializable {
 			TipoPeriodo tipoPeriodo = null;
 			List<TipoAtividade> tiposAtividades = null;
 			List<DiasSemana> diasSemanas = null;
+			Usuario usuario = null;
 			JsonObject jsonObject = new Gson().fromJson(json, JsonObject.class);
 			if (jsonObject != null) {
+				if (jsonObject.get("uid") != null) {
+					usuario = usuarioDao.buscarUsuarioPorChave(jsonObject.get("uid").getAsString());
+				}
 				if (jsonObject.get("dataInicial") != null) {
 					dataInicial = sdf.parse(jsonObject.get("dataInicial").getAsString());
 				}
@@ -254,17 +260,23 @@ public class VagaService implements Serializable {
 			}
 			List<Rotina> rotinas = vagaDao.buscarRotinasPorDataEValor(dataInicial, dataFinal, valorInicial, valorFinal,
 					tipoPeriodo, tiposAtividades, diasSemanas);
-			
+
 			if (rotinas.isEmpty()) {
 				return Response.status(Status.NO_CONTENT).build();
 			} else {
 				List<Rotina> rotinasRestauradas = new ArrayList<>();
-				for(Rotina r : rotinas) {
-					rotinasRestauradas.add(rotinaDao.restoreById(r.getId()));
+				for (Rotina r : rotinas) {
+					Rotina restaurada = rotinaDao.restoreById(r.getId());
+					if (!restaurada.getPrestadores().contains(usuario)) {
+						rotinasRestauradas.add(restaurada);
+					}
 				}
-				String retorno = gsonBuilder.toJson(rotinasRestauradas, typeRotina);
+				if(rotinasRestauradas.size() <= 0) {
+					return Response.status(Status.NO_CONTENT).build();
+				}
+ 				String retorno = gsonBuilder.toJson(rotinasRestauradas, typeRotina);
 				return Response.status(Status.OK).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-				.entity(gson.fromJson(retorno, typeRotina)).build();
+						.entity(gson.fromJson(retorno, typeRotina)).build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

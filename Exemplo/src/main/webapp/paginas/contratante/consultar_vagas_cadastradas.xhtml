@@ -7,7 +7,7 @@
 	xmlns:p="http://primefaces.org/ui">
 	<ui:define name="corpo">
 		<p:panelGrid columns="1" id="panelAprovacaoVaga" layout="grid">
-			<h1>#{msg['aprovacao.vaga']}</h1>
+			<h1>Consultar vagas cadastradas</h1>
 			<p:panelGrid columns="4" layout="grid"
 				columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-2,ui-grid-col-2">
 				<h:panelGroup>
@@ -28,7 +28,7 @@
 				</h:panelGroup>
 				<h:panelGroup />
 				<p:commandButton value="Buscar" update="panelTableVaga"
-					action="#{aprovacaoVagasBean.buscarRotinasParaAprovacao()}" />
+					action="#{aprovacaoVagasBean.buscarRotinas()}" />
 			</p:panelGrid>
 			<p:panelGrid columns="1" layout="grid" id="panelTableVaga">
 				<p:dataTable var="rotina"
@@ -54,7 +54,7 @@
 						<h:outputText value="#{rotina.vaga.tipoPeriodo.descricao}" />
 					</p:column>
 					<p:column headerText="#{msg['valor.periodo.reais']}"
-						style="text-align:center" >
+						style="text-align:center">
 						<h:outputText value="#{rotina.vaga.valorPeriodo} Reais" />
 					</p:column>
 					<p:column headerText="Candidatos" style="text-align:center">
@@ -73,8 +73,8 @@
 						</ui:repeat>
 					</p:column>
 					<p:column headerText="#{msg['acoes']}">
-						<p:commandButton action="#{aprovacaoVagasBean.editar(rotina)}"
-							value="#{msg['editar']}" />
+						<p:commandButton value="#{msg['excluir']}" update="panelTableVaga"
+							action="#{aprovacaoVagasBean.excluir(rotina)}" />
 					</p:column>
 				</p:dataTable>
 			</p:panelGrid>

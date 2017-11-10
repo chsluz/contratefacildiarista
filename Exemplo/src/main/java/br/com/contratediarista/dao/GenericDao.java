@@ -115,6 +115,7 @@ public class GenericDao<T> implements Serializable {
 		try {
 			em.getTransaction().begin();
 			em.remove(t);
+			em.flush();
 			em.getTransaction().commit();
 		} catch (Exception e) {
 			e.printStackTrace();

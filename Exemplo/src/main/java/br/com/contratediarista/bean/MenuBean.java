@@ -80,8 +80,12 @@ public class MenuBean implements Serializable {
 			item.setHref("../../paginas/prestador/consultar_vaga.jsf");
 			item.setIcon("ui-icon-home");
 			consulta.addElement(item);
+			item = new DefaultMenuItem("Vagas Pretendidas");
+			item.setHref("../../paginas/prestador/visualizar_vagas_ja_candidato.jsf");
+			item.setIcon("ui-icon-home");
+			consulta.addElement(item);
 
-			item = new DefaultMenuItem(facesUtil.getLabel("vagas.vinculadas"));
+			item = new DefaultMenuItem("Minha Agenda");
 			item.setHref("../../paginas/prestador/visualizar_vagas_vinculadas.jsf");
 			item.setIcon("ui-icon-home");
 			consulta.addElement(item);
@@ -97,13 +101,18 @@ public class MenuBean implements Serializable {
 			item.setHref("../../paginas/contratante/aprovacao_vaga.jsf");
 			item.setIcon("ui-icon-home");
 			consulta.addElement(item);
+			
+			item = new DefaultMenuItem("Vagas cadastradas");
+			item.setHref("../../paginas/contratante/consultar_vagas_cadastradas.jsf");
+			item.setIcon("ui-icon-home");
+			consulta.addElement(item);
 
 			item = new DefaultMenuItem(facesUtil.getLabel("disponibilidade.prestador"));
 			item.setHref("../../paginas/contratante/visualizar_disponibilidade_prestador.jsf");
 			item.setIcon("ui-icon-home");
 			consulta.addElement(item);
 			
-			item = new DefaultMenuItem(facesUtil.getLabel("calendario"));
+			item = new DefaultMenuItem("Minha Agenda");
 			item.setHref("../../paginas/contratante/visualizar_vagas_prestador_aprovado.jsf");
 			item.setIcon("ui-icon-home");
 			consulta.addElement(item);

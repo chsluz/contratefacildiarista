@@ -53,6 +53,10 @@ public class LoginBean implements Serializable {
 
 	private String msgErro;
 
+	private String email;
+	private String senha;
+	private String msgErroRedefinirSenha;
+
 	public LoginBean() {
 	}
 
@@ -126,7 +130,11 @@ public class LoginBean implements Serializable {
 	}
 
 	public void exibirMensagemErro() {
-		facesUtil.exibirMsgErro(msgErro);
+		if (msgErro.equals("auth/weak-password")) {
+			facesUtil.exibirMsgErro("Senha deve conter no mínimo 6 dígitos");
+		} else {
+			facesUtil.exibirMsgErro(msgErro);
+		}
 	}
 
 	public void salvar() throws Exception {
@@ -161,6 +169,21 @@ public class LoginBean implements Serializable {
 		} else {
 			return null;
 		}
+	}
+
+	public void sucessoRedefinirSenha() {
+		facesUtil.exibirMsgSucesso("Verifique seu email para alterar sua senha.");
+	}
+
+	public void erroRedefinirSenha() {
+		String msg = msgErroRedefinirSenha;
+		if(msgErroRedefinirSenha.equals("auth/user-not-found")) {
+			msg = "Email não cadastrado";
+		}
+		else if(msgErroRedefinirSenha.equals("auth/invalid-email")) {
+			msg = "Email inválido";
+		}
+		facesUtil.exibirMsgErro(msg);
 	}
 
 	public void cadastrarNovo() throws IOException {
@@ -219,6 +242,30 @@ public class LoginBean implements Serializable {
 
 	public void setFacebook(boolean isFacebook) {
 		this.isFacebook = isFacebook;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
+	public String getMsgErroRedefinirSenha() {
+		return msgErroRedefinirSenha;
+	}
+
+	public void setMsgErroRedefinirSenha(String msgErroRedefinirSenha) {
+		this.msgErroRedefinirSenha = msgErroRedefinirSenha;
 	}
 
 }

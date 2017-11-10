@@ -53,6 +53,7 @@ public class DisponibilidadeDao implements Serializable {
 		try {
 			StringBuilder sql = new StringBuilder(" SELECT d FROM Disponibilidade d ");
 			sql.append(" WHERE d.data BETWEEN :dataInicial AND :dataFinal ").append(" AND d.prestador = :usuario ");
+			sql.append(" ORDER BY d.data ");
 			Query query = em.createQuery(sql.toString(), Disponibilidade.class);
 			query.setParameter("dataInicial", dataInicial);
 			query.setParameter("dataFinal", dataFinal);

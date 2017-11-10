@@ -16,8 +16,11 @@ import javax.inject.Named;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.joda.time.LocalDate;
+
 import br.com.contratediarista.entity.Rotina;
 import br.com.contratediarista.entity.Usuario;
+import br.com.contratediarista.enuns.DiasSemana;
 import br.com.contratediarista.enuns.TipoPeriodo;
 import br.com.contratediarista.service.RotinaService;
 import br.com.contratediarista.service.UsuarioService;
@@ -100,6 +103,28 @@ public class AprovacaoVagasBean implements Serializable {
 					sdf.format(dataFinal));
 			if (response.getStatus() == Status.OK.getStatusCode()) {
 				rotinas = (List<Rotina>) response.getEntity();
+			}
+		}
+	}
+	
+	
+	public DiasSemana buscarDiaDaSemana(Rotina rotina) {
+		LocalDate dataSelecionada = LocalDate.fromDateFields(rotina.getData());
+		DiasSemana diaSemana = DiasSemana.getValor(dataSelecionada.getDayOfWeek());
+		return diaSemana;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void buscarRotinasParaAprovacao() {
+		rotinas = new ArrayList<Rotina>();
+		if (usuarioLogado != null) {
+			Response response = rotinaService.buscarVagasParaAprovacao(usuarioLogado.getUid(), sdf.format(dataInicial),
+					sdf.format(dataFinal));
+			if (response.getStatus() == Status.OK.getStatusCode()) {
+				rotinas = (List<Rotina>) response.getEntity();
+			}
+			else if(response.getStatus() == Status.NO_CONTENT.getStatusCode()) {
+				facesUtil.exibirMsgWarning("Nenhuma vaga encontrada para aprovação");
 			}
 		}
 	}

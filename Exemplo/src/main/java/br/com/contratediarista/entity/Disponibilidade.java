@@ -69,7 +69,6 @@ public class Disponibilidade implements Serializable {
 	private Integer valorPeriodo;
 
 	@NotEmpty(message = "Tipos de Atividade é Obrigatório")
-	@Cascade(CascadeType.PERSIST)
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "disponibilidade_has_atividade", joinColumns = {
 			@JoinColumn(name = "id_disponibilidade") }, inverseJoinColumns = {
@@ -154,6 +153,5 @@ public class Disponibilidade implements Serializable {
 			return false;
 		return true;
 	}
-	
 
 }

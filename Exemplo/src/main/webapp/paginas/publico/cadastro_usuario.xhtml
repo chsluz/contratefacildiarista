@@ -26,19 +26,16 @@
 					<p:panelGrid id="panelCadastro" layout="grid"
 						columnClasses="ui-grid-col-12" style="overflow:auto;" columns="1">
 						<p:fieldset legend="#{msg['dados.usuario']}">
-							<p:panelGrid columns="2"
-								layout="grid">
+							<p:panelGrid columns="2" layout="grid">
 								<h:panelGroup rendered="#{!loginBean.facebook}" id="groupEmail">
 									<h:outputText value="#{msg['email']}:" />
-									<p:inputText required="true"
-										requiredMessage="#{msg['email.obrigatorio']}"
-										id="emailCadastro" placeholder="teste@teste.com" />
+									<p:inputText value="#{loginBean.email}" id="emailCadastro"
+										placeholder="teste@teste.com" />
 								</h:panelGroup>
 								<h:panelGroup rendered="#{!loginBean.facebook}" id="groupSenha">
 									<h:outputText value="#{msg['senha']}:" />
-									<p:password required="true"
-										requiredMessage="#{msg['senha.obrigatorio']}"
-										id="senhaCadastro" placeholder="********" />
+									<p:password value="#{loginBean.senha}" id="senhaCadastro"
+										placeholder="********" />
 								</h:panelGroup>
 								<h:panelGroup id="groupNome">
 									<h:outputText value="#{msg['nome']}:" />
@@ -154,18 +151,12 @@
 									<h:outputText value="Complemento:" />
 									<p:inputText value="#{buscaEnderecoBean.endereco.complemento}" />
 								</h:panelGroup>
-								<p:spacer />
-								<h:panelGroup id="groupLatitude">
-									<h:outputText value="Latitude:" />
-									<p:inputText id="latitude"
-										value="#{buscaEnderecoBean.endereco.latitude}" />
-								</h:panelGroup>
-								<h:panelGroup id="groupLongitude">
-									<h:outputText value="Longitude:" />
-									<p:inputText id="longitude"
-										value="#{buscaEnderecoBean.endereco.longitude}" />
-								</h:panelGroup>
+								<h:inputHidden id="latitude"
+									value="#{buscaEnderecoBean.endereco.latitude}" />
+								<h:inputHidden id="longitude"
+									value="#{buscaEnderecoBean.endereco.longitude}" />
 							</p:panelGrid>
+
 						</p:fieldset>
 						<h:panelGrid columns="2">
 							<p:commandButton value="Cancelar"

@@ -49,8 +49,8 @@ public class RotinaDao implements Serializable {
 	public void excluir(Rotina rotina) throws Exception {
 		int position = 0;
 		List<Rotina> rotinas = new ArrayList<>(rotina.getVaga().getRotinas());
-		for(Rotina r : rotinas) {
-			if(rotina.getId() == r.getId()) {
+		for (Rotina r : rotinas) {
+			if (rotina.getId() == r.getId()) {
 				position = rotinas.indexOf(r);
 			}
 		}
@@ -78,8 +78,44 @@ public class RotinaDao implements Serializable {
 	public List<Rotina> listarRotinasPorDataEUsuario(Date dataInicial, Date dataFinal, Usuario usuario) {
 		try {
 			StringBuilder sql = new StringBuilder(" SELECT r FROM  Rotina r ");
-			sql.append(" JOIN r.vaga v ").append(" WHERE r.data BETWEEN :dataInicial AND :dataFinal ")
-					.append(" AND v.contratante = :usuario ");
+			sql.append("JOIN r.vaga v ").append(" WHERE r.data BETWEEN :dataInicial AND :dataFinal ")
+					.append(" AND v.contratante = :usuario ").append(" ORDER BY r.data ");
+			Query query = em.createQuery(sql.toString(), Rotina.class);
+			query.setParameter("dataInicial", dataInicial);
+			query.setParameter("dataFinal", dataFinal);
+			query.setParameter("usuario", usuario);
+			return query.getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public List<Rotina> listarRotinasJaCandidatou(Date dataInicial, Usuario usuario) {
+		try {
+			StringBuilder sql = new StringBuilder(" SELECT r FROM Rotina r ")
+					.append(" JOIN r.prestadores p ")
+					.append(" WHERE r.data > :dataInicial ")
+					.append(" AND p = :usuario")
+					.append(" ORDER BY r.data ");
+			Query query = em.createQuery(sql.toString(), Rotina.class);
+			query.setParameter("dataInicial", dataInicial);
+			query.setParameter("usuario", usuario);
+			return (List<Rotina>) query.getResultList();
+		} catch (Exception e) {
+			System.out.println(e);
+			return null;
+		}
+	}
+
+	public List<Rotina> listarRotinasParaAprovacao(Date dataInicial, Date dataFinal, Usuario usuario) {
+		try {
+			StringBuilder sql = new StringBuilder(" SELECT r FROM  Rotina r ");
+			sql.append(" JOIN r.vaga v ")
+			.append(" JOIN r.prestadores p ")
+			.append(" WHERE r.data BETWEEN :dataInicial AND :dataFinal ")
+			.append(" AND v.contratante = :usuario ")
+			.append(" ORDER BY r.data ");
 			Query query = em.createQuery(sql.toString(), Rotina.class);
 			query.setParameter("dataInicial", dataInicial);
 			query.setParameter("dataFinal", dataFinal);
@@ -95,8 +131,7 @@ public class RotinaDao implements Serializable {
 		try {
 			StringBuilder sql = new StringBuilder(" SELECT r FROM  Rotina r ");
 			sql.append(" JOIN r.vaga v ").append(" WHERE r.data BETWEEN :dataInicial AND :dataFinal ")
-					.append(" AND v.contratante = :usuario ")
-					.append(" AND r.prestadorSelecionado IS NOT NULL ");
+					.append(" AND v.contratante = :usuario ").append(" AND r.prestadorSelecionado IS NOT NULL ");
 			Query query = em.createQuery(sql.toString(), Rotina.class);
 			query.setParameter("dataInicial", dataIni);
 			query.setParameter("dataFinal", dataFin);

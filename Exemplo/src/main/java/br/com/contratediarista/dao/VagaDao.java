@@ -59,16 +59,17 @@ public class VagaDao implements Serializable {
 			sql.append(" JOIN v.rotinas r ").append(" JOIN v.tiposAtividade at ")
 					.append(" WHERE v.valorPeriodo BETWEEN :valorInicial AND :valorFinal ")
 					.append(" AND r.data BETWEEN :dataInicial AND :dataFinal ");
-
 			if (periodo != null) {
 				sql.append(" AND v.tipoPeriodo = :tipoPeriodo ");
 			}
-			if (diasSemana != null) {
+			if (diasSemana != null && !diasSemana.isEmpty()) {
 				sql.append(" AND r.diaSemana IN :diasSemana ");
 			}
 			if (tiposAtividade != null) {
 				sql.append(" AND at IN :tiposAtividade ");
 			}
+			
+			sql.append(" ORDER BY r.data ");
 			Query query = em.createQuery(sql.toString(), Rotina.class);
 			query.setParameter("valorInicial", valorInicial);
 			query.setParameter("valorFinal", valorFinal);

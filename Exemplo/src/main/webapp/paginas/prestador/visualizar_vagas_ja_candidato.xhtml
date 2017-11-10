@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<ui:composition template="/template/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="corpo">
+		<p:panelGrid id="panelConsultarVaga" columns="1" layout="grid">
+			<h1>Visualizar vagas que já candidatou-se</h1>
+			<p:panelGrid columns="1" layout="grid" id="panelTableVaga">
+				<p:dataTable var="rotina"
+					rendered="#{not empty visualizarVagasJaCandidatouBean.rotinas}"
+					reflow="true" value="#{visualizarVagasJaCandidatouBean.rotinas}"
+					paginator="true" rows="10"
+					paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+					rowsPerPageTemplate="5,10,15" id="tableVaga" lazy="true">
+					<f:facet name="header">
+						#{msg['vagas']}
+					</f:facet>
+					<p:column headerText="#{msg['contratante']}"
+						style="text-align:center">
+						<h:outputText value="#{rotina.vaga.contratante.nome}" />
+					</p:column>
+					<p:column headerText="#{msg['avaliacao']}"
+						style="text-align:center">
+						<h:outputText
+							value="#{rotina.vaga.contratante.mediaAprovacaoUsuario}" />
+					</p:column>
+					<p:column headerText="#{msg['qtde.avaliacao']}"
+						style="text-align:center">
+						<h:outputText
+							value="#{rotina.vaga.contratante.quantidadeAvaliacoesUsuario}" />
+					</p:column>
+					<p:column headerText="#{msg['data']}" style="text-align:center">
+						<h:outputText value="#{rotina.data}">
+							<f:convertDateTime timeZone="pt_BR" pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="#{msg['dia.semana']}"
+						style="text-align:center">
+						<h:outputText
+							value="#{visualizarVagasJaCandidatouBean.buscarDiaDaSemana(rotina).descricao}" />
+					</p:column>
+					<p:column headerText="#{msg['tipo.periodo']}"
+						style="text-align:center">
+						<h:outputText value="#{rotina.vaga.tipoPeriodo.descricao}" />
+					</p:column>
+					<p:column headerText="#{msg['valor.periodo.reais']}">
+						<h:outputText value="#{rotina.vaga.valorPeriodo} Reais" />
+					</p:column>
+					<p:column headerText="Selecionado">
+						<h:outputText
+							value="#{visualizarVagasJaCandidatouBean.jaSelecionado(rotina)}" />
+					</p:column>
+					<p:column headerText="#{msg['atividades']}"
+						style="text-align:center">
+						<ui:repeat var="atividade" value="#{rotina.vaga.tiposAtividade}">
+							<h:outputText value="#{atividade.descricao}" />
+							<br />
+						</ui:repeat>
+					</p:column>
+					<p:column headerText="#{msg['acoes']}">
+						<h:panelGroup>
+							<p:commandButton icon="	ui-icon-info"
+								style="width:35px;height:35px;"
+								action="#{visualizarVagasJaCandidatouBean.visualizar(rotina)}">
+							</p:commandButton>
+							<p:commandButton icon="	ui-icon-trash"
+								style="width:35px;height:35px;"
+								update="panelTableVaga"
+								action="#{visualizarVagasJaCandidatouBean.excluir(rotina)}">
+							</p:commandButton>
+						</h:panelGroup>
+
+					</p:column>
+				</p:dataTable>
+			</p:panelGrid>
+		</p:panelGrid>
+	</ui:define>
+</ui:composition>

@@ -70,7 +70,7 @@ public class Vaga implements Serializable {
 	private Integer valorPeriodo;
 
 	@NotEmpty(message = "Tipos de Atividade é Obrigatório")
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "vaga_has_atividade", joinColumns = { @JoinColumn(name = "id_vaga") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_tipo_atividade") })
 	@Expose
@@ -120,6 +120,7 @@ public class Vaga implements Serializable {
 		this.tipoPeriodo = tipoPeriodo;
 	}
 
+	
 	public List<TipoAtividade> getTiposAtividade() {
 		return new ArrayList<>(tiposAtividade);
 	}
@@ -128,8 +129,8 @@ public class Vaga implements Serializable {
 		this.tiposAtividade = tiposAtividade;
 	}
 
-	public Set<Rotina> getRotinas() {
-		return rotinas;
+	public List<Rotina> getRotinas() {
+		return new ArrayList<>(rotinas);
 	}
 
 	public void setRotinas(Set<Rotina> rotinas) {

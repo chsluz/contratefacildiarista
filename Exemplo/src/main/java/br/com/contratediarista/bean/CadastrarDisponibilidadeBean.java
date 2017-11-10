@@ -99,10 +99,10 @@ public class CadastrarDisponibilidadeBean implements Serializable{
 		}
 		Response response = disponibilidadeService.salvar(disponibilidade);
 		if (response.getStatus() == Status.OK.getStatusCode()) {
-			instanciarNovo();
-			facesUtil.exibirMsgSucesso(facesUtil.getLabel("salvo.sucesso"));
+			instanciarNovo();	
+			facesUtil.exibirMsgSucesso("Disponibilidade salva com sucesso.");
 		} else {
-			facesUtil.exibirMsgErro(facesUtil.getLabel("erro.salvar"));
+			facesUtil.exibirMsgErro("Erro ao salvar disponibilidade.");
 		}
 	}
 	

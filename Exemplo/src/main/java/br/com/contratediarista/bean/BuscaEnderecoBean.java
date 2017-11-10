@@ -321,6 +321,8 @@ public class BuscaEnderecoBean implements Serializable {
 			JsonElement location = geometry.getAsJsonObject().get("location");
 			endereco.setLatitude(location.getAsJsonObject().get("lat").getAsDouble());
 			endereco.setLongitude(location.getAsJsonObject().get("lng").getAsDouble());
+			System.out.println(endereco.getLatitude());
+			System.out.println(endereco.getLongitude());
 		}
 	}
 

@@ -65,6 +65,29 @@ public class RotinaService implements Serializable {
 	}
 	
 	@POST
+	@Path("/listar-rotinas-ja-candidatou/{dataInicial}/{uidUsuario}")
+	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
+	public Response listarRotinasJaCandidatou(@PathParam("dataInicial")String dataInicial,@PathParam("uidUsuario")String uidUsuario) {
+		try {
+			Date dataIni = sdf.parse(dataInicial);
+			Usuario usuario = usuarioDao.buscarUsuarioPorChave(uidUsuario);
+			List<Rotina> rotinas = rotinaDao.listarRotinasJaCandidatou(dataIni, usuario);
+			if (rotinas.isEmpty()) {
+				return Response.status(Status.NO_CONTENT).build();
+			} else {
+				String retorno = gsonBuilder.toJson(rotinas, typeRotina);
+				return Response.status(Status.OK).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+						.entity(gsonBuilder.fromJson(retorno, typeRotina)).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+					.build();
+		}
+		
+	}
+
+	@POST
 	@Path("/remover-prestador-selecionado/{idRotina}")
 	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
 	public Response removerPrestadorSelecionado(@PathParam("idRotina") int idRotina) {
@@ -79,11 +102,12 @@ public class RotinaService implements Serializable {
 					.build();
 		}
 	}
-	
+
 	@POST
 	@Path("/alterar-prestador-selecionado/{idRotina}/{uidUsuario}")
 	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
-	public Response alterarPrestadorSelecionado(@PathParam("idRotina") int idRotina,@PathParam("uidUsuario") String uidUsuario) {
+	public Response alterarPrestadorSelecionado(@PathParam("idRotina") int idRotina,
+			@PathParam("uidUsuario") String uidUsuario) {
 		try {
 			Usuario usuario = usuarioDao.buscarUsuarioPorChave(uidUsuario);
 			Rotina rotina = rotinaDao.restoreById(idRotina);
@@ -96,11 +120,12 @@ public class RotinaService implements Serializable {
 					.build();
 		}
 	}
-	
+
 	@POST
 	@Path("/remover-lista-prestador/{idRotina}/{uidUsuario}")
 	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
-	public Response removerListaPrestador(@PathParam("idRotina") int idRotina,@PathParam("uidUsuario") String uidUsuario) {
+	public Response removerListaPrestador(@PathParam("idRotina") int idRotina,
+			@PathParam("uidUsuario") String uidUsuario) {
 		try {
 			Usuario usuario = usuarioDao.buscarUsuarioPorChave(uidUsuario);
 			Rotina rotina = rotinaDao.restoreById(idRotina);
@@ -115,16 +140,17 @@ public class RotinaService implements Serializable {
 					.build();
 		}
 	}
-	
+
 	@POST
 	@Path("/candidatar-vaga/{uidUsuario}/{idRotina}")
 	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
-	public Response candidatarSeRotinaUsuario(@PathParam("uidUsuario") String uidUsuario,@PathParam("idRotina") int idRotina) {
+	public Response candidatarSeRotinaUsuario(@PathParam("uidUsuario") String uidUsuario,
+			@PathParam("idRotina") int idRotina) {
 		try {
 			Usuario usuario = usuarioDao.buscarUsuarioPorChave(uidUsuario);
 			Rotina rotina = rotinaDao.restoreById(idRotina);
 			List<Usuario> usuarios = new ArrayList<>();
-			if(rotina.getPrestadores() != null && !rotina.getPrestadores().isEmpty()) {
+			if (rotina.getPrestadores() != null && !rotina.getPrestadores().isEmpty()) {
 				usuarios.addAll(rotina.getPrestadores());
 			}
 			usuarios.add(usuario);
@@ -136,7 +162,7 @@ public class RotinaService implements Serializable {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")
 					.build();
 		}
-		
+
 	}
 
 	@POST
@@ -149,13 +175,13 @@ public class RotinaService implements Serializable {
 			Date dataFin = sdf.parse(dataFinal);
 			Usuario usuario = usuarioDao.buscarUsuarioPorChave(uid);
 			List<Rotina> rotinas = rotinaDao.listarRotinasPorDataEUsuario(dataIni, dataFin, usuario);
-			
+
 			if (rotinas.isEmpty()) {
 				return Response.status(Status.NO_CONTENT).build();
 			} else {
 				String retorno = gsonBuilder.toJson(rotinas, typeRotina);
 				return Response.status(Status.OK).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-				.entity(gsonBuilder.fromJson(retorno, typeRotina)).build();
+						.entity(gsonBuilder.fromJson(retorno, typeRotina)).build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -163,7 +189,31 @@ public class RotinaService implements Serializable {
 					.build();
 		}
 	}
-	
+
+	@POST
+	@Path("/buscar-rotinas-para-aprovacao/{uid}/{dataInicial}/{dataFinal}")
+	public Response buscarVagasParaAprovacao(@PathParam(value = "uid") String uid,
+			@PathParam(value = "dataInicial") String dataInicial, @PathParam(value = "dataFinal") String dataFinal) {
+		try {
+			Date dataIni = sdf.parse(dataInicial);
+			Date dataFin = sdf.parse(dataFinal);
+			Usuario usuario = usuarioDao.buscarUsuarioPorChave(uid);
+			List<Rotina> rotinas = rotinaDao.listarRotinasParaAprovacao(dataIni, dataFin, usuario);
+			if (rotinas.isEmpty()) {
+				return Response.status(Status.NO_CONTENT).build();
+			} else {
+				String retorno = gsonBuilder.toJson(rotinas, typeRotina);
+				return Response.status(Status.OK).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+						.entity(gsonBuilder.fromJson(retorno, typeRotina)).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+					.build();
+		}
+
+	}
+
 	@POST
 	@Path("/buscar-rotinas-vinculadas/{uid}/{dataInicial}/{dataFinal}")
 	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
@@ -179,7 +229,7 @@ public class RotinaService implements Serializable {
 			} else {
 				String retorno = gsonBuilder.toJson(rotinas, typeRotina);
 				return Response.status(Status.OK).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-				.entity(gsonBuilder.fromJson(retorno, typeRotina)).build();
+						.entity(gsonBuilder.fromJson(retorno, typeRotina)).build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -231,7 +281,7 @@ public class RotinaService implements Serializable {
 					.build();
 		}
 	}
-	
+
 	@POST
 	@Path("/excluir-rotina/{id}")
 	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
@@ -264,7 +314,7 @@ public class RotinaService implements Serializable {
 			} else {
 				String retorno = gsonBuilder.toJson(rotinas, typeRotina);
 				return Response.status(Status.OK).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-				.entity(gsonBuilder.fromJson(retorno, typeRotina)).build();
+						.entity(gsonBuilder.fromJson(retorno, typeRotina)).build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

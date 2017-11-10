@@ -13,8 +13,13 @@
 					<p:outputLabel value="#{msg['data.inicial']}" />
 					<p:calendar locale="pt_BR" id="dataInicial" required="true"
 						requiredMessage="#{msg['data.inicial.obrigatorio']}"
-						placeholder="99/99/9999" pattern="dd/MM/yyyy"
-						value="#{vagasBean.dataInicial}" mask="99/99/9999" size="15" />
+						mindate="#{vagasBean.dataMinima}" placeholder="99/99/9999"
+						pattern="dd/MM/yyyy" value="#{vagasBean.dataInicial}"
+						mask="99/99/9999" size="15">
+						<p:ajax event="dateSelect"
+							listener="#{vagasBean.onSelectDataInicial}"
+							update="panelDiasSemana" />
+					</p:calendar>
 				</h:panelGroup>
 				<h:panelGroup>
 					<p:outputLabel value="#{msg['data.final']}" />
@@ -22,7 +27,11 @@
 						mindate="#{vagasBean.dataMinima}"
 						requiredMessage="#{msg['data.final.obrigatorio']}"
 						pattern="dd/MM/yyyy" value="#{vagasBean.dataFinal}"
-						mask="99/99/9999" size="15" />
+						mask="99/99/9999" size="15">
+						<p:ajax event="dateSelect"
+							listener="#{vagasBean.onSelectDataFinal}"
+							update="panelDiasSemana" />
+					</p:calendar>
 				</h:panelGroup>
 
 			</p:panelGrid>
@@ -50,9 +59,28 @@
 					requiredMessage="#{msg['dia.da.semana.e.obrigatorio']}"
 					value="#{vagasBean.diasSelecionados}" layout="responsive"
 					columns="3">
-					<f:selectItem itemLabel="#{msg['selecione']}" itemValue="null" />
-					<f:selectItems var="dia" itemLabel="#{dia.descricao}"
-						itemValue="#{dia}" value="#{vagasBean.diasSemana}" />
+					<f:selectItem itemDisabled="#{vagasBean.desabilitaDomingo}"
+						itemLabel="Domingo" itemValue="7" />
+
+					<f:selectItem itemDisabled="#{vagasBean.desabilitaSegunda}"
+						itemLabel="Segunda" itemValue="1" />
+
+					<f:selectItem itemDisabled="#{vagasBean.desabilitaTerca}"
+						itemLabel="Terça" itemValue="2" />
+
+					<f:selectItem itemDisabled="#{vagasBean.desabilitaQuarta}"
+						itemLabel="Quarta" itemValue="3" />
+
+					<f:selectItem itemDisabled="#{vagasBean.desabilitaQuinta}"
+						itemLabel="Quinta" itemValue="4" />
+
+					<f:selectItem itemDisabled="#{vagasBean.desabilitaSexta}"
+						itemLabel="Sexta" itemValue="5" />
+
+					<f:selectItem itemDisabled="#{vagasBean.desabilitaSabado}"
+						itemLabel="Sábado" itemValue="6" />
+
+
 				</p:selectManyCheckbox>
 			</p:panelGrid>
 			<p:outputLabel value="#{msg['atividades']}" />
@@ -135,16 +163,11 @@
 						<p:inputText value="#{buscaEnderecoBean.endereco.complemento}" />
 					</h:panelGroup>
 					<p:spacer />
-					<h:panelGroup id="groupLatitude">
-						<h:outputText value="Latitude:" />
-						<p:inputText id="latitude"
-							value="#{buscaEnderecoBean.endereco.latitude}" />
-					</h:panelGroup>
-					<h:panelGroup id="groupLongitude">
-						<h:outputText value="Longitude:" />
-						<p:inputText id="longitude"
-							value="#{buscaEnderecoBean.endereco.longitude}" />
-					</h:panelGroup>
+					<h:inputHidden id="latitude"
+						value="#{buscaEnderecoBean.endereco.latitude}" />
+
+					<h:inputHidden id="longitude"
+						value="#{buscaEnderecoBean.endereco.longitude}" />
 				</p:panelGrid>
 				<h:panelGroup id="mapa">
 					<script>

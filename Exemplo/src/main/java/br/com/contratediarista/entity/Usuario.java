@@ -83,7 +83,7 @@ public class Usuario implements Serializable {
 	@OneToMany(fetch = FetchType.EAGER, cascade = javax.persistence.CascadeType.ALL, mappedBy = "usuario")
 	@Expose
 	private Set<Avaliacao> avaliacoes;
-
+	
 	public String getUid() {
 		return uid;
 	}

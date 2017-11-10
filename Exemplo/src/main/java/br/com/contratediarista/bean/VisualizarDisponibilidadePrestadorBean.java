@@ -86,64 +86,38 @@ public class VisualizarDisponibilidadePrestadorBean implements Serializable {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void contratar(Disponibilidade disponibilidade) {
-		List<Rotina> rotinas = null;
-		Rotina rotina = null;
 		disponibilidade = restaurar(disponibilidade);
 		if (disponibilidade != null) {
-			Response response = rotinaService.buscarPorUsuarioEData(usuarioLogado.getUid(),
-					sdf.format(disponibilidade.getData()), sdf.format(disponibilidade.getData()));
+			List<TipoAtividade> atividades = new ArrayList<>();
+			for (TipoAtividade atividade : disponibilidade.getTiposAtividade()) {
+				atividades.add(atividade);
+			}
+			Vaga vaga = new Vaga();
+			vaga.setContratante(usuarioLogado);
+			vaga.setDataCadastrada(new Date());
+			vaga.setEndereco(Endereco.copy(usuarioLogado.getEndereco()));
+			vaga.setTipoPeriodo(disponibilidade.getTipoPeriodo());
+			vaga.setValorPeriodo(disponibilidade.getValorPeriodo());
+			vaga.setTiposAtividade(new HashSet<>(atividades));
+			vaga.setRotinas(new HashSet<>());
+			
+			Rotina rotina = new Rotina();
+			rotina.setData(disponibilidade.getData());
+			rotina.setPrestadores(new HashSet<>(Arrays.asList(disponibilidade.getPrestador())));
+			rotina.setPrestadorSelecionado(disponibilidade.getPrestador());
+			rotina.setVaga(vaga);
+			LocalDate dataSelecionada = LocalDate.fromDateFields(disponibilidade.getData());
+			DiasSemana diaSemana = DiasSemana.getValor(dataSelecionada.getDayOfWeek());
+			rotina.setDiaSemana(diaSemana);
+			HashSet<Rotina> rotinas = new HashSet<>();
+			rotinas.add(rotina);
+			vaga.setRotinas(rotinas);
+			Response response = vagaService.salvar(vaga);
 			if (response.getStatus() == Status.OK.getStatusCode()) {
-				rotinas = (List<Rotina>) response.getEntity();
-			}
-			if (rotinas != null && !rotinas.isEmpty()) {
-				for (Rotina r : rotinas) {
-					if (r.getVaga().getTipoPeriodo() == disponibilidade.getTipoPeriodo()) {
-						rotina = r;
-					}
-				}
-			}
-			if (rotina == null) {
-				List<TipoAtividade> atividades = new ArrayList<>();
-				for (TipoAtividade atividade : disponibilidade.getTiposAtividade()) {
-					atividades.add(atividade);
-				}
-
-				Vaga vaga = new Vaga();
-				vaga.setContratante(usuarioLogado);
-				vaga.setDataCadastrada(new Date());
-				vaga.setEndereco(Endereco.copy(usuarioLogado.getEndereco()));
-				vaga.setTipoPeriodo(disponibilidade.getTipoPeriodo());
-				vaga.setValorPeriodo(disponibilidade.getValorPeriodo());
-				vaga.setTiposAtividade(new HashSet<>(atividades));
-				vaga.setRotinas(new HashSet<>());
-
-				rotina = new Rotina();
-				rotina.setData(disponibilidade.getData());
-				rotina.setPrestadores(new HashSet<>(Arrays.asList(disponibilidade.getPrestador())));
-				rotina.setPrestadorSelecionado(disponibilidade.getPrestador());
-				rotina.setVaga(vaga);
-				LocalDate dataSelecionada = LocalDate.fromDateFields(disponibilidade.getData());
-				DiasSemana diaSemana = DiasSemana.getValor(dataSelecionada.getDayOfWeek());
-				rotina.setDiaSemana(diaSemana);
-				vaga.getRotinas().add(rotina);
-				response = vagaService.salvar(vaga);
-				if (response.getStatus() == Status.OK.getStatusCode() && removerDisponibilidade(disponibilidade)) {
-					disponibilidades.remove(disponibilidade);
-					facesUtil.exibirMsgSucesso(facesUtil.getLabel("contratado.sucesso"));
-				} else {
-					facesUtil.exibirMsgErro(facesUtil.getLabel("erro.contratar"));
-				}
+				facesUtil.exibirMsgSucesso(facesUtil.getLabel("contratado.sucesso"));
 			} else {
-				rotina.setPrestadorSelecionado(disponibilidade.getPrestador());
-				response = rotinaService.alterar(rotina);
-				if (response.getStatus() == Status.OK.getStatusCode() && removerDisponibilidade(disponibilidade)) {
-					disponibilidades.remove(disponibilidade);
-					facesUtil.exibirMsgSucesso(facesUtil.getLabel("contratado.sucesso"));
-				} else {
-					facesUtil.exibirMsgErro(facesUtil.getLabel("erro.contratar"));
-				}
+				facesUtil.exibirMsgErro(facesUtil.getLabel("erro.contratar"));
 			}
 		} else {
 			facesUtil.exibirMsgErro(facesUtil.getLabel("erro.contratar"));

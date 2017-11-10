@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -55,7 +54,7 @@ public class Rotina implements Serializable {
 	@Expose
 	private Vaga vaga;
 
-	@ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "rotina_has_prestador", joinColumns = { @JoinColumn(name = "id_rotina") }, inverseJoinColumns = {
 			@JoinColumn(name = "uid_usuario") })
 	@Expose

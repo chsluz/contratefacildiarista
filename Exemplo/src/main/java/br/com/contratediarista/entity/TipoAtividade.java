@@ -53,7 +53,7 @@ public class TipoAtividade implements Serializable{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
+		result = prime * result + id;
 		return result;
 	}
 
@@ -66,10 +66,7 @@ public class TipoAtividade implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		TipoAtividade other = (TipoAtividade) obj;
-		if (descricao == null) {
-			if (other.descricao != null)
-				return false;
-		} else if (!descricao.equals(other.descricao))
+		if (id != other.id)
 			return false;
 		return true;
 	}

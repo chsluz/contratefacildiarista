@@ -26,9 +26,11 @@ import org.primefaces.model.ScheduleModel;
 import br.com.contratediarista.entity.Avaliacao;
 import br.com.contratediarista.entity.Rotina;
 import br.com.contratediarista.entity.Usuario;
+import br.com.contratediarista.entity.Vaga;
 import br.com.contratediarista.service.AvaliacaoService;
 import br.com.contratediarista.service.RotinaService;
 import br.com.contratediarista.service.UsuarioService;
+import br.com.contratediarista.service.VagaService;
 import br.com.contratediarista.utils.FacesUtil;
 
 @Named
@@ -50,6 +52,9 @@ public class VisualizarVagasVinculadasBean implements Serializable {
 
 	@Inject
 	private AvaliacaoService avaliacaoService;
+	
+	@Inject
+	private VagaService vagaService;
 
 	@Inject
 	private FacesContext facesContext;
@@ -78,12 +83,8 @@ public class VisualizarVagasVinculadasBean implements Serializable {
 		avaliacao = new Avaliacao();
 		usuarioLogado = facesUtil.getUsuarioLogado();
 		rotinaSelecionada = (Rotina) facesContext.getExternalContext().getSessionMap().get("rotina");
-		usuarioAvaliado = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuarioAvaliado");
 		if (rotinaSelecionada != null) {
 			rotinaSelecionada = restaurar(rotinaSelecionada);
-		}
-		if(usuarioAvaliado != null) {
-			usuarioAvaliado = restaurarUsuario(usuarioAvaliado.getUid());
 		}
 		Response response = rotinaService.buscarVagasUsuario(usuarioLogado.getUid(), formatoJson.format(dataInicial),
 				formatoJson.format(dataFinal));
@@ -92,12 +93,17 @@ public class VisualizarVagasVinculadasBean implements Serializable {
 		}
 		eventModel = new DefaultScheduleModel();
 		for (Rotina rotina : rotinas) {
+			response = vagaService.restoreById(rotina.getVaga().getId());
+			Vaga vaga = null;
+			if(response.getStatus() == Status.OK.getStatusCode()) {
+				vaga = (Vaga) response.getEntity();
+			}
 			DefaultScheduleEvent vinculada = new DefaultScheduleEvent();
 			vinculada.setAllDay(false);
 			vinculada.setData(rotina);
 			vinculada.setStartDate(rotina.getData());
 			vinculada.setEndDate(rotina.getData());
-			vinculada.setTitle(rotina.getVaga().getContratante().getNome());
+			vinculada.setTitle(vaga.getContratante().getNome());
 			eventModel.addEvent(vinculada);
 		}
 	}
@@ -109,11 +115,6 @@ public class VisualizarVagasVinculadasBean implements Serializable {
 		rotinaSelecionada =  restaurar((Rotina) event.getData());
 		if (data.before(formatoData.parse(dataAtual))) {
 			facesContext.getExternalContext().redirect("avaliar_contratante.jsf");
-			Usuario usuario = rotinaSelecionada.getVaga().getContratante();
-			String uid = usuario.getUid();
-			usuario = restaurarUsuario(uid);
-			facesContext.getExternalContext().getSessionMap().put("usuarioAvaliado",
-					usuario);
 			facesContext.getExternalContext().getSessionMap().put("rotina", (Rotina) event.getData());
 		} else {
 			facesContext.getExternalContext().redirect("visualizacao_vaga_prestador.jsf");
@@ -141,6 +142,8 @@ public class VisualizarVagasVinculadasBean implements Serializable {
 
 	public void avaliar() {
 		avaliacao.setAvaliador(usuarioLogado);
+		String uid = rotinaSelecionada.getVaga().getContratante().getUid();
+		usuarioAvaliado = restaurarUsuario(uid);
 		avaliacao.setUsuario(usuarioAvaliado);
 		avaliacao.setData(rotinaSelecionada.getData());
 		Response response = avaliacaoService.buscarAvaliacaoSalvaPrestadorContratante(usuarioLogado.getUid(),

@@ -12,6 +12,25 @@
 	<ui:define name="corpo">
 
 		<script>
+			function limparCampo() {
+				$("#emailRedefinirSenha").val('');
+			}
+
+			function redefinirSenha() {
+				var auth = firebase.auth();
+				var email = document.getElementById('emailRedefinirSenha').value;
+	
+				auth.sendPasswordResetEmail(email).then(function() {
+					commandSucessoRedefinirSenha();
+					$("#emailRedefinirSenha").val('');
+				}).catch(function(error) {
+					 $("#emailRedefinirSenha").val('');
+					 $("#msgErroRedefinirSenha").val(error.code);
+					commandErroRedefinirSenha();
+				});
+							
+			}
+		
 		function loginFacebook() {
 			console.log('login facebook');
 			var provider = new firebase.auth.FacebookAuthProvider();
@@ -35,6 +54,15 @@
 				});
 		}
 	</script>
+
+		<h:inputHidden id="msgErroRedefinirSenha"
+			value="#{loginBean.msgErroRedefinirSenha}" />
+
+		<p:remoteCommand name="commandSucessoRedefinirSenha"
+			actionListener="#{loginBean.sucessoRedefinirSenha}" />
+		<p:remoteCommand name="commandErroRedefinirSenha"
+			actionListener="#{loginBean.erroRedefinirSenha}" />
+
 
 		<h:inputHidden id="idUsuario" value="#{loginBean.idUsuario}" />
 		<h:inputHidden id="idErroLogin" value="#{loginBean.msgErro}" />
@@ -68,7 +96,8 @@
 							<p:commandButton update="mensagem" onclick="logar()"
 								value="Logar" />
 							<p:panelGrid columns="2" layout="grid">
-								<p:commandLink value="Esqueci a senha" />
+								<p:commandLink value="Esqueci a senha" type="button"
+									onclick="PF('dlg2').show();" />
 								<p:commandLink value="Novo? Cadastre-se"
 									action="#{loginBean.cadastrarNovo()}" />
 							</p:panelGrid>
@@ -80,5 +109,16 @@
 			<h:panelGroup>
 			</h:panelGroup>
 		</p:panelGrid>
+		<p:dialog header="Redefinir Senha:" widgetVar="dlg2" modal="true"
+			resizable="false" height="150">
+			<p:outputLabel value="Digite seu email: " />
+			<p:inputText id="emailRedefinirSenha" />
+			<p:panelGrid layout="grid" columns="2">
+				<p:commandButton value="Cancelar" oncomplete="PF('dlg2').hide();" onclick="limparCampo()" />
+				<p:commandButton value="Enviar" onclick="redefinirSenha();"
+					oncomplete="PF('dlg2').hide();" />
+			</p:panelGrid>
+		</p:dialog>
 	</ui:define>
+
 </ui:composition>
