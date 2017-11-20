@@ -28,7 +28,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import br.com.contratediarista.dao.DisponibilidadeDao;
-import br.com.contratediarista.dao.RotinaDao;
 import br.com.contratediarista.dao.TipoAtividadeDao;
 import br.com.contratediarista.dao.UsuarioDao;
 import br.com.contratediarista.dao.VagaDao;
@@ -58,64 +57,47 @@ public class DisponibilidadeService implements Serializable {
 
 	@Inject
 	private DisponibilidadeDao disponibilidadeDao;
-	
-	@Inject
-	private RotinaDao rotinaDao;
 
 	@Inject
 	private UsuarioDao usuarioDao;
-	
-	@Inject 
+
+	@Inject
 	private VagaDao vagaDao;
-	
+
 	@Inject
 	private TipoAtividadeDao tipoAtividadeDao;
-	
+
 	@POST
 	@Path("/contratar-usuario/{idDisponibilidade}/{uidUsuario}")
 	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
-	public Response contratarUsuario(@PathParam("idDisponibilidade") int idDisponibilidade,@PathParam("uidUsuario") String uidUsuario) {
+	public Response contratarUsuario(@PathParam("idDisponibilidade") int idDisponibilidade,
+			@PathParam("uidUsuario") String uidUsuario) {
 		try {
 			Disponibilidade disponibilidade = disponibilidadeDao.restoreById(idDisponibilidade);
 			Usuario usuario = usuarioDao.buscarUsuarioPorChave(uidUsuario);
-			List<Rotina> rotinas = rotinaDao.listarRotinasPorDataEUsuario(disponibilidade.getData(), disponibilidade.getData(), usuario);
-			Rotina rotina = null;
-			if (!rotinas.isEmpty()) {
-				for (Rotina r : rotinas) {
-					if (r.getVaga().getTipoPeriodo() == disponibilidade.getTipoPeriodo()) {
-						rotina = r;
-					}
-				}
+			List<TipoAtividade> atividades = new ArrayList<>();
+			for (TipoAtividade atividade : disponibilidade.getTiposAtividade()) {
+				atividades.add(atividade);
 			}
-			if (rotina == null) {
-				List<TipoAtividade> atividades = new ArrayList<>();
-				for (TipoAtividade atividade : disponibilidade.getTiposAtividade()) {
-					atividades.add(atividade);
-				}
-				Vaga vaga = new Vaga();
-				vaga.setContratante(usuario);
-				vaga.setDataCadastrada(new Date());
-				vaga.setEndereco(Endereco.copy(usuario.getEndereco()));
-				vaga.setTipoPeriodo(disponibilidade.getTipoPeriodo());
-				vaga.setValorPeriodo(disponibilidade.getValorPeriodo());
-				vaga.setTiposAtividade(new HashSet<>(atividades));
-				vaga.setRotinas(new HashSet<>());
-				rotina = new Rotina();
-				rotina.setData(disponibilidade.getData());
-				rotina.setPrestadores(new HashSet<>(Arrays.asList(disponibilidade.getPrestador())));
-				rotina.setPrestadorSelecionado(disponibilidade.getPrestador());
-				rotina.setVaga(vaga);
-				LocalDate dataSelecionada = LocalDate.fromDateFields(disponibilidade.getData());
-				DiasSemana diaSemana = DiasSemana.getValor(dataSelecionada.getDayOfWeek());
-				rotina.setDiaSemana(diaSemana);
-				vaga.getRotinas().add(rotina);
-				vagaDao.salvar(vaga);
-				disponibilidadeDao.excluir(disponibilidade);
-			} else {
-				rotina.setPrestadorSelecionado(disponibilidade.getPrestador());
-				rotinaDao.alterar(rotina);
-				disponibilidadeDao.excluir(disponibilidade);
-			}
+			Vaga vaga = new Vaga();
+			vaga.setContratante(usuario);
+			vaga.setDataCadastrada(new Date());
+			vaga.setEndereco(Endereco.copy(usuario.getEndereco()));
+			vaga.setTipoPeriodo(disponibilidade.getTipoPeriodo());
+			vaga.setValorPeriodo(disponibilidade.getValorPeriodo());
+			vaga.setTiposAtividade(new HashSet<>(atividades));
+			List<Rotina> novasRotinas = new ArrayList<>();
+			Rotina rotina = new Rotina();
+			rotina.setData(disponibilidade.getData());
+			rotina.setPrestadores(new HashSet<>(Arrays.asList(disponibilidade.getPrestador())));
+			rotina.setPrestadorSelecionado(disponibilidade.getPrestador());
+			rotina.setVaga(vaga);
+			LocalDate dataSelecionada = LocalDate.fromDateFields(disponibilidade.getData());
+			DiasSemana diaSemana = DiasSemana.getValor(dataSelecionada.getDayOfWeek());
+			rotina.setDiaSemana(diaSemana);
+			novasRotinas.add(rotina);
+			vaga.setRotinas(new HashSet<>(novasRotinas));
+			vagaDao.salvar(vaga);
 			return Response.ok().build();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -206,7 +188,7 @@ public class DisponibilidadeService implements Serializable {
 					.build();
 		}
 	}
-	
+
 	@POST
 	@Path("excluir-diponibilidade/{id}")
 	@Consumes({ MediaType.APPLICATION_JSON + ";charset=UTF-8" })
@@ -256,7 +238,7 @@ public class DisponibilidadeService implements Serializable {
 			} else {
 				String retorno = gsonBuilder.toJson(disponibilidades, typeDisponibilidade);
 				return Response.status(Status.OK).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-				.entity(gsonBuilder.fromJson(retorno, typeDisponibilidade)).build();
+						.entity(gsonBuilder.fromJson(retorno, typeDisponibilidade)).build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -294,7 +276,7 @@ public class DisponibilidadeService implements Serializable {
 			} else {
 				String retorno = gsonBuilder.toJson(disponibilidades, typeDisponibilidade);
 				return Response.status(Status.OK).type(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-				.entity(gsonBuilder.fromJson(retorno, typeDisponibilidade)).build();
+						.entity(gsonBuilder.fromJson(retorno, typeDisponibilidade)).build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

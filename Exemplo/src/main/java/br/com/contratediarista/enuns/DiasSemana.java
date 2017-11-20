@@ -13,7 +13,7 @@ public enum DiasSemana {
 	}
 
 	public static DiasSemana getValor(int ordem) {
-		if (7 == ordem) {
+		if (7 == ordem || 0== ordem) {
 			return DiasSemana.DOMINGO;
 		}
 		if (SEGUNDA.ordinal() == ordem) {
